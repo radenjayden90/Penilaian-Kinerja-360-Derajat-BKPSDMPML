@@ -1,0 +1,42 @@
+<?php
+$dir = __DIR__ . "/database/migrations";
+$files = scandir($dir);
+foreach($files as $file) {
+    if (strpos($file, "create_roles_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"roles\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->string(\"name\");\n            \$table->text(\"description\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"roles\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_departments_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"departments\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->string(\"name\");\n            \$table->string(\"code\")->nullable();\n            \$table->text(\"description\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"departments\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_positions_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"positions\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->foreignUuid(\"department_id\")->constrained(\"departments\")->cascadeOnDelete();\n            \$table->string(\"name\");\n            \$table->string(\"level\")->nullable();\n            \$table->text(\"description\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"positions\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_periods_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"periods\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->string(\"name\");\n            \$table->integer(\"month\");\n            \$table->integer(\"year\");\n            \$table->date(\"start_date\");\n            \$table->date(\"end_date\");\n            \$table->boolean(\"is_active\")->default(false);\n            \$table->string(\"status\")->default(\"OPEN\");\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"periods\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_assessment_categories_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"assessment_categories\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->string(\"name\");\n            \$table->text(\"description\")->nullable();\n            \$table->integer(\"display_order\")->default(0);\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"assessment_categories\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_assessment_indicators_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"assessment_indicators\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->foreignUuid(\"category_id\")->constrained(\"assessment_categories\")->cascadeOnDelete();\n            \$table->string(\"indicator\");\n            \$table->text(\"description\")->nullable();\n            \$table->integer(\"display_order\")->default(0);\n            \$table->boolean(\"is_active\")->default(true);\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"assessment_indicators\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_assessments_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"assessments\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->foreignUuid(\"period_id\")->constrained(\"periods\")->cascadeOnDelete();\n            \$table->foreignUuid(\"assessor_id\")->constrained(\"employees\")->cascadeOnDelete();\n            \$table->foreignUuid(\"employee_id\")->constrained(\"employees\")->cascadeOnDelete();\n            \$table->string(\"assessment_type\");\n            \$table->string(\"status\")->default(\"DRAFT\");\n            \$table->timestamp(\"submitted_at\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"assessments\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_assessment_scores_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"assessment_scores\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->foreignUuid(\"assessment_id\")->constrained(\"assessments\")->cascadeOnDelete();\n            \$table->foreignUuid(\"indicator_id\")->constrained(\"assessment_indicators\")->cascadeOnDelete();\n            \$table->integer(\"score\");\n            \$table->text(\"comment\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"assessment_scores\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+    if (strpos($file, "create_assessment_results_table") !== false) {
+        $content = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nreturn new class extends Migration {\n    public function up(): void {\n        Schema::create(\"assessment_results\", function (Blueprint \$table) {\n            \$table->uuid(\"id\")->primary();\n            \$table->foreignUuid(\"employee_id\")->constrained(\"employees\")->cascadeOnDelete();\n            \$table->foreignUuid(\"period_id\")->constrained(\"periods\")->cascadeOnDelete();\n            \$table->decimal(\"superior_score\", 5, 2)->nullable();\n            \$table->decimal(\"peer_score\", 5, 2)->nullable();\n            \$table->decimal(\"subordinate_score\", 5, 2)->nullable();\n            \$table->decimal(\"final_score\", 5, 2)->nullable();\n            \$table->string(\"category\")->nullable();\n            \$table->timestamp(\"calculated_at\")->nullable();\n            \$table->timestamps();\n        });\n    }\n    public function down(): void {\n        Schema::dropIfExists(\"assessment_results\");\n    }\n};\n";
+        file_put_contents("$dir/$file", $content);
+    }
+}
+
