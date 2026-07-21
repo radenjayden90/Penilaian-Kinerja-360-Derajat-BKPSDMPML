@@ -78,18 +78,13 @@ class AssessmentCalculatorService
             }
         }
 
-        // If not ready
-        if (count($pendingReason) > 0) {
-            return $this->saveResult($employee, $period, [
-                'status' => CalculationStatus::PENDING,
-                'pending_reason' => implode(' ', $pendingReason)
-            ]);
-        }
+        $status = count($pendingReason) > 0 ? CalculationStatus::PENDING : CalculationStatus::COMPLETE;
+        $reason = count($pendingReason) > 0 ? implode(' ', $pendingReason) : null;
 
         // 4. Calculate Averages
         $superiorAvg = $superiorAssessments->count() > 0 ? $this->calculateAssessmentAverage($superiorAssessments) : 0;
-        $peerAvg = $this->calculateAssessmentAverage($peerAssessments);
-        $subordinateAvg = $hasSubordinates ? $this->calculateAssessmentAverage($subordinateAssessments) : 0;
+        $peerAvg = $peerAssessments->count() > 0 ? $this->calculateAssessmentAverage($peerAssessments) : 0;
+        $subordinateAvg = ($hasSubordinates && $subordinateAssessments->count() > 0) ? $this->calculateAssessmentAverage($subordinateAssessments) : 0;
 
         // 5. Calculate Final Score & Weights
         $superiorWeight = 0.50;
@@ -98,8 +93,8 @@ class AssessmentCalculatorService
 
         $rawScore = ($superiorAvg * $superiorWeight) + ($peerAvg * $peerWeight) + ($subordinateAvg * $subordinateWeight);
         
-        // Scale 1-5 to 10-100 for category evaluation
-        $finalScore = $rawScore * 20;
+        // Scale 1-10 to 10-100 for category evaluation
+        $finalScore = $rawScore * 10;
 
         // 6. Determine Category
         $category = $this->determineCategory($finalScore);
@@ -114,8 +109,8 @@ class AssessmentCalculatorService
             'subordinate_weight' => $subordinateWeight,
             'final_score' => $finalScore,
             'category' => $category,
-            'status' => CalculationStatus::COMPLETE,
-            'pending_reason' => null,
+            'status' => $status,
+            'pending_reason' => $reason,
             'calculated_at' => now(),
         ]);
     }
