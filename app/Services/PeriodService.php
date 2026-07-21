@@ -1,4 +1,5 @@
-﻿<?php
+<?php
+
 namespace App\Services;
 use App\Models\Period;
 use Illuminate\Support\Facades\DB;

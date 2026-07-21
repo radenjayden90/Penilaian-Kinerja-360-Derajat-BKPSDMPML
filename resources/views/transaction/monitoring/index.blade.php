@@ -1,108 +1,117 @@
 @extends('layouts.app')
 
-@section('header', 'Monitoring Penilaian')
+@section('title', 'Monitoring Penilaian')
+@section('header', 'Monitoring Progres Penilaian 360°')
+@section('subtitle', 'Pantau kelengkapan partisipasi pengisian kuesioner oleh pegawai secara real-time')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Monitoring</li>
+@endsection
 
 @section('content')
-<x-page-header title="Monitoring Penilaian 360" subtitle="Pantau kemajuan penilaian kinerja masing-masing pegawai di instansi.">
-</x-page-header>
-
-<x-card>
-    <div class="p-4 sm:p-6" x-data="{ submitForm() { $refs.searchForm.submit(); } }">
-        
-        @if(!$activePeriod)
-            <div class="mb-6 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
-                <strong>Perhatian:</strong> Saat ini tidak ada periode penilaian yang berstatus OPEN.
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+        <form method="GET" action="{{ route('transaction.monitoring.index') }}" class="row g-2">
+            <div class="col-12 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari NIP atau nama pegawai evaluator..." value="{{ request('search') }}">
+                </div>
             </div>
-        @else
-            <div class="mb-6 bg-indigo-50 border border-indigo-200 text-indigo-700 px-4 py-3 rounded">
-                Menampilkan data pada Periode Aktif: <strong>{{ $activePeriod->name }}</strong>
-            </div>
-        @endif
-
-        <form x-ref="searchForm" method="GET" action="{{ route('transaction.monitoring.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div>
-                <x-form.input name="search" value="{{ request('search') }}" @input.debounce.500ms="submitForm()" placeholder="Cari NIP atau Nama..." />
-            </div>
-            <div>
-                <x-form.select name="department_id" @change="submitForm()">
-                    <option value="">Semua Bidang</option>
+            <div class="col-12 col-md-4">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                    <option value="">-- Semua Unit Kerja --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
                     @endforeach
-                </x-form.select>
+                </select>
             </div>
-            <div>
-                <x-form.select name="per_page" @change="submitForm()">
-                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10 Per Halaman</option>
-                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25 Per Halaman</option>
-                    <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50 Per Halaman</option>
-                    <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100 Per Halaman</option>
-                </x-form.select>
+            <div class="col-12 col-md-2">
+                @if(request('search') || request('department_id'))
+                    <a href="{{ route('transaction.monitoring.index') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-x-circle me-1"></i> Reset
+                    </a>
+                @endif
             </div>
         </form>
+    </div>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead>
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pegawai</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jabatan / Bidang</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Atasan</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Rekan</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Bawahan</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Evaluasi</th>
+                        <th class="ps-3" style="width: 50px;">No</th>
+                        <th>Pegawai Evaluator</th>
+                        <th>Unit Kerja & Jabatan</th>
+                        <th>Evaluasi Atasan</th>
+                        <th>Evaluasi Sejawat</th>
+                        <th>Evaluasi Bawahan</th>
+                        <th class="text-center">Total Diisi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($employees as $employee)
+                <tbody>
+                    @forelse($employees as $index => $emp)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-medium text-gray-900">{{ $employee->name }}</div>
-                                <div class="text-sm text-gray-500">{{ $employee->nip }}</div>
+                            <td class="ps-3 fw-semibold text-muted">{{ $employees->firstItem() + $index }}</td>
+                            <td>
+                                <div class="fw-semibold text-dark">{{ $emp->name }}</div>
+                                <small class="text-muted">NIP. {{ $emp->nip }}</small>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $employee->position->name ?? '-' }}</div>
-                                <div class="text-xs text-gray-500">{{ $employee->department->name ?? '-' }}</div>
+                            <td>
+                                <div class="small fw-medium text-dark">{{ $emp->department->name ?? '-' }}</div>
+                                <small class="text-muted">{{ $emp->position->name ?? '-' }}</small>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                @if(str_contains($employee->monitoring_superior, 'Sudah'))
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $employee->monitoring_superior }}</span>
+                            <td>
+                                @if(str_contains($emp->monitoring_superior, 'Sudah'))
+                                    <span class="badge bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>{{ $emp->monitoring_superior }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ $employee->monitoring_superior }}</span>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning"><i class="bi bi-clock me-1"></i>Belum</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                @if(str_contains($employee->monitoring_peer, 'Sudah'))
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $employee->monitoring_peer }}</span>
+                            <td>
+                                @if(str_contains($emp->monitoring_peer, 'Sudah'))
+                                    <span class="badge bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>{{ $emp->monitoring_peer }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ $employee->monitoring_peer }}</span>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning"><i class="bi bi-clock me-1"></i>Belum</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                @if(str_contains($employee->monitoring_subordinate, 'Sudah'))
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $employee->monitoring_subordinate }}</span>
+                            <td>
+                                @if(str_contains($emp->monitoring_subordinate, 'Sudah'))
+                                    <span class="badge bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>{{ $emp->monitoring_subordinate }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ $employee->monitoring_subordinate }}</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary">N/A / Belum</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center font-bold text-gray-700">
-                                {{ $employee->total_assessed }}
+                            <td class="text-center">
+                                <span class="badge bg-primary px-3 py-1 fs-6" style="background-color: #1E3A5F !important;">
+                                    {{ $emp->total_assessed ?? 0 }} Form
+                                </span>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500">
-                                Tidak ada data yang ditemukan.
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
+                                Belum ada data monitoring penilaian.
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        
-        <div class="mt-4">
-            {{ $employees->withQueryString()->links() }}
-        </div>
     </div>
-</x-card>
+
+    @if($employees->hasPages())
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    Menampilkan {{ $employees->firstItem() }} - {{ $employees->lastItem() }} dari total {{ $employees->total() }} data
+                </small>
+                {{ $employees->withQueryString()->links() }}
+            </div>
+        </div>
+    @endif
+</div>
 @endsection

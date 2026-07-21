@@ -1,67 +1,83 @@
 @extends('layouts.app')
 
-@section('header', 'Detail Penilaian')
+@section('title', 'Rincian Penilaian')
+@section('header', 'Rincian Lembar Evaluasi Penilaian 360°')
+@section('subtitle', 'Hasil masukan isian kuesioner yang telah diserahkan')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Rincian Evaluasi</li>
+@endsection
 
 @section('content')
-<x-page-header title="Detail Penilaian ({{ $assessment->assessment_type }})" subtitle="Periode: {{ $assessment->period->name }}">
-    <x-slot:actions>
-        <a href="{{ route('transaction.assessments.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">&larr; Kembali</a>
-    </x-slot>
-</x-page-header>
-
-<div class="mb-6 bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-green-500 flex flex-col md:flex-row md:items-center md:justify-between">
-    <div>
-        <h3 class="text-lg font-bold text-gray-900">Target: {{ $assessment->employee->name }}</h3>
-        <p class="text-sm text-gray-500">{{ $assessment->employee->nip }} | {{ $assessment->employee->position->name ?? '-' }} | {{ $assessment->employee->department->name ?? '-' }}</p>
-    </div>
-    <div class="mt-4 md:mt-0 text-right">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-            Disubmit: {{ $assessment->submitted_at->format('d/m/Y H:i') }}
-        </span>
-        <div class="text-xs text-gray-500 mt-1">Oleh: {{ $assessment->assessor->name }}</div>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-8">
+                <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Target Pegawai Evaluasi</small>
+                <h4 class="fw-bold text-dark mb-1">{{ $assessment->employee->name ?? '-' }}</h4>
+                <p class="text-muted mb-0">NIP. {{ $assessment->employee->nip ?? '-' }}</p>
+            </div>
+            <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                <span class="badge bg-success px-3 py-2 fs-6">
+                    <i class="bi bi-check-circle me-1"></i>Selesai Diserahkan
+                </span>
+                <div class="small text-muted mt-1">
+                    Tanggal: {{ $assessment->submitted_at ? $assessment->submitted_at->format('d M Y H:i') : '-' }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="space-y-8">
-    @foreach($groupedScores as $categoryName => $scores)
-        <x-card>
-            <div class="bg-gray-50 px-6 py-4 border-b">
-                <h4 class="text-lg font-bold text-gray-900">{{ $categoryName }}</h4>
-            </div>
-            
-            <div class="p-6 space-y-4">
-                @foreach($scores as $score)
-                    <div class="border-b pb-4 last:border-b-0 last:pb-0">
-                        <div class="flex justify-between items-start">
-                            <div class="w-3/4">
-                                <label class="block text-sm font-medium text-gray-900">{{ $loop->iteration }}. {{ $score->indicator->name }}</label>
-                                @if($score->comment)
-                                    <div class="mt-2 bg-gray-50 rounded p-3 text-sm text-gray-700 italic border-l-2 border-gray-300">
-                                        "{{ $score->comment }}"
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="w-1/4 text-right">
-                                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 text-indigo-700 font-bold text-lg">
-                                    {{ $score->score }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </x-card>
-    @endforeach
-
-    @if($assessment->notes)
-    <x-card>
-        <div class="p-6">
-            <h4 class="text-lg font-bold text-gray-900 mb-2">Catatan Keseluruhan</h4>
-            <div class="bg-yellow-50 rounded p-4 text-sm text-gray-800 border border-yellow-200">
-                {!! nl2br(e($assessment->notes)) !!}
+@foreach($groupedScores as $categoryName => $scores)
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 fw-semibold text-primary">
+            <i class="bi bi-folder2-open me-2"></i>{{ $categoryName }}
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3" style="width: 50px;">No</th>
+                            <th>Indikator Pertanyaan</th>
+                            <th class="text-center" style="width: 120px;">Skor Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($scores as $score)
+                            <tr>
+                                <td class="ps-3 fw-semibold text-muted">{{ $loop->iteration }}</td>
+                                <td>{{ $score->indicator->name ?? $score->indicator->question }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary px-3 py-2 fs-6" style="background-color: #1E3A5F !important;">
+                                        {{ $score->score }} / 5
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-    </x-card>
-    @endif
+    </div>
+@endforeach
+
+@if($assessment->notes)
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 fw-semibold">
+            <i class="bi bi-chat-left-text me-2 text-primary"></i>Catatan Tambahan
+        </div>
+        <div class="card-body p-4 bg-light">
+            <p class="mb-0 text-dark italic">"{{ $assessment->notes }}"</p>
+        </div>
+    </div>
+@endif
+
+<div class="d-flex justify-content-start mb-4">
+    <a href="{{ route('transaction.assessments.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar Penilaian
+    </a>
 </div>
 @endsection

@@ -1,33 +1,71 @@
-﻿@extends('layouts.app')
-@section('header', 'Edit Jabatan')
+@extends('layouts.app')
+
+@section('title', 'Edit Jabatan')
+@section('header', 'Edit Data Jabatan')
+@section('subtitle', 'Pembaruan informasi data jabatan')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('master.positions.index') }}">Jabatan</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+@endsection
+
 @section('content')
-<x-page-header title="Edit Jabatan" subtitle="Ubah data jabatan.">
-    <x-slot:actions><a href="{{ route('master.positions.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">&larr; Kembali</a></x-slot>
-</x-page-header>
-<x-card class="max-w-2xl">
-    <div class="p-4 sm:p-6">
-        <form action="{{ route('master.positions.update', $position) }}" method="POST">
-            @csrf @method('PUT')
-            <div class="space-y-6">
-                <x-form.select name="department_id" label="Bidang" error="{{ $errors->first('department_id') }}" required>
-                    <option value="">-- Pilih Bidang --</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}" {{ old('department_id', $position->department_id) == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
-                    @endforeach
-                </x-form.select>
-                <x-form.input name="name" label="Nama Jabatan" value="{{ old('name', $position->name) }}" error="{{ $errors->first('name') }}" required />
-                <x-form.input name="level" label="Level Jabatan" type="number" min="1" max="10" value="{{ old('level', $position->level) }}" error="{{ $errors->first('level') }}" required />
-                <x-form.textarea name="description" label="Deskripsi" rows="4" error="{{ $errors->first('description') }}">{{ old('description', $position->description) }}</x-form.textarea>
-                <x-form.select name="is_active" label="Status" error="{{ $errors->first('is_active') }}">
-                    <option value="1" {{ old('is_active', $position->is_active) == '1' ? 'selected' : '' }}>Aktif</option>
-                    <option value="0" {{ old('is_active', $position->is_active) == '0' ? 'selected' : '' }}>Nonaktif</option>
-                </x-form.select>
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <span class="fw-semibold"><i class="bi bi-pencil-square me-2 text-primary"></i>Edit Jabatan</span>
             </div>
-            <div class="mt-6 flex items-center justify-end gap-x-6">
-                <a href="{{ route('master.positions.index') }}" class="text-sm font-semibold text-gray-900">Batal</a>
-                <x-button type="submit" variant="primary">Simpan Perubahan</x-button>
+            <div class="card-body p-4">
+                <form action="{{ route('master.positions.update', $position) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Nama Jabatan <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $position->name) }}" required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="department_id" class="form-label fw-semibold">Unit Kerja / Bidang <span class="text-danger">*</span></label>
+                        <select name="department_id" id="department_id" class="form-select @error('department_id') is-invalid @enderror" required>
+                            <option value="">-- Pilih Unit Kerja --</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}" {{ old('department_id', $position->department_id) == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('department_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="level" class="form-label fw-semibold">Level / Eselon</label>
+                        <input type="number" name="level" id="level" class="form-control @error('level') is-invalid @enderror" value="{{ old('level', $position->level) }}">
+                        @error('level')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Status Jabatan</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $position->is_active) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="is_active">Aktif</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                        <a href="{{ route('master.positions.index') }}" class="btn btn-outline-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Perbarui Data</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
-</x-card>
+</div>
 @endsection

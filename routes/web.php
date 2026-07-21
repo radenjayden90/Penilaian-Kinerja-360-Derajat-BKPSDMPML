@@ -11,14 +11,14 @@ use App\Http\Controllers\Master\PeriodController;
 use App\Http\Controllers\Master\AssessmentCategoryController;
 use App\Http\Controllers\Master\AssessmentIndicatorController;
 
+use App\Http\Controllers\DashboardController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('master')->name('master.')->group(function () {
         Route::get('/', function () {
@@ -48,13 +48,11 @@ Route::middleware('auth')->group(function () {
         Route::get('calculations/{employee}', [\App\Http\Controllers\Transaction\CalculationController::class, 'show'])->name('calculations.show');
     });
 
-    Route::get('/assessment', function () {
-        return view('assessment.index');
-    })->name('assessment.index');
+    Route::get('/assessment', [AssessmentController::class, 'history'])->name('assessment.index');
 
-    Route::get('/report', function () {
-        return view('report.index');
-    })->name('report.index');
+    Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/print', [\App\Http\Controllers\ReportController::class, 'print'])->name('report.print');
+    Route::get('/report/export-csv', [\App\Http\Controllers\ReportController::class, 'exportCsv'])->name('report.exportCsv');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

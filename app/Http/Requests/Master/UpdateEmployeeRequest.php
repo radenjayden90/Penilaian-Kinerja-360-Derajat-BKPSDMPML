@@ -1,10 +1,19 @@
-﻿<?php
+<?php
+
 namespace App\Http\Requests\Master;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEmployeeRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->has('is_active') ? true : false,
+        ]);
+    }
+
     public function rules(): array {
         return [
             'nip' => 'required|string|max:50|unique:employees,nip,' . $this->route('employee')->id,

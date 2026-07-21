@@ -21,8 +21,12 @@ class Department extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'ilike', '%' . $search . '%')
-                     ->orWhere('code', 'ilike', '%' . $search . '%');
+        if (!$search) return $query;
+        $term = mb_strtolower($search, 'UTF-8');
+        return $query->where(function($q) use ($term) {
+            $q->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%')
+              ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(code)'), 'LIKE', '%' . $term . '%');
+        });
     }
 
     public function scopeFilterStatus($query, $status)

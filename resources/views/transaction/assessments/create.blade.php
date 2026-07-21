@@ -1,99 +1,126 @@
 @extends('layouts.app')
 
-@section('header', 'Form Penilaian')
+@section('title', 'Form Penilaian Kinerja')
+@section('header', 'Form Kuesioner Penilaian 360°')
+@section('subtitle', 'Berikan penilaian secara jujur dan objektif untuk meningkatkan kualitas kinerja ASN')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Form Evaluasi</li>
+@endsection
 
 @section('content')
-<x-page-header title="Form Penilaian ({{ $type }})" subtitle="Periode: {{ $activePeriod->name }} (Batas Akhir: {{ $activePeriod->end_date->format('d/m/Y') }})">
-    <x-slot:actions>
-        <a href="{{ route('transaction.assessments.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">&larr; Kembali</a>
-    </x-slot>
-</x-page-header>
-
-<div class="mb-6 bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-indigo-500 flex flex-col md:flex-row md:items-center md:justify-between">
-    <div>
-        <h3 class="text-lg font-bold text-gray-900">{{ $target->name }}</h3>
-        <p class="text-sm text-gray-500">{{ $target->nip }} | {{ $target->position->name ?? '-' }} | {{ $target->department->name ?? '-' }}</p>
-    </div>
-    <div class="mt-4 md:mt-0">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-            Penilaian: {{ $type }}
-        </span>
+<!-- Target Employee Summary Header -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-8">
+                <small class="text-uppercase fw-semibold text-primary" style="font-size: 11px;">Target Evaluasi Pegawai</small>
+                <h4 class="fw-bold text-dark mb-1">{{ $target->name }}</h4>
+                <p class="text-muted mb-0" style="font-size: 14px;">
+                    NIP. {{ $target->nip }} | {{ $target->position->name ?? '-' }} | {{ $target->department->name ?? '-' }}
+                </p>
+            </div>
+            <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 fs-6" style="color: #1E3A5F !important;">
+                    Tipe Evaluasi: {{ $type }}
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 
-@if($errors->any())
-    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-        <strong>Terjadi Kesalahan:</strong>
-        <ul class="list-disc pl-5 mt-1 text-sm">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-<form action="{{ route('transaction.assessments.store') }}" method="POST" id="assessmentForm">
+<form action="{{ route('transaction.assessments.store') }}" method="POST">
     @csrf
     <input type="hidden" name="target_id" value="{{ $target->id }}">
     <input type="hidden" name="type" value="{{ $type }}">
 
-    <div class="space-y-8">
-        @foreach($categories as $category)
-            <x-card>
-                <div class="bg-gray-50 px-6 py-4 border-b">
-                    <h4 class="text-lg font-bold text-gray-900">{{ $category->name }}</h4>
-                    @if($category->description)
-                        <p class="text-sm text-gray-600 mt-1">{{ $category->description }}</p>
-                    @endif
-                </div>
-                
-                <div class="p-6 space-y-6">
-                    @foreach($category->indicators as $indicator)
-                        <div class="border-b pb-6 last:border-b-0 last:pb-0">
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-900">{{ $loop->iteration }}. {{ $indicator->name }}</label>
-                                @if($indicator->description)
-                                    <p class="text-xs text-gray-500 mt-1">{{ $indicator->description }}</p>
-                                @endif
-                            </div>
-                            
-                            <div class="mt-2">
-                                <div class="flex flex-wrap gap-2">
-                                    @for($i = 1; $i <= 10; $i++)
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="scores[{{ $indicator->id }}][score]" value="{{ $i }}" class="peer sr-only" required {{ old("scores.{$indicator->id}.score") == $i ? 'checked' : '' }}>
-                                            <div class="w-10 h-10 rounded-md border flex items-center justify-center font-medium text-gray-700 bg-white peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600 hover:bg-gray-50 transition-colors">
-                                                {{ $i }}
-                                            </div>
-                                        </label>
-                                    @endfor
-                                </div>
-                                @error("scores.{$indicator->id}.score")
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div class="mt-3">
-                                <x-form.textarea name="scores[{{ $indicator->id }}][comment]" placeholder="Komentar (Opsional)" rows="2">{{ old("scores.{$indicator->id}.comment") }}</x-form.textarea>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </x-card>
-        @endforeach
-
-        <x-card>
-            <div class="p-6">
-                <h4 class="text-lg font-bold text-gray-900 mb-4">Catatan Keseluruhan (Opsional)</h4>
-                <x-form.textarea name="general_notes" rows="4" placeholder="Berikan catatan keseluruhan atas kinerja pegawai yang dinilai...">{{ old('general_notes') }}</x-form.textarea>
+    <!-- Scale Rating Guide Legend -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light py-2 fw-semibold" style="font-size: 13px;">
+            <i class="bi bi-info-circle me-1 text-primary"></i> Panduan Skala Penilaian Likert (1 - 5)
+        </div>
+        <div class="card-body p-3" style="font-size: 13px;">
+            <div class="row text-center g-2">
+                <div class="col"><span class="badge bg-danger w-100 py-2">1: Sangat Kurang</span></div>
+                <div class="col"><span class="badge bg-warning text-dark w-100 py-2">2: Kurang</span></div>
+                <div class="col"><span class="badge bg-secondary w-100 py-2">3: Cukup</span></div>
+                <div class="col"><span class="badge bg-info text-white w-100 py-2">4: Baik</span></div>
+                <div class="col"><span class="badge bg-success w-100 py-2">5: Sangat Baik</span></div>
             </div>
-        </x-card>
+        </div>
     </div>
 
-    <div class="mt-8 mb-12 bg-white p-4 shadow rounded-lg flex items-center justify-between border-t-4 border-indigo-500 sticky bottom-4 z-10">
-        <p class="text-sm text-gray-600">Pastikan semua indikator telah dinilai sebelum menyimpan. Data yang sudah disubmit tidak dapat diubah lagi.</p>
-        <x-button type="submit" variant="primary" onclick="return confirm('Apakah Anda yakin ingin submit penilaian ini? Data tidak dapat diubah setelah disubmit.')">Submit Penilaian</x-button>
+    <!-- Questions Grouped by Category -->
+    @foreach($categories as $category)
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="fw-bold mb-0 text-primary" style="color: #1E3A5F !important;">
+                    <i class="bi bi-folder2-open me-2"></i>{{ $category->name }}
+                </h6>
+                @if($category->description)
+                    <small class="text-muted d-block mt-1">{{ $category->description }}</small>
+                @endif
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3" style="width: 50px;">No</th>
+                                <th>Indikator Pertanyaan</th>
+                                <th class="text-center" style="width: 320px;">Pilihan Nilai (1 - 5)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($category->indicators as $indIndex => $indicator)
+                                <tr>
+                                    <td class="ps-3 fw-semibold text-muted">{{ $loop->iteration }}</td>
+                                    <td>
+                                        <div class="fw-medium text-dark">{{ $indicator->name ?? $indicator->question }}</div>
+                                        @if($indicator->description)
+                                            <small class="text-muted d-block">{{ $indicator->description }}</small>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @for($score = 1; $score <= 5; $score++)
+                                                <input type="radio" class="btn-check" name="scores[{{ $indicator->id }}]" id="score_{{ $indicator->id }}_{{ $score }}" value="{{ $score }}" required {{ old("scores.{$indicator->id}") == $score ? 'checked' : '' }}>
+                                                <label class="btn btn-outline-primary btn-sm px-3 py-1 fw-semibold" for="score_{{ $indicator->id }}_{{ $score }}">
+                                                    {{ $score }}
+                                                </label>
+                                            @endfor
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <!-- General Notes -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 fw-semibold">
+            <i class="bi bi-chat-left-text me-2 text-primary"></i>Catatan & Saran Konstruktif (Opsional)
+        </div>
+        <div class="card-body p-4">
+            <textarea name="general_notes" rows="4" class="form-control" placeholder="Tuliskan apresiasi, masukan, atau saran perbaikan untuk pengembangan kinerja pegawai ini..."></textarea>
+        </div>
+    </div>
+
+    <!-- Submit Action -->
+    <div class="card border-0 shadow-sm p-3 mb-5 bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ route('transaction.assessments.index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Batal / Kembali
+            </a>
+            <button type="submit" class="btn btn-success px-4 py-2 fw-semibold" onclick="return confirm('Apakah Anda yakin jawaban kuesioner ini sudah sesuai? Penilaian yang diserahkan tidak dapat diubah.')">
+                <i class="bi bi-send-check me-2"></i>Kirim Evaluasi Penilaian
+            </button>
+        </div>
     </div>
 </form>
-
 @endsection

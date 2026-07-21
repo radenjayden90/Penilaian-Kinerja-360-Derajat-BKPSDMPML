@@ -36,9 +36,13 @@ class Employee extends Authenticatable
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'ilike', '%' . $search . '%')
-                     ->orWhere('nip', 'ilike', '%' . $search . '%')
-                     ->orWhere('email', 'ilike', '%' . $search . '%');
+        if (!$search) return $query;
+        $term = mb_strtolower($search, 'UTF-8');
+        return $query->where(function($q) use ($term) {
+            $q->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%')
+              ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(nip)'), 'LIKE', '%' . $term . '%')
+              ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(email)'), 'LIKE', '%' . $term . '%');
+        });
     }
 
     public function scopeFilterStatus($query, $status)
@@ -83,4 +87,25 @@ class Employee extends Authenticatable
     public function assessments() { return $this->hasMany(Assessment::class, "employee_id"); }
     public function results() { return $this->hasMany(AssessmentResult::class, "employee_id"); }
     public function assessmentResult() { return $this->hasOne(AssessmentResult::class, "employee_id")->latestOfMany(); }
+
+    public function isAdmin(): bool
+    {
+        $roleName = $this->role->name ?? '';
+        return in_array($roleName, [EmployeeRole::SUPER_ADMIN->value, EmployeeRole::ADMIN->value]);
+    }
+
+    public function isHead(): bool
+    {
+        return ($this->role->name ?? '') === EmployeeRole::HEAD->value;
+    }
+
+    public function isEmployee(): bool
+    {
+        return ($this->role->name ?? '') === EmployeeRole::EMPLOYEE->value;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return ($this->role->name ?? '') === $role;
+    }
 }

@@ -15,6 +15,13 @@ class UpdateDepartmentRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->has('is_active') ? true : false,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

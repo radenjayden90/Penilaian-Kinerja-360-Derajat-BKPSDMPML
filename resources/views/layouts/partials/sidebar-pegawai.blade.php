@@ -1,0 +1,45 @@
+<aside class="app-sidebar">
+    <div class="sidebar-header">
+        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+            <i class="bi bi-shield-check text-warning fs-4"></i>
+            <div class="sidebar-brand-text">
+                <div class="fw-bold lh-1" style="font-size: 15px;">360 Kinerja</div>
+                <small class="text-white-50" style="font-size: 11px;">BKPSDM Pemalang</small>
+            </div>
+        </a>
+    </div>
+
+    <nav class="sidebar-menu">
+        <div class="nav-label">Menu Pegawai</div>
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <i class="bi bi-speedometer2"></i>
+            <span class="nav-link-text">Dashboard</span>
+        </a>
+
+        <a href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}">
+            <i class="bi bi-pencil-square"></i>
+            <span class="nav-link-text">Penilaian Saya</span>
+        </a>
+
+        <a href="{{ route('assessment.index') }}" class="nav-link {{ request()->routeIs('assessment.*') ? 'active' : '' }}">
+            <i class="bi bi-clock-history"></i>
+            <span class="nav-link-text">Riwayat Penilaian</span>
+        </a>
+
+        <div class="nav-label">Pengaturan</div>
+        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+            <i class="bi bi-person-gear"></i>
+            <span class="nav-link-text">Profil</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <form method="POST" action="{{ route('logout') }}" id="logout-form-pegawai">
+            @csrf
+            <button type="submit" class="btn btn-logout" title="Keluar Aplikasi">
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="nav-link-text">Logout</span>
+            </button>
+        </form>
+    </div>
+</aside>

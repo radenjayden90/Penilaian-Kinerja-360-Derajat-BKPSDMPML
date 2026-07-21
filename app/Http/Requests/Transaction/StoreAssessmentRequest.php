@@ -17,9 +17,8 @@ class StoreAssessmentRequest extends FormRequest
             'target_id' => 'required|exists:employees,id',
             'type' => 'required|in:SUPERIOR,PEER,SUBORDINATE',
             'scores' => 'required|array',
-            'scores.*.score' => 'required|integer|min:1|max:10',
-            'scores.*.comment' => 'nullable|string',
-            'general_notes' => 'nullable|string', // General note, optional (not in schema, but user asked for "Catatan Keseluruhan". We'll need to handle it or save it somewhere if we have a column, wait, Assessment schema doesn't have a note column. Let me check the migration again).
+            'scores.*' => 'required',
+            'general_notes' => 'nullable|string',
         ];
     }
 }

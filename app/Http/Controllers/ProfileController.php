@@ -16,8 +16,29 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        
+        $employee = \App\Models\Employee::with(['department', 'position', 'supervisor', 'role'])
+            ->find($user->id);
+
+        $latestResult = \App\Models\AssessmentResult::with('period')
+            ->where('employee_id', $user->id)
+            ->latest('created_at')
+            ->first();
+
+        $historicalResults = \App\Models\AssessmentResult::with('period')
+            ->where('employee_id', $user->id)
+            ->latest()
+            ->take(6)
+            ->get()
+            ->reverse()
+            ->values();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'employee' => $employee,
+            'latestResult' => $latestResult,
+            'historicalResults' => $historicalResults,
         ]);
     }
 

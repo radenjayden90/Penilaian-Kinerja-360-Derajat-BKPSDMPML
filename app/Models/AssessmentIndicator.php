@@ -21,7 +21,9 @@ class AssessmentIndicator extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('indicator', 'ilike', '%' . $search . '%');
+        if (!$search) return $query;
+        $term = mb_strtolower($search, 'UTF-8');
+        return $query->where(\Illuminate\Support\Facades\DB::raw('LOWER(indicator)'), 'LIKE', '%' . $term . '%');
     }
 
     public function scopeFilterStatus($query, $status)

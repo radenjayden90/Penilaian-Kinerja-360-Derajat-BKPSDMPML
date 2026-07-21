@@ -10,15 +10,18 @@ use Illuminate\Support\Facades\DB;
 use App\Enums\AssessmentType;
 use App\Enums\AssessmentStatus;
 use App\Models\AssessmentCategory;
+use App\Services\AssessmentCalculatorService;
 use Illuminate\Validation\ValidationException;
 
 class AssessmentService
 {
     protected $repository;
+    protected $calculatorService;
 
-    public function __construct(AssessmentRepository $repository)
+    public function __construct(AssessmentRepository $repository, AssessmentCalculatorService $calculatorService)
     {
         $this->repository = $repository;
+        $this->calculatorService = $calculatorService;
     }
 
     /**
@@ -82,18 +85,24 @@ class AssessmentService
 
             $scoreRecords = [];
             foreach ($scoresData as $indicatorId => $data) {
+                $scoreNum = is_array($data) ? ($data['score'] ?? 0) : $data;
+                $commentVal = is_array($data) ? ($data['comment'] ?? null) : null;
+
                 $scoreRecords[] = [
-                    'id' => \Illuminate\Support\Str::uuid(),
+                    'id' => (string) \Illuminate\Support\Str::uuid(),
                     'assessment_id' => $assessment->id,
                     'indicator_id' => $indicatorId,
-                    'score' => $data['score'],
-                    'comment' => $data['comment'] ?? null,
+                    'score' => (float) $scoreNum,
+                    'comment' => $commentVal,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
             }
 
             AssessmentScore::insert($scoreRecords);
+
+            // Real-time automatic calculation for target employee
+            $this->calculatorService->calculateEmployee($target, $activePeriod);
 
             return $assessment;
         });

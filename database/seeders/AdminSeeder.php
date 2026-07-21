@@ -14,12 +14,12 @@ class AdminSeeder extends Seeder
     {
         $role = Role::where("name", EmployeeRole::ADMIN->value)->first();
         
-        Employee::firstOrCreate([
-            "email" => "admin@bkpsdm.go.id"
+        Employee::updateOrCreate([
+            "nip" => "198001012005011001"
         ], [
-            "nip" => "198001012005011001",
-            "name" => "Admin BKPSDM",
-            "password" => Hash::make("password"),
+            "email" => "admin@pemalang.go.id",
+            "name" => "Administrator BKPSDM",
+            "password" => Hash::make("198001012005011001"),
             "role_id" => $role?->id,
             "is_active" => true,
         ]);

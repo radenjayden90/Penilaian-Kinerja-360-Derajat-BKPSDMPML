@@ -1,67 +1,119 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
+
+@section('title', 'Master Data Jabatan')
 @section('header', 'Master Data Jabatan')
+@section('subtitle', 'Kelola data seluruh jabatan ASN di lingkungan instansi')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Jabatan</li>
+@endsection
+
+@section('action_buttons')
+    <a href="{{ route('master.positions.create') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i> Tambah Jabatan
+    </a>
+@endsection
+
 @section('content')
-<x-page-header title="Daftar Jabatan" subtitle="Kelola seluruh data jabatan dalam instansi.">
-    <x-slot:actions>
-        <a href="{{ route('master.positions.create') }}"><x-button variant="primary">Tambah Jabatan</x-button></a>
-    </x-slot>
-</x-page-header>
-@if(session('success'))
-    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-@endif
-<x-card>
-    <div class="p-4 sm:p-6" x-data="{ submitForm() { $refs.searchForm.submit(); } }">
-        <form x-ref="searchForm" method="GET" action="{{ route('master.positions.index') }}" class="flex flex-col sm:flex-row gap-4 mb-6">
-            <div class="flex-1">
-                <x-form.input name="search" value="{{ request('search') }}" @input.debounce.500ms="submitForm()" placeholder="Cari nama jabatan..." />
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <form method="GET" action="{{ route('master.positions.index') }}" class="row g-2">
+            <div class="col-12 col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari nama jabatan..." value="{{ request('search') }}">
+                </div>
             </div>
-            <div class="w-full sm:w-48">
-                <x-form.select name="department_id" @change="submitForm()">
-                    <option value="">Semua Bidang</option>
+            <div class="col-12 col-md-4">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                    <option value="">-- Semua Unit Kerja / Bidang --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
                     @endforeach
-                </x-form.select>
+                </select>
             </div>
-            <div class="w-full sm:w-48">
-                <x-form.select name="status" @change="submitForm()">
-                    <option value="">Semua Status</option>
+            <div class="col-12 col-md-3 d-flex gap-2">
+                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                    <option value="">-- Semua Status --</option>
                     <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
-                </x-form.select>
+                </select>
+                @if(request('search') || request('department_id') || request('status') !== null)
+                    <a href="{{ route('master.positions.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
+                        <i class="bi bi-x-circle"></i>
+                    </a>
+                @endif
             </div>
         </form>
-        <x-table.index>
-            <x-slot:header>
-                <x-table.th>Jabatan</x-table.th>
-                <x-table.th>Bidang</x-table.th>
-                <x-table.th>Level</x-table.th>
-                <x-table.th>Status</x-table.th>
-                <x-table.th class="text-right">Aksi</x-table.th>
-            </x-slot>
-            @forelse($positions as $position)
-                <tr>
-                    <x-table.td><div class="font-medium text-gray-900">{{ $position->name }}</div></x-table.td>
-                    <x-table.td>{{ $position->department->name ?? '-' }}</x-table.td>
-                    <x-table.td>{{ $position->level }}</x-table.td>
-                    <x-table.td>
-                        @if($position->is_active)<x-badge color="green">Aktif</x-badge>@else<x-badge color="red">Nonaktif</x-badge>@endif
-                    </x-table.td>
-                    <x-table.td class="text-right text-sm font-medium">
-                        <a href="{{ route('master.positions.edit', $position) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                        <form action="{{ route('master.positions.destroy', $position) }}" method="POST" class="inline-block" x-data @submit.prevent="if (confirm('Apakah Anda yakin ingin menghapus data ini?')) $el.submit()">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
-                        </form>
-                    </x-table.td>
-                </tr>
-            @empty
-                <x-table.empty colspan="5" message="Tidak ada data jabatan." />
-            @endforelse
-        </x-table.index>
-        <div class="mt-4">{{ $positions->withQueryString()->links() }}</div>
     </div>
-</x-card>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-3" style="width: 50px;">No</th>
+                        <th>Nama Jabatan</th>
+                        <th>Unit Kerja / Bidang</th>
+                        <th>Level</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3" style="width: 140px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($positions as $index => $pos)
+                        <tr>
+                            <td class="ps-3 fw-semibold text-muted">{{ $positions->firstItem() + $index }}</td>
+                            <td>
+                                <div class="fw-semibold text-dark">{{ $pos->name }}</div>
+                            </td>
+                            <td>{{ $pos->department->name ?? '-' }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ $pos->level ?? '-' }}</span></td>
+                            <td>
+                                @if($pos->is_active)
+                                    <span class="badge bg-success bg-opacity-10 text-success">Aktif</span>
+                                @else
+                                    <span class="badge bg-danger bg-opacity-10 text-danger">Nonaktif</span>
+                                @endif
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ route('master.positions.edit', $pos) }}" class="btn btn-outline-primary" title="Edit Data">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="{{ route('master.positions.destroy', $pos) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jabatan ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger" title="Hapus Data">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
+                                Belum ada data jabatan ditemukan.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if($positions->hasPages())
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    Menampilkan {{ $positions->firstItem() }} - {{ $positions->lastItem() }} dari total {{ $positions->total() }} data
+                </small>
+                {{ $positions->withQueryString()->links() }}
+            </div>
+        </div>
+    @endif
+</div>
 @endsection

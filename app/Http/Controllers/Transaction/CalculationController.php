@@ -20,7 +20,12 @@ class CalculationController extends Controller
 
     public function index(Request $request)
     {
-        $activePeriod = Period::where('status', 'OPEN')->first();
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+
+        // Automatic real-time calculation sync
+        if ($activePeriod) {
+            $this->calculator->calculateAll($activePeriod);
+        }
         
         $query = Employee::with(['department', 'position', 'assessmentResult' => function($q) use ($activePeriod) {
             if ($activePeriod) {
@@ -29,9 +34,10 @@ class CalculationController extends Controller
         }]);
 
         if ($request->search) {
-            $query->where(function($q) use ($request) {
-                $q->where('name', 'ilike', '%' . $request->search . '%')
-                  ->orWhere('nip', 'ilike', '%' . $request->search . '%');
+            $term = mb_strtolower($request->search, 'UTF-8');
+            $query->where(function($q) use ($term) {
+                $q->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%')
+                  ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(nip)'), 'LIKE', '%' . $term . '%');
             });
         }
 
@@ -47,7 +53,7 @@ class CalculationController extends Controller
 
     public function calculateAll()
     {
-        $activePeriod = Period::where('status', 'OPEN')->first();
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
         
         if (!$activePeriod) {
             return back()->with('error', 'Tidak ada periode penilaian yang aktif.');
@@ -60,7 +66,7 @@ class CalculationController extends Controller
 
     public function calculate(Employee $employee)
     {
-        $activePeriod = Period::where('status', 'OPEN')->first();
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
         
         if (!$activePeriod) {
             return back()->with('error', 'Tidak ada periode penilaian yang aktif.');
@@ -73,7 +79,7 @@ class CalculationController extends Controller
 
     public function show(Employee $employee)
     {
-        $activePeriod = Period::where('status', 'OPEN')->first();
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
         
         if (!$activePeriod) {
             return back()->with('error', 'Tidak ada periode penilaian yang aktif.');

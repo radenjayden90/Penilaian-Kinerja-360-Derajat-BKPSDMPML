@@ -1,0 +1,180 @@
+@extends('layouts.app')
+
+@section('title', 'Dashboard Pegawai')
+@section('header', 'Dashboard Pegawai')
+@section('subtitle', 'Portal Penilaian Kinerja 360 Derajat ASN Kabupaten Pemalang')
+
+@section('content')
+<!-- Welcome Banner -->
+<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #1E3A5F 0%, #152A45 100%); color: #FFFFFF;">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-8">
+                <h4 class="fw-bold mb-1">Selamat Datang, {{ $user->name ?? 'Pegawai' }}!</h4>
+                <p class="mb-2 text-white-50" style="font-size: 14px;">
+                    NIP. {{ $user->nip ?? '-' }} | {{ $user->position->name ?? 'Jabatan Belum Diatur' }}
+                </p>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <span class="badge bg-white text-dark px-3 py-2" style="font-weight: 500;">
+                        <i class="bi bi-building me-1 text-primary"></i> {{ $user->department->name ?? 'Unit Kerja Belum Diatur' }}
+                    </span>
+                    <span class="badge bg-warning text-dark px-3 py-2" style="font-weight: 500;">
+                        <i class="bi bi-person-badge me-1"></i> {{ $user->role->name ?? 'EMPLOYEE' }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{{ route('transaction.assessments.index') }}" class="btn btn-light fw-semibold text-primary px-4 py-2">
+                    <i class="bi bi-pencil-square me-2"></i>Mulai Penilaian
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Period Alert Banner -->
+@if($activePeriod)
+    <div class="alert alert-info border-0 shadow-sm d-flex align-items-center justify-content-between p-3 mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="bg-info text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                <i class="bi bi-calendar-event fs-5"></i>
+            </div>
+            <div>
+                <div class="fw-bold text-dark">Periode Penilaian Aktif: {{ $activePeriod->name }}</div>
+                <small class="text-muted">
+                    Jadwal: {{ \Carbon\Carbon::parse($activePeriod->start_date)->format('d M Y') }} s/d {{ \Carbon\Carbon::parse($activePeriod->end_date)->format('d M Y') }}
+                </small>
+            </div>
+        </div>
+        <span class="badge bg-success px-3 py-2">Aktif</span>
+    </div>
+@else
+    <div class="alert alert-secondary border-0 shadow-sm d-flex align-items-center gap-3 p-3 mb-4">
+        <i class="bi bi-info-circle fs-4 text-muted"></i>
+        <div>
+            <div class="fw-bold">Tidak Ada Periode Penilaian Aktif Saat Ini</div>
+            <small class="text-muted">Silakan tunggu pemberitahuan dari BKPSDM untuk pembukaan periode penilaian kinerja berikutnya.</small>
+        </div>
+    </div>
+@endif
+
+<!-- Evaluation Task Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold text-muted" style="font-size: 13px;">Total Tugas Penilaian</span>
+                    <i class="bi bi-card-checklist text-primary fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0" style="color: #1E3A5F;">{{ $myAssessments->count() }}</h3>
+                <small class="text-muted">Target evaluasi disiapkan</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold text-muted" style="font-size: 13px;">Sudah Diisi</span>
+                    <i class="bi bi-check-circle text-success fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-success mb-0">{{ $submittedCount }}</h3>
+                <small class="text-muted">Formulir selesai diserahkan</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold text-muted" style="font-size: 13px;">Belum Diisi</span>
+                    <i class="bi bi-clock-history text-warning fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-warning mb-0">{{ $pendingCount }}</h3>
+                <small class="text-muted">Menunggu pengisian Anda</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold text-muted" style="font-size: 13px;">Atasan Langsung</span>
+                    <i class="bi bi-person-up text-info fs-4"></i>
+                </div>
+                <div class="fw-bold text-dark text-truncate" style="font-size: 14px;">
+                    {{ $user->supervisor->name ?? 'Belum Ditentukan' }}
+                </div>
+                <small class="text-muted">NIP. {{ $user->supervisor->nip ?? '-' }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- My Evaluation List Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
+        <span class="fw-semibold"><i class="bi bi-list-check text-primary me-2"></i>Daftar Penilaian Periode Ini</span>
+        <a href="{{ route('transaction.assessments.index') }}" class="btn btn-sm btn-primary">
+            Lihat Semua Penilaian Saya
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-3">Target Pegawai</th>
+                        <th>Jabatan / Unit Kerja</th>
+                        <th>Tipe Evaluasi</th>
+                        <th>Status</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($myAssessments as $assessment)
+                        <tr>
+                            <td class="ps-3">
+                                <div class="fw-semibold text-dark">{{ $assessment->employee->name ?? '-' }}</div>
+                                <small class="text-muted">NIP. {{ $assessment->employee->nip ?? '-' }}</small>
+                            </td>
+                            <td>
+                                <div>{{ $assessment->employee->position->name ?? '-' }}</div>
+                                <small class="text-muted">{{ $assessment->employee->department->name ?? '-' }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                    {{ $assessment->assessment_type->value ?? $assessment->assessment_type }}
+                                </span>
+                            </td>
+                            <td>
+                                @if(($assessment->status->value ?? $assessment->status) === 'COMPLETED')
+                                    <span class="badge bg-success bg-opacity-10 text-success">Selesai</span>
+                                @else
+                                    <span class="badge bg-warning bg-opacity-10 text-warning">Belum Diisi</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('transaction.assessments.index') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil me-1"></i> Isi Evaluasi
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
+                                Belum ada daftar penilaian yang ditugaskan kepada Anda pada periode ini.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection

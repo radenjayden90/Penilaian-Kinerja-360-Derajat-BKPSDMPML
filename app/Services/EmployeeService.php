@@ -1,4 +1,5 @@
-﻿<?php
+<?php
+
 namespace App\Services;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Hash;

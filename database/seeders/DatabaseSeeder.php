@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             DepartmentSeeder::class,
             PositionSeeder::class,
+            UserSeeder::class,
             AdminSeeder::class,
             AssessmentCategorySeeder::class,
             AssessmentIndicatorSeeder::class,

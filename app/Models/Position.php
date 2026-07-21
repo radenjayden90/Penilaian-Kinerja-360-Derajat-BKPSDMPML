@@ -29,7 +29,9 @@ class Position extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'ilike', '%' . $search . '%');
+        if (!$search) return $query;
+        $term = mb_strtolower($search, 'UTF-8');
+        return $query->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%');
     }
 
     public function scopeFilterStatus($query, $status)

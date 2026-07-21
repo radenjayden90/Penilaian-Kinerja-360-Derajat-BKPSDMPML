@@ -1,52 +1,86 @@
-﻿@extends('layouts.app')
-@section('header', 'Tambah Periode')
+@extends('layouts.app')
+
+@section('title', 'Buka Periode Penilaian Baru')
+@section('header', 'Buka Periode Penilaian Baru')
+@section('subtitle', 'Form pengaturan jadwal dan periode evaluasi kinerja ASN')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('master.periods.index') }}">Periode Penilaian</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Tambah</li>
+@endsection
+
 @section('content')
-<x-page-header title="Tambah Periode" subtitle="Tambahkan data periode penilaian baru.">
-    <x-slot:actions><a href="{{ route('master.periods.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">&larr; Kembali</a></x-slot>
-</x-page-header>
-<x-card class="max-w-2xl">
-    <div class="p-4 sm:p-6">
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
-                </div>
-                <div class="ml-3"><p class="text-sm text-blue-700">Jika Anda menyimpan periode ini sebagai <b>Aktif</b>, maka periode aktif sebelumnya akan otomatis di-set menjadi <b>CLOSED</b> dan Tidak Aktif.</p></div>
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <span class="fw-semibold"><i class="bi bi-calendar-plus me-2 text-primary"></i>Form Periode Penilaian</span>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('master.periods.store') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Nama Periode Penilaian <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Contoh: Penilaian Kinerja Semester I Tahun 2026" required>
+                        @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-sm-6">
+                            <label for="year" class="form-label fw-semibold">Tahun <span class="text-danger">*</span></label>
+                            <input type="number" name="year" id="year" class="form-control @error('year') is-invalid @enderror" value="{{ old('year', date('Y')) }}" required>
+                            @error('year') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="month" class="form-label fw-semibold">Bulan ke- <span class="text-danger">*</span></label>
+                            <input type="number" min="1" max="12" name="month" id="month" class="form-control @error('month') is-invalid @enderror" value="{{ old('month', date('n')) }}" required>
+                            @error('month') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-sm-6">
+                            <label for="start_date" class="form-label fw-semibold">Tanggal Mulai <span class="text-danger">*</span></label>
+                            <input type="date" name="start_date" id="start_date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date', date('Y-m-d')) }}" required>
+                            @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="end_date" class="form-label fw-semibold">Tanggal Selesai <span class="text-danger">*</span></label>
+                            <input type="date" name="end_date" id="end_date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date', date('Y-m-d', strtotime('+30 days'))) }}" required>
+                            @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-sm-6">
+                            <label for="status" class="form-label fw-semibold">Status Periode <span class="text-danger">*</span></label>
+                            <select name="status" id="status" class="form-select @error('status') is-invalid @enderror" required>
+                                <option value="OPEN" {{ old('status', 'OPEN') === 'OPEN' ? 'selected' : '' }}>OPEN (Terbuka untuk Penilaian)</option>
+                                <option value="CLOSED" {{ old('status') === 'CLOSED' ? 'selected' : '' }}>CLOSED (Ditutup)</option>
+                                <option value="ARCHIVED" {{ old('status') === 'ARCHIVED' ? 'selected' : '' }}>ARCHIVED (Arsip)</option>
+                            </select>
+                            @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12 col-sm-6 align-self-center mt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', '1') == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold" for="is_active">Set Sebagai Periode Aktif</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                        <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Simpan Periode</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <form action="{{ route('master.periods.store') }}" method="POST">
-            @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <x-form.input name="name" label="Nama Periode (Contoh: Penilaian Q1 2026)" value="{{ old('name') }}" error="{{ $errors->first('name') }}" required />
-                </div>
-                <x-form.select name="month" label="Bulan" error="{{ $errors->first('month') }}" required>
-                    <option value="">-- Pilih Bulan --</option>
-                    @for($i = 1; $i <= 12; $i++)
-                        <option value="{{ $i }}" {{ old('month', date('n')) == $i ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
-                    @endfor
-                </x-form.select>
-                <x-form.input name="year" label="Tahun" type="number" min="2020" max="2100" value="{{ old('year', date('Y')) }}" error="{{ $errors->first('year') }}" required />
-                
-                <x-form.input name="start_date" label="Tanggal Mulai" type="date" value="{{ old('start_date') }}" error="{{ $errors->first('start_date') }}" required />
-                <x-form.input name="end_date" label="Tanggal Selesai" type="date" value="{{ old('end_date') }}" error="{{ $errors->first('end_date') }}" required />
-                
-                <x-form.select name="status" label="Status Data" error="{{ $errors->first('status') }}" required>
-                    <option value="OPEN" {{ old('status', 'OPEN') == 'OPEN' ? 'selected' : '' }}>OPEN</option>
-                    <option value="CLOSED" {{ old('status') == 'CLOSED' ? 'selected' : '' }}>CLOSED</option>
-                    <option value="ARCHIVED" {{ old('status') == 'ARCHIVED' ? 'selected' : '' }}>ARCHIVED</option>
-                </x-form.select>
-                <x-form.select name="is_active" label="Status Aktif Berjalan" error="{{ $errors->first('is_active') }}">
-                    <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Aktif</option>
-                    <option value="0" {{ old('is_active', '0') == '0' ? 'selected' : '' }}>Nonaktif</option>
-                </x-form.select>
-            </div>
-            
-            <div class="mt-6 flex items-center justify-end gap-x-6">
-                <a href="{{ route('master.periods.index') }}" class="text-sm font-semibold text-gray-900">Batal</a>
-                <x-button type="submit" variant="primary">Simpan</x-button>
-            </div>
-        </form>
     </div>
-</x-card>
+</div>
 @endsection

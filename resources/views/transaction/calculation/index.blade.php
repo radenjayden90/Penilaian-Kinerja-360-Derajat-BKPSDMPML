@@ -1,127 +1,118 @@
 @extends('layouts.app')
 
-@section('header', 'Perhitungan Nilai Akhir')
+@section('title', 'Perhitungan Nilai 360°')
+@section('header', 'Kalkulasi Skor Kinerja 360° ASN')
+@section('subtitle', 'Proses kalkulasi nilai agregat berdasarkan pembobotan (Atasan, Sejawat, Bawahan, Diri Sendiri)')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Perhitungan Nilai</li>
+@endsection
+
+@section('action_buttons')
+    <form action="{{ route('transaction.calculations.calculateAll') }}" method="POST" class="d-inline" onsubmit="return confirm('Proses ini akan menghitung ulang skor akhir seluruh pegawai pada periode aktif. Lanjutkan?')">
+        @csrf
+        <button type="submit" class="btn btn-success fw-semibold">
+            <i class="bi bi-calculator me-1"></i> Hitung Ulang Seluruh Pegawai
+        </button>
+    </form>
+@endsection
 
 @section('content')
-<x-page-header title="Perhitungan Nilai 360" subtitle="Manajemen proses kalkulasi hasil penilaian kinerja masing-masing pegawai.">
-    <x-slot:actions>
-        @if($activePeriod)
-            <form action="{{ route('transaction.calculations.calculateAll') }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin memproses perhitungan masal untuk semua pegawai pada periode aktif ini?');">
-                @csrf
-                <x-button type="submit" variant="primary">Hitung Semua</x-button>
-            </form>
-        @endif
-    </x-slot>
-</x-page-header>
-
-<x-card>
-    <div class="p-4 sm:p-6" x-data="{ submitForm() { $refs.searchForm.submit(); } }">
-        
-        @if(session('success'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                <span class="block sm:inline">{{ session('success') }}</span>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+        <form method="GET" action="{{ route('transaction.calculations.index') }}" class="row g-2">
+            <div class="col-12 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari NIP atau nama pegawai..." value="{{ request('search') }}">
+                </div>
             </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
-
-        @if(!$activePeriod)
-            <div class="mb-6 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
-                <strong>Perhatian:</strong> Saat ini tidak ada periode penilaian yang berstatus OPEN. Perhitungan hanya bisa dilakukan pada periode aktif.
-            </div>
-        @else
-            <div class="mb-6 bg-indigo-50 border border-indigo-200 text-indigo-700 px-4 py-3 rounded">
-                Menampilkan data pada Periode Aktif: <strong>{{ $activePeriod->name }}</strong>
-            </div>
-        @endif
-
-        <form x-ref="searchForm" method="GET" action="{{ route('transaction.calculations.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div>
-                <x-form.input name="search" value="{{ request('search') }}" @input.debounce.500ms="submitForm()" placeholder="Cari NIP atau Nama..." />
-            </div>
-            <div>
-                <x-form.select name="department_id" @change="submitForm()">
-                    <option value="">Semua Bidang</option>
+            <div class="col-12 col-md-4">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                    <option value="">-- Semua Unit Kerja --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
                     @endforeach
-                </x-form.select>
+                </select>
             </div>
-            <div>
-                <x-form.select name="per_page" @change="submitForm()">
-                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10 Per Halaman</option>
-                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25 Per Halaman</option>
-                    <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50 Per Halaman</option>
-                </x-form.select>
+            <div class="col-12 col-md-2">
+                @if(request('search') || request('department_id'))
+                    <a href="{{ route('transaction.calculations.index') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-x-circle me-1"></i> Reset
+                    </a>
+                @endif
             </div>
         </form>
+    </div>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead>
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pegawai</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Final Score</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="ps-3" style="width: 50px;">No</th>
+                        <th>Pegawai ASN</th>
+                        <th>Jabatan & Unit Kerja</th>
+                        <th class="text-center">Skor Akhir 360°</th>
+                        <th class="text-center">Kategori Nilai</th>
+                        <th class="text-end pe-3" style="width: 170px;">Aksi Kalkulasi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($employees as $employee)
+                <tbody>
+                    @forelse($employees as $index => $emp)
                         @php
-                            $result = $employee->assessmentResult;
+                            $res = $emp->assessmentResult;
                         @endphp
                         <tr>
-                            <td class="px-6 py-4">
-                                <div class="font-medium text-gray-900">{{ $employee->name }}</div>
-                                <div class="text-sm text-gray-500">{{ $employee->nip }} | {{ $employee->position->name ?? '-' }}</div>
+                            <td class="ps-3 fw-semibold text-muted">{{ $employees->firstItem() + $index }}</td>
+                            <td>
+                                <div class="fw-semibold text-dark">{{ $emp->name }}</div>
+                                <small class="text-muted">NIP. {{ $emp->nip }}</small>
                             </td>
-                            <td class="px-6 py-4">
-                                @if($result)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $result->status->badgeColor() }}">
-                                        {{ $result->status->label() }}
-                                    </span>
-                                    @if($result->status === \App\Enums\CalculationStatus::PENDING)
-                                        <div class="text-xs text-red-500 mt-1 max-w-xs truncate" title="{{ $result->pending_reason }}">
-                                            {{ Str::limit($result->pending_reason, 40) }}
-                                        </div>
-                                    @endif
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                        Belum Dihitung
-                                    </span>
-                                @endif
+                            <td>
+                                <div class="fw-medium text-dark">{{ $emp->position->name ?? '-' }}</div>
+                                <small class="text-muted">{{ $emp->department->name ?? '-' }}</small>
                             </td>
-                            <td class="px-6 py-4 text-center font-bold text-gray-700">
-                                {{ $result?->final_score ? number_format($result->final_score, 2) : '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-center whitespace-nowrap">
-                                @if($result?->category)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $result->category->badgeColor() }}">
-                                        {{ $result->category->label() }}
+                            <td class="text-center">
+                                @if($res && $res->final_score !== null)
+                                    <span class="fw-bold fs-5 text-primary" style="color: #1E3A5F !important;">
+                                        {{ number_format($res->final_score, 2) }}
                                     </span>
                                 @else
-                                    -
+                                    <span class="text-muted small">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    @if($activePeriod)
-                                        <form action="{{ route('transaction.calculations.calculate', $employee->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="text-indigo-600 hover:text-indigo-900" title="Hitung / Hitung Ulang">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                            </button>
-                                        </form>
-                                    @endif
-
-                                    @if($result)
-                                        <a href="{{ route('transaction.calculations.show', $employee->id) }}" class="text-blue-600 hover:text-blue-900" title="Lihat Detail">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <td class="text-center">
+                                @if($res && $res->category)
+                                    @php
+                                        $catVal = is_object($res->category) ? $res->category->value : $res->category;
+                                        $badgeColor = match($catVal) {
+                                            'SANGAT_BAIK' => 'bg-success',
+                                            'BAIK' => 'bg-primary',
+                                            'CUKUP' => 'bg-warning text-dark',
+                                            'KURANG' => 'bg-danger',
+                                            default => 'bg-secondary'
+                                        };
+                                    @endphp
+                                    <span class="badge {{ $badgeColor }} px-3 py-1.5 fs-6">
+                                        {{ str_replace('_', ' ', $catVal) }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-light text-muted border">Belum Dihitung</span>
+                                @endif
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="btn-group btn-group-sm">
+                                    <form action="{{ route('transaction.calculations.calculate', $emp) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-primary" title="Hitung Skor Pegawai Ini">
+                                            <i class="bi bi-calculator me-1"></i>Hitung
+                                        </button>
+                                    </form>
+                                    @if($res)
+                                        <a href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Rincian Rapor">
+                                            <i class="bi bi-eye"></i>
                                         </a>
                                     @endif
                                 </div>
@@ -129,18 +120,26 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-500">
-                                Tidak ada data pegawai yang ditemukan.
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
+                                Belum ada data perhitungan nilai pegawai.
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        
-        <div class="mt-4">
-            {{ $employees->withQueryString()->links() }}
-        </div>
     </div>
-</x-card>
+
+    @if($employees->hasPages())
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    Menampilkan {{ $employees->firstItem() }} - {{ $employees->lastItem() }} dari total {{ $employees->total() }} data
+                </small>
+                {{ $employees->withQueryString()->links() }}
+            </div>
+        </div>
+    @endif
+</div>
 @endsection

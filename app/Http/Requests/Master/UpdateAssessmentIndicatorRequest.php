@@ -1,10 +1,19 @@
-﻿<?php
+<?php
+
 namespace App\Http\Requests\Master;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAssessmentIndicatorRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->has('is_active') ? true : false,
+        ]);
+    }
+
     public function rules(): array {
         return [
             'assessment_category_id' => 'required|exists:assessment_categories,id',

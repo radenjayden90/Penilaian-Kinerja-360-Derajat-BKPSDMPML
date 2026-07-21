@@ -26,9 +26,9 @@ class AssessmentController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $employee = Employee::where('email', $user->email)->first();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first() ?? $user;
 
-        if (!$employee) {
+        if (!$employee instanceof Employee) {
             return redirect()->route('dashboard')->with('error', 'Akun Anda tidak terhubung dengan data Pegawai.');
         }
 
@@ -94,7 +94,7 @@ class AssessmentController extends Controller
     public function store(StoreAssessmentRequest $request)
     {
         $user = Auth::user();
-        $assessor = Employee::where('email', $user->email)->firstOrFail();
+        $assessor = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first() ?? $user;
         $target = Employee::findOrFail($request->target_id);
 
         try {
@@ -107,6 +107,14 @@ class AssessmentController extends Controller
 
     public function show(Assessment $assessment)
     {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        // Non-admin users can only view their own assessments
+        if ($employee && !$employee->isAdmin() && $assessment->assessor_id !== $employee->id && $assessment->employee_id !== $employee->id) {
+            return redirect()->route('assessment.index')->with('error', 'Anda tidak memiliki akses untuk melihat penilaian ini.');
+        }
+
         $assessment->load(['assessor', 'employee', 'scores.indicator.category', 'period']);
         
         $groupedScores = $assessment->scores->groupBy(function($score) {
@@ -114,5 +122,34 @@ class AssessmentController extends Controller
         });
 
         return view('transaction.assessments.show', compact('assessment', 'groupedScores'));
+    }
+
+    public function history(Request $request)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee) {
+            return redirect()->route('dashboard')->with('error', 'Akun Anda tidak terhubung dengan data Pegawai.');
+        }
+
+        $selectedPeriodId = $request->input('period_id');
+        $periods = \App\Models\Period::orderBy('year', 'desc')->orderBy('month', 'desc')->get();
+
+        // Query strictly the logged-in employee's own 360° evaluation results
+        $myResults = \App\Models\AssessmentResult::with(['period'])
+            ->where('employee_id', $employee->id)
+            ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
+                return $q->where('period_id', $selectedPeriodId);
+            })
+            ->latest()
+            ->paginate(10);
+
+        return view('assessment.index', compact(
+            'employee',
+            'periods',
+            'selectedPeriodId',
+            'myResults'
+        ));
     }
 }
