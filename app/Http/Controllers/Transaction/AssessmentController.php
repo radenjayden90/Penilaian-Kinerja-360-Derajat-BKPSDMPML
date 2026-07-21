@@ -28,8 +28,8 @@ class AssessmentController extends Controller
         $user = Auth::user();
         $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first() ?? $user;
 
-        if (!$employee instanceof Employee) {
-            return redirect()->route('dashboard')->with('error', 'Akun Anda tidak terhubung dengan data Pegawai.');
+        if (!$employee instanceof Employee || $employee->isAdmin()) {
+            return redirect()->route('dashboard')->with('error', 'Akun Anda tidak memiliki akses untuk mengisi penilaian.');
         }
 
         $activePeriod = $this->repository->getActivePeriod();
@@ -69,6 +69,13 @@ class AssessmentController extends Controller
 
     public function create(Request $request)
     {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee || $employee->isAdmin()) {
+            return redirect()->route('dashboard')->with('error', 'Akun Anda tidak memiliki akses untuk mengisi penilaian.');
+        }
+
         $targetId = $request->query('target_id');
         $type = $request->query('type'); // SUPERIOR, PEER, SUBORDINATE
 
@@ -96,6 +103,14 @@ class AssessmentController extends Controller
 
         try {
             $this->assessmentService->storeAssessment($assessor, $target, $request->type, $request->scores, $request->general_notes);
+            
+            // Automatic calculation after assessment is stored
+            $activePeriod = \App\Models\Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+            if ($activePeriod) {
+                $calculator = app(\App\Services\AssessmentCalculatorService::class);
+                $calculator->calculateEmployee($target, $activePeriod);
+            }
+
             return redirect()->route('transaction.assessments.index')->with('success', 'Penilaian berhasil disimpan.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();
@@ -130,6 +145,13 @@ class AssessmentController extends Controller
             return redirect()->route('dashboard')->with('error', 'Akun Anda tidak terhubung dengan data Pegawai.');
         }
 
+        // Exclude Admin and Kepala BKPSDM from viewing history
+        $posName = strtolower($employee->position?->name ?? '');
+        $isKepalaBkpsdm = ($employee->position?->level == '1' || str_contains($posName, 'kepala bkpsdm'));
+        if ($employee->isAdmin() || $isKepalaBkpsdm) {
+            return redirect()->route('dashboard')->with('error', 'Riwayat penilaian tidak tersedia untuk akun Anda.');
+        }
+
         $selectedPeriodId = $request->input('period_id');
         $periods = \App\Models\Period::orderBy('year', 'desc')->orderBy('month', 'desc')->get();
 
@@ -148,5 +170,181 @@ class AssessmentController extends Controller
             'selectedPeriodId',
             'myResults'
         ));
+    }
+
+    public function exportPdf(Request $request, $id)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee) {
+            abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
+        }
+
+        $result = \App\Models\AssessmentResult::with(['employee.position', 'employee.department', 'period'])
+            ->findOrFail($id);
+
+        if (!$employee->isAdmin() && $result->employee_id !== $employee->id) {
+            abort(403, 'Anda tidak memiliki akses untuk mengekspor rapor ini.');
+        }
+
+        return view('assessment.print', compact('result'));
+    }
+
+    public function exportExcel(Request $request, $id)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee) {
+            abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
+        }
+
+        $result = \App\Models\AssessmentResult::with(['employee.position', 'employee.department', 'period'])
+            ->findOrFail($id);
+
+        if (!$employee->isAdmin() && $result->employee_id !== $employee->id) {
+            abort(403, 'Anda tidak memiliki akses untuk mengekspor rapor ini.');
+        }
+
+        $fileName = 'rapor_kinerja_360_' . ($result->employee->nip ?? 'pegawai') . '_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $posName = strtolower($result->employee->position?->name ?? '');
+        $isKabid = ($result->employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category);
+        $catLabel = $catEnum ? $catEnum->label() : $result->category;
+
+        $callback = function() use($result, $isKabid, $catLabel) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF");
+
+            fputcsv($file, ['RAPOR INDIVIDU HASIL PENILAIAN KINERJA 360 DERAJAT']);
+            fputcsv($file, ['']);
+            fputcsv($file, ['Nama Pegawai', $result->employee->name ?? '-']);
+            fputcsv($file, ['NIP', $result->employee->nip ?? '-']);
+            fputcsv($file, ['Jabatan', $result->employee->position->name ?? '-']);
+            fputcsv($file, ['Unit Kerja', $result->employee->department->name ?? '-']);
+            fputcsv($file, ['Periode Penilaian', $result->period->name ?? '-']);
+            fputcsv($file, ['']);
+
+            fputcsv($file, ['No', 'Komponen Penilaian', 'Bobot', 'Skor Rata-Rata (1-10)', 'Skor Terbobot (10-100)']);
+
+            if ($isKabid) {
+                fputcsv($file, [1, 'Penilaian Atasan (Kepala BKPSDM)', '50%', number_format($result->subordinate_average ?? 0, 2), number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2)]);
+                fputcsv($file, [2, 'Penilaian Sejawat (Rekan Kepala Bidang)', '30%', number_format($result->peer_average ?? 0, 2), number_format(($result->peer_average ?? 0) * 10 * 0.30, 2)]);
+                fputcsv($file, [3, 'Penilaian Bawahan (Staf Divisi)', '20%', number_format($result->superior_average ?? 0, 2), number_format(($result->superior_average ?? 0) * 10 * 0.20, 2)]);
+            } else {
+                fputcsv($file, [1, 'Penilaian Atasan (Kepala Bidang)', '50%', number_format($result->subordinate_average ?? 0, 2), number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2)]);
+                fputcsv($file, [2, 'Penilaian Sejawat (Rekan Staff)', '50%', number_format($result->peer_average ?? 0, 2), number_format(($result->peer_average ?? 0) * 10 * 0.50, 2)]);
+            }
+
+            fputcsv($file, ['', '', '', 'Nilai Akhir Kinerja 360°', number_format($result->final_score ?? 0, 2)]);
+            fputcsv($file, ['', '', '', 'Predikat Kategori', strtoupper($catLabel ?? '-')]);
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportAllPdf(Request $request)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee) {
+            abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
+        }
+
+        $results = \App\Models\AssessmentResult::with(['period'])
+            ->where('employee_id', $employee->id)
+            ->latest()
+            ->get();
+
+        return view('assessment.print_all', compact('employee', 'results'));
+    }
+
+    public function exportAllExcel(Request $request)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first();
+
+        if (!$employee) {
+            abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
+        }
+
+        $results = \App\Models\AssessmentResult::with(['period'])
+            ->where('employee_id', $employee->id)
+            ->latest()
+            ->get();
+
+        $fileName = 'rekap_rapor_kinerja_360_' . ($employee->nip ?? 'pegawai') . '_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $posName = strtolower($employee->position?->name ?? '');
+        $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+
+        $callback = function() use($employee, $results, $isKabid) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF");
+
+            fputcsv($file, ['REKAPITULASI HISTORI HASIL PENILAIAN KINERJA 360 DERAJAT']);
+            fputcsv($file, ['']);
+            fputcsv($file, ['Nama Pegawai', $employee->name ?? '-']);
+            fputcsv($file, ['NIP', $employee->nip ?? '-']);
+            fputcsv($file, ['Jabatan', $employee->position->name ?? '-']);
+            fputcsv($file, ['Unit Kerja', $employee->department->name ?? '-']);
+            fputcsv($file, ['']);
+
+            if ($isKabid) {
+                fputcsv($file, ['No', 'Periode Penilaian', 'Skor Atasan (50%)', 'Skor Sejawat (30%)', 'Skor Bawahan (20%)', 'Nilai Akhir Kinerja 360°', 'Kategori Predikat']);
+                foreach ($results as $index => $res) {
+                    $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                    $catLabel = $catEnum ? $catEnum->label() : $res->category;
+                    fputcsv($file, [
+                        $index + 1,
+                        $res->period->name ?? '-',
+                        number_format($res->subordinate_average ?? 0, 2),
+                        number_format($res->peer_average ?? 0, 2),
+                        number_format($res->superior_average ?? 0, 2),
+                        number_format($res->final_score ?? 0, 2),
+                        strtoupper($catLabel ?? '-')
+                    ]);
+                }
+            } else {
+                fputcsv($file, ['No', 'Periode Penilaian', 'Skor Atasan (50%)', 'Skor Sejawat (50%)', 'Nilai Akhir Kinerja 360°', 'Kategori Predikat']);
+                foreach ($results as $index => $res) {
+                    $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                    $catLabel = $catEnum ? $catEnum->label() : $res->category;
+                    fputcsv($file, [
+                        $index + 1,
+                        $res->period->name ?? '-',
+                        number_format($res->subordinate_average ?? 0, 2),
+                        number_format($res->peer_average ?? 0, 2),
+                        number_format($res->final_score ?? 0, 2),
+                        strtoupper($catLabel ?? '-')
+                    ]);
+                }
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -21,16 +21,27 @@ class AssessmentCalculatorService
         Log::info("Starting mass calculation for period: {$period->name}");
         $processed = 0;
 
-        Employee::where('is_active', true)->chunk(100, function ($employees) use ($period, &$processed) {
-            foreach ($employees as $employee) {
-                try {
-                    $this->calculateEmployee($employee, $period);
-                    $processed++;
-                } catch (\Exception $e) {
-                    Log::error("Failed to calculate for employee {$employee->id}: " . $e->getMessage());
+        Employee::where('is_active', true)
+            ->whereHas('role', function($q) {
+                $q->whereNotIn('name', ['ADMIN', 'SUPER_ADMIN']);
+            })
+            ->where(function($q) {
+                $q->whereNull('position_id')
+                  ->orWhereHas('position', function($pos) {
+                      $pos->where('level', '!=', '1')
+                          ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kepala bkpsdm%');
+                  });
+            })
+            ->chunk(100, function ($employees) use ($period, &$processed) {
+                foreach ($employees as $employee) {
+                    try {
+                        $this->calculateEmployee($employee, $period);
+                        $processed++;
+                    } catch (\Exception $e) {
+                        Log::error("Failed to calculate for employee {$employee->id}: " . $e->getMessage());
+                    }
                 }
-            }
-        });
+            });
 
         Log::info("Completed mass calculation. Processed {$processed} employees.");
         return $processed;
@@ -43,10 +54,17 @@ class AssessmentCalculatorService
     {
         Log::info("Calculating for employee: {$employee->name} ({$employee->nip})");
 
-        // 1. Determine if employee has subordinates
-        $hasSubordinates = Employee::where('supervisor_id', $employee->id)->where('is_active', true)->exists();
+        $posName = strtolower($employee->position?->name ?? '');
+        $isKepalaBkpsdm = ($employee->position?->level == '1' || str_contains($posName, 'kepala bkpsdm'));
+        if ($employee->isAdmin() || $isKepalaBkpsdm) {
+            Log::info("Skipping calculation for Admin/Kepala BKPSDM: {$employee->name}");
+            return null;
+        }
 
-        // 2. Fetch all SUBMITTED assessments for this employee in this period
+        // Determine if employee is Kabid (level 2)
+        $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+
+        // Fetch all SUBMITTED assessments for this employee in this period
         $assessments = Assessment::with(['scores.indicator.category'])
             ->where('employee_id', $employee->id)
             ->where('period_id', $period->id)
@@ -57,49 +75,66 @@ class AssessmentCalculatorService
         $peerAssessments = $assessments->where('assessment_type', 'PEER');
         $subordinateAssessments = $assessments->where('assessment_type', 'SUBORDINATE');
 
-        // 3. Validation Logic
+        // Validation Logic
         $pendingReason = [];
         
-        // Superior validation (must have exactly 1 if they have a superior registered)
-        if ($employee->supervisor_id && $superiorAssessments->count() < 1) {
-            $pendingReason[] = "Atasan belum melakukan penilaian.";
-        }
+        if ($isKabid) {
+            // Atasan (Kepala BKPSDM) assessment (type SUBORDINATE)
+            if ($subordinateAssessments->count() < 1) {
+                $pendingReason[] = "Atasan (Kepala BKPSDM) belum melakukan penilaian.";
+            }
 
-        // Peer validation (must have exactly 3)
-        if ($peerAssessments->count() < 3) {
-            $pendingReason[] = "Penilaian rekan kerja kurang dari 3 (baru " . $peerAssessments->count() . ").";
-        }
+            // Peers (Rekan Kabid) assessment (type PEER)
+            if ($peerAssessments->count() < 3) {
+                $pendingReason[] = "Penilaian rekan kerja kurang dari 3 (baru " . $peerAssessments->count() . ").";
+            }
 
-        // Subordinate validation (if applicable, must have ALL active subordinates submit)
-        if ($hasSubordinates) {
+            // Subordinate (Staff) assessment (type SUPERIOR)
             $activeSubordinatesCount = Employee::where('supervisor_id', $employee->id)->where('is_active', true)->count();
-            if ($subordinateAssessments->count() < $activeSubordinatesCount) {
-                $pendingReason[] = "Belum semua bawahan melakukan penilaian (" . $subordinateAssessments->count() . "/" . $activeSubordinatesCount . ").";
+            if ($superiorAssessments->count() < $activeSubordinatesCount) {
+                $pendingReason[] = "Belum semua bawahan melakukan penilaian (" . $superiorAssessments->count() . "/" . $activeSubordinatesCount . ").";
+            }
+        } else {
+            // Staff
+            // Atasan (Kabid) assessment (type SUBORDINATE)
+            if ($subordinateAssessments->count() < 1) {
+                $pendingReason[] = "Atasan (Kabid) belum melakukan penilaian.";
+            }
+
+            // Peers (Rekan Staff) assessment (type PEER)
+            if ($peerAssessments->count() < 3) {
+                $pendingReason[] = "Penilaian rekan kerja kurang dari 3 (baru " . $peerAssessments->count() . ").";
             }
         }
 
         $status = count($pendingReason) > 0 ? CalculationStatus::PENDING : CalculationStatus::COMPLETE;
         $reason = count($pendingReason) > 0 ? implode(' ', $pendingReason) : null;
 
-        // 4. Calculate Averages
+        // Calculate Averages
         $superiorAvg = $superiorAssessments->count() > 0 ? $this->calculateAssessmentAverage($superiorAssessments) : 0;
         $peerAvg = $peerAssessments->count() > 0 ? $this->calculateAssessmentAverage($peerAssessments) : 0;
-        $subordinateAvg = ($hasSubordinates && $subordinateAssessments->count() > 0) ? $this->calculateAssessmentAverage($subordinateAssessments) : 0;
+        $subordinateAvg = $subordinateAssessments->count() > 0 ? $this->calculateAssessmentAverage($subordinateAssessments) : 0;
 
-        // 5. Calculate Final Score & Weights
-        $superiorWeight = 0.50;
-        $peerWeight = $hasSubordinates ? 0.30 : 0.50;
-        $subordinateWeight = $hasSubordinates ? 0.20 : 0.00;
+        // Calculate Final Score & Weights
+        if ($isKabid) {
+            $superiorWeight = 0.20; // staff / subordinates (SUPERIOR type)
+            $peerWeight = 0.30;     // rekan kabid (PEER type)
+            $subordinateWeight = 0.50; // kepala bkpsdm / superior (SUBORDINATE type)
+        } else {
+            $superiorWeight = 0.00;
+            $peerWeight = 0.50;     // rekan staff (PEER type)
+            $subordinateWeight = 0.50; // kabid (SUBORDINATE type)
+        }
 
         $rawScore = ($superiorAvg * $superiorWeight) + ($peerAvg * $peerWeight) + ($subordinateAvg * $subordinateWeight);
         
         // Scale 1-10 to 10-100 for category evaluation
         $finalScore = $rawScore * 10;
 
-        // 6. Determine Category
+        // Determine Category
         $category = $this->determineCategory($finalScore);
 
-        // 7. Save
+        // Save
         return $this->saveResult($employee, $period, [
             'superior_average' => $superiorAvg,
             'peer_average' => $peerAvg,

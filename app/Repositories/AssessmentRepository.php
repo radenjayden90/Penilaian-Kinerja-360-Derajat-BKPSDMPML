@@ -29,8 +29,8 @@ class AssessmentRepository
         $roleName = strtolower($employee->role?->name ?? '');
         $positionName = strtolower($employee->position?->name ?? '');
         
-        // Kepala BKPSDM & Kabid do not evaluate superiors
-        if ($employee->position?->level == '1' || $employee->position?->level == '2' || str_contains($positionName, 'kepala bkpsdm') || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid')) {
+        // Kepala BKPSDM & Kabid (including Sekretaris) do not evaluate superiors
+        if ($employee->position?->level == '1' || $employee->position?->level == '2' || str_contains($positionName, 'kepala bkpsdm') || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid') || str_contains($positionName, 'sekretaris')) {
             return null;
         }
 
@@ -45,14 +45,14 @@ class AssessmentRepository
         $roleName = strtolower($employee->role?->name ?? '');
         $positionName = strtolower($employee->position?->name ?? '');
         $isKepalaBkpsdm = ($employee->position?->level == '1' || str_contains($positionName, 'kepala bkpsdm'));
-        $isKabid = ($roleName === 'kabid' || $roleName === 'head' || $employee->position?->level == '2' || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid'));
+        $isKabid = ($roleName === 'kabid' || $roleName === 'head' || $employee->position?->level == '2' || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid') || str_contains($positionName, 'sekretaris'));
 
         // 1. Kepala BKPSDM: Hanya menilai para Kabid (level 2), tidak menilai staff
         if ($isKepalaBkpsdm) {
             return Employee::where('is_active', true)
                 ->where('id', '!=', $employee->id)
                 ->whereHas('position', function($q) {
-                    $q->where('level', '2')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kepala bidang%')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kabid%');
+                    $q->where('level', '2')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kepala bidang%')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kabid%')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%sekretaris%');
                 })
                 ->with(['department', 'position'])
                 ->get();
@@ -89,35 +89,51 @@ class AssessmentRepository
         $roleName = strtolower($employee->role?->name ?? '');
         $positionName = strtolower($employee->position?->name ?? '');
         $isKepalaBkpsdm = ($employee->position?->level == '1' || str_contains($positionName, 'kepala bkpsdm'));
+        $isKabid = ($employee->position?->level == '2' || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid') || str_contains($positionName, 'sekretaris'));
 
-        // Kepala BKPSDM tidak memiliki peers (rekan sejawat)
-        if ($isKepalaBkpsdm) {
+        // Kepala BKPSDM dan Admin tidak memiliki peers (rekan sejawat)
+        if ($isKepalaBkpsdm || $employee->isAdmin()) {
             return collect();
         }
 
-        // Eligible peers:
-        // - Not the employee themselves
-        // - Not their direct supervisor
-        // - Across any department/division (can be from different division, including sesama Kabid)
-        // - Filter by same position level if position is set
-        
         $query = Employee::where('id', '!=', $employee->id)
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->whereHas('role', function($q) {
+                $q->where('name', '!=', 'ADMIN');
+            });
 
-        if ($employee->supervisor_id) {
-            $query->where('id', '!=', $employee->supervisor_id);
-        }
-            
-        if ($employee->position && $employee->position->level) {
-            $level = $employee->position->level;
-            $query->whereHas('position', function($q) use ($level) {
-                $q->where('level', $level);
+        if ($isKabid) {
+            // Peers are other Kabids (level 2)
+            $query->whereHas('position', function($q) {
+                $q->where('level', '2')
+                  ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kepala bidang%')
+                  ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kabid%')
+                  ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%sekretaris%');
+            });
+        } else {
+            // Peers are other staff members (level > 2 or null, and not level 1 or 2, and not kepala bkpsdm)
+            $query->where(function($q) {
+                $q->whereNull('position_id')
+                  ->orWhereHas('position', function($p) {
+                      $p->whereNotIn('level', ['1', '2'])
+                        ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kepala bidang%')
+                        ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kabid%')
+                        ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%sekretaris%')
+                        ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kepala bkpsdm%');
+                  });
             });
         }
 
         $peers = $query->with(['department', 'position'])->get();
 
         $eligiblePeers = collect();
+
+        // How many peer assessments has the logged-in user already submitted
+        $mySubmittedPeersCount = Assessment::where('period_id', $activePeriod->id)
+            ->where('assessor_id', $employee->id)
+            ->where('assessment_type', 'PEER')
+            ->where('status', 'SUBMITTED')
+            ->count();
 
         foreach ($peers as $peer) {
             // Check if THIS employee already assessed this peer
@@ -144,6 +160,10 @@ class AssessmentRepository
                 if ($receivedPeerAssessmentsCount >= 3) {
                     // Quota 3/3 filled by others, still show as FULL (greyed out)
                     $peer->assessment_status = 'FULL';
+                    $eligiblePeers->push($peer);
+                } elseif ($mySubmittedPeersCount >= 3) {
+                    // User has reached their peer choice limit
+                    $peer->assessment_status = 'LIMIT_REACHED';
                     $eligiblePeers->push($peer);
                 } else {
                     // Quota available (< 3), pending assessment

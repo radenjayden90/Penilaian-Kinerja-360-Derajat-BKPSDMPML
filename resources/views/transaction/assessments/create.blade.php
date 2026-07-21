@@ -180,7 +180,7 @@
                                     <!-- Interactive Scoring Component -->
                                     <div class="tw-pl-0 md:tw-pl-14">
                                         <div class="tw-flex tw-justify-between tw-mb-4 tw-px-1">
-                                            @for($i = 0; $i <= 10; $i++)
+                                            @for($i = 1; $i <= 10; $i++)
                                                 <button type="button" 
                                                         class="rating-number tw-w-8 tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-600 tw-font-semibold tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-slate-200 tw-border-0"
                                                         data-value="{{ $i }}"
@@ -197,16 +197,17 @@
                                                  style="width: 0%; display: none;"></div>
                                                  
                                             <!-- The actual input that gets submitted -->
-                                            <input type="range" min="0" max="10" step="1" 
+                                            <input type="range" min="1" max="10" step="1" 
                                                    class="custom-range tw-w-full form-score-input" 
                                                    name="scores[{{ $indicator->id }}]" 
                                                    id="score_{{ $indicator->id }}" 
-                                                   value="" 
+                                                   value="1" 
                                                    data-category="{{ $catIndex }}"
+                                                   data-answered="false"
                                                    required>
                                         </div>
                                         <div class="tw-flex tw-justify-between tw-text-xs tw-text-slate-400 tw-mt-2 tw-font-medium tw-px-1">
-                                            <span>0 - Sangat Kurang</span>
+                                            <span>1 - Sangat Kurang</span>
                                             <span>10 - Sangat Baik</span>
                                         </div>
                                     </div>
@@ -306,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (index === totalCategories - 1) {
             btnNext.classList.add('tw-hidden');
             btnSubmit.classList.remove('tw-hidden');
-            document.getElementById('tab-notes').classList.add('active'); // show notes on last tab
         } else {
             btnNext.classList.remove('tw-hidden');
             btnSubmit.classList.add('tw-hidden');
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const categoryCounts = new Array(totalCategories).fill(0);
         
         inputs.forEach(input => {
-            if (input.value !== "") {
+            if (input.dataset.answered === "true") {
                 answered++;
                 categoryCounts[parseInt(input.dataset.category)]++;
             }
@@ -359,11 +359,31 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             btnSubmit.setAttribute('disabled', 'true');
         }
+
+        // Show/hide comment box based on last category answers
+        const totalInLastCategory = document.querySelectorAll('#tab-' + (totalCategories - 1) + ' .form-score-input').length;
+        const lastCategoryFinished = (categoryCounts[totalCategories - 1] === totalInLastCategory);
+        
+        if (currentTabIndex === totalCategories - 1 && lastCategoryFinished) {
+            document.getElementById('tab-notes').classList.add('active');
+        } else {
+            document.getElementById('tab-notes').classList.remove('active');
+        }
+    }
+
+    function revertSaveDraftButton() {
+        const btnSaveDraft = document.getElementById('btnSaveDraft');
+        if (btnSaveDraft && btnSaveDraft.classList.contains('tw-bg-green-100')) {
+            btnSaveDraft.textContent = 'Simpan Sementara';
+            btnSaveDraft.classList.remove('tw-bg-green-100', 'tw-text-green-700');
+            btnSaveDraft.classList.add('tw-bg-amber-100', 'tw-text-amber-700');
+        }
     }
 
     function syncUI(inputId, val) {
         const input = document.getElementById(inputId);
         input.value = val;
+        input.dataset.answered = "true";
         
         // Update active number
         document.querySelectorAll(`[data-input="${inputId}"]`).forEach(btn => {
@@ -378,9 +398,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const track = document.getElementById('track_' + inputId.replace('score_', ''));
         if (track) {
             track.style.display = 'block';
-            track.style.width = (val * 10) + '%';
+            track.style.width = ((val - 1) * 11.11) + '%'; // Adjust width scale since it starts from 1 (1-10 scale)
         }
         
+        revertSaveDraftButton();
         updateProgress();
     }
 
@@ -403,31 +424,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save Draft Dummy
     document.getElementById('btnSaveDraft').addEventListener('click', function() {
         const data = {};
-        inputs.forEach(i => data[i.id] = i.value);
+        inputs.forEach(i => {
+            data[i.id] = {
+                val: i.value,
+                answered: i.dataset.answered
+            };
+        });
         data['general_notes'] = document.querySelector('textarea[name="general_notes"]').value;
         localStorage.setItem('draft_assessment_{{ $target->id }}', JSON.stringify(data));
         
-        const originalText = this.textContent;
         this.innerHTML = 'Tersimpan Lokal';
         this.classList.remove('tw-bg-amber-100', 'tw-text-amber-700');
         this.classList.add('tw-bg-green-100', 'tw-text-green-700');
-        
-        setTimeout(() => {
-            this.textContent = 'Simpan Sementara';
-            this.classList.add('tw-bg-amber-100', 'tw-text-amber-700');
-            this.classList.remove('tw-bg-green-100', 'tw-text-green-700');
-        }, 2000);
     });
+
+    // Textarea input listener to revert button
+    const notesTextarea = document.querySelector('textarea[name="general_notes"]');
+    if (notesTextarea) {
+        notesTextarea.addEventListener('input', revertSaveDraftButton);
+    }
 
     // Load Draft
     const draft = localStorage.getItem('draft_assessment_{{ $target->id }}');
     if (draft) {
         const data = JSON.parse(draft);
-        for (const [id, val] of Object.entries(data)) {
+        for (const [id, item] of Object.entries(data)) {
             if (id === 'general_notes') {
-                document.querySelector('textarea[name="general_notes"]').value = val;
+                document.querySelector('textarea[name="general_notes"]').value = item;
+            } else if (item && typeof item === 'object') {
+                if (item.answered === "true") {
+                    syncUI(id, item.val);
+                }
             } else {
-                if (val !== "") syncUI(id, val);
+                if (item !== "") syncUI(id, item);
             }
         }
     }

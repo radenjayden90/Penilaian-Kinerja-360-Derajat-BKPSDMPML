@@ -17,14 +17,14 @@
         </a>
 
         <div class="nav-label">Master Data</div>
-        <a href="#masterSubmenu" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('master.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.*') ? 'true' : 'false' }}">
+        <a href="#masterSubmenu" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'true' : 'false' }}">
             <div>
                 <i class="bi bi-database"></i>
                 <span class="nav-link-text ms-1">Master Data</span>
             </div>
             <i class="bi bi-chevron-down dropdown-arrow small"></i>
         </a>
-        <div class="collapse {{ request()->routeIs('master.*') ? 'show' : '' }}" id="masterSubmenu">
+        <div class="collapse {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'show' : '' }}" id="masterSubmenu">
             <ul class="submenu">
                 <li>
                     <a href="{{ route('master.employees.index') }}" class="nav-link {{ request()->routeIs('master.employees.*') ? 'active' : '' }}">
@@ -75,12 +75,7 @@
                         <span class="nav-link-text">Hasil Penilaian</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('assessment.index') }}" class="nav-link {{ request()->routeIs('assessment.*') ? 'active' : '' }}">
-                        <i class="bi bi-clock-history"></i>
-                        <span class="nav-link-text">Riwayat Penilaian Saya</span>
-                    </a>
-                </li>
+
             </ul>
         </div>
 

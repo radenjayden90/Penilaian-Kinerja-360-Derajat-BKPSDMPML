@@ -37,10 +37,23 @@
             </div>
         </div>
 
+@php
+    $posName = strtolower($employee->position?->name ?? '');
+    $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+@endphp
+
         <!-- Content Card -->
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-award me-2 text-primary"></i>Histori Rapor Evaluasi Kinerja 360° Murni Pegawai</h6>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('assessment.exportAllPdf') }}" target="_blank" class="btn btn-sm btn-danger">
+                        <i class="bi bi-file-pdf me-1"></i>Ekspor Rekap PDF
+                    </a>
+                    <a href="{{ route('assessment.exportAllExcel') }}" class="btn btn-sm btn-success">
+                        <i class="bi bi-file-excel me-1"></i>Ekspor Rekap Excel
+                    </a>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -49,12 +62,17 @@
                             <tr>
                                 <th class="ps-3" style="width: 50px;">No</th>
                                 <th>Periode Penilaian</th>
-                                <th class="text-center">Skor Atasan (50%)</th>
-                                <th class="text-center">Skor Sejawat</th>
-                                <th class="text-center">Skor Bawahan</th>
+                                @if($isKabid)
+                                    <th class="text-center">Skor Atasan (50%)</th>
+                                    <th class="text-center">Skor Sejawat (30%)</th>
+                                    <th class="text-center">Skor Bawahan (20%)</th>
+                                @else
+                                    <th class="text-center">Skor Atasan (50%)</th>
+                                    <th class="text-center">Skor Sejawat (50%)</th>
+                                @endif
                                 <th class="text-center">Skor Akhir 360°</th>
                                 <th class="text-center">Predikat Kategori</th>
-                                <th class="text-end pe-3" style="width: 140px;">Aksi Rapor</th>
+                                <th class="text-end pe-3" style="width: 160px;">Ekspor Rapor</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,15 +83,24 @@
                                         <div class="fw-semibold text-dark">{{ $res->period->name ?? '-' }}</div>
                                         <small class="text-muted">Tahun {{ $res->period->year ?? '-' }}</small>
                                     </td>
-                                    <td class="text-center font-monospace fs-6">
-                                        {{ number_format($res->superior_average ?? 0, 2) }}
-                                    </td>
-                                    <td class="text-center font-monospace fs-6">
-                                        {{ number_format($res->peer_average ?? 0, 2) }}
-                                    </td>
-                                    <td class="text-center font-monospace fs-6">
-                                        {{ number_format($res->subordinate_average ?? 0, 2) }}
-                                    </td>
+                                    @if($isKabid)
+                                        <td class="text-center font-monospace fs-6">
+                                            {{ number_format($res->subordinate_average ?? 0, 2) }}
+                                        </td>
+                                        <td class="text-center font-monospace fs-6">
+                                            {{ number_format($res->peer_average ?? 0, 2) }}
+                                        </td>
+                                        <td class="text-center font-monospace fs-6">
+                                            {{ number_format($res->superior_average ?? 0, 2) }}
+                                        </td>
+                                    @else
+                                        <td class="text-center font-monospace fs-6">
+                                            {{ number_format($res->subordinate_average ?? 0, 2) }}
+                                        </td>
+                                        <td class="text-center font-monospace fs-6">
+                                            {{ number_format($res->peer_average ?? 0, 2) }}
+                                        </td>
+                                    @endif
                                     <td class="text-center">
                                         @if($res->final_score !== null)
                                             <span class="fw-bold fs-5 text-primary" style="color: #1E3A5F !important;">
@@ -86,31 +113,37 @@
                                     <td class="text-center">
                                         @if($res->category)
                                             @php
-                                                $catVal = is_object($res->category) ? $res->category->value : $res->category;
-                                                $badgeColor = match($catVal) {
-                                                    'SANGAT_BAIK' => 'bg-success',
-                                                    'BAIK' => 'bg-primary',
-                                                    'CUKUP' => 'bg-warning text-dark',
-                                                    'KURANG' => 'bg-danger',
-                                                    default => 'bg-secondary'
+                                                $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                                                $textColor = match($catEnum) {
+                                                    \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
+                                                    \App\Enums\ResultCategory::GOOD => 'text-primary',
+                                                    \App\Enums\ResultCategory::FAIR => 'text-warning',
+                                                    \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'text-danger',
+                                                    default => 'text-secondary'
                                                 };
+                                                $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                             @endphp
-                                            <span class="badge {{ $badgeColor }} px-3 py-1.5 fs-6">
-                                                {{ str_replace('_', ' ', $catVal) }}
+                                            <span class="fw-semibold {{ $textColor }}" {!! $style !!}>
+                                                {{ $catEnum ? $catEnum->label() : $res->category }}
                                             </span>
                                         @else
-                                            <span class="badge bg-light text-muted border">Proses Penilaian</span>
+                                            <span class="text-muted small">Proses Penilaian</span>
                                         @endif
                                     </td>
                                     <td class="text-end pe-3">
-                                        <a href="{{ route('transaction.calculations.show', $employee) }}" class="btn btn-sm btn-outline-info" title="Lihat Rapor Lengkap">
-                                            <i class="bi bi-file-earmark-bar-graph me-1"></i>Rapor
-                                        </a>
+                                        <div class="d-flex gap-1 justify-content-end">
+                                            <a href="{{ route('assessment.exportPdf', $res->id) }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Ekspor PDF">
+                                                <i class="bi bi-file-pdf me-1"></i>PDF
+                                            </a>
+                                            <a href="{{ route('assessment.exportExcel', $res->id) }}" class="btn btn-sm btn-outline-success" title="Ekspor Excel">
+                                                <i class="bi bi-file-excel me-1"></i>Excel
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted py-4">
+                                    <td colspan="{{ $isKabid ? 8 : 7 }}" class="text-center text-muted py-4">
                                         <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
                                         Belum ada hasil evaluasi penilaian 360° untuk akun Anda.
                                     </td>

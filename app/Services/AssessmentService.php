@@ -59,6 +59,18 @@ class AssessmentService
 
         // Validate peer constraints
         if ($type === AssessmentType::PEER->value) {
+            $mySubmittedPeersCount = Assessment::where('period_id', $activePeriod->id)
+                ->where('assessor_id', $assessor->id)
+                ->where('assessment_type', AssessmentType::PEER->value)
+                ->where('status', AssessmentStatus::SUBMITTED->value)
+                ->count();
+
+            if ($mySubmittedPeersCount >= 3) {
+                throw ValidationException::withMessages([
+                    'peer_assessor_limit' => 'Anda hanya dapat menilai maksimal 3 rekan kerja.',
+                ]);
+            }
+
             $receivedPeerAssessments = Assessment::where('period_id', $activePeriod->id)
                 ->where('employee_id', $target->id)
                 ->where('assessment_type', AssessmentType::PEER->value)

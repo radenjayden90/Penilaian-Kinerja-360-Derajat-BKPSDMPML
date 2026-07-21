@@ -27,16 +27,29 @@
                         {{ number_format($result->final_score ?? 0, 2) }}
                     </h2>
                     @php
-                        $catVal = is_object($result->category) ? $result->category->value : $result->category;
+                        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category);
+                        $textColor = match($catEnum) {
+                            \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
+                            \App\Enums\ResultCategory::GOOD => 'text-primary',
+                            \App\Enums\ResultCategory::FAIR => 'text-warning',
+                            \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'text-danger',
+                            default => 'text-secondary'
+                        };
+                        $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                     @endphp
-                    <span class="badge bg-success px-3 py-1 mt-1 fs-6">
-                        Kategori: {{ str_replace('_', ' ', $catVal) }}
-                    </span>
+                    <div class="fw-semibold mt-1 {{ $textColor }}" {!! $style !!}>
+                        Kategori: {{ $catEnum ? $catEnum->label() : $result->category }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@php
+    $posName = strtolower($employee->position?->name ?? '');
+    $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+@endphp
 
 <!-- Score Breakdown Table -->
 <div class="card border-0 shadow-sm mb-4">
@@ -50,35 +63,44 @@
                     <tr>
                         <th class="ps-3">Sumber Evaluator</th>
                         <th>Bobot (%)</th>
-                        <th class="text-center">Skor Rata-Rata (1-5)</th>
+                        <th class="text-center">Skor Rata-Rata (0-10)</th>
                         <th class="text-center">Skor Terbobot</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="ps-3 fw-semibold"><i class="bi bi-person-up me-2 text-primary"></i>Atasan Langsung (Superior)</td>
-                        <td>40%</td>
-                        <td class="text-center fw-semibold">{{ number_format($result->superior_score ?? 0, 2) }}</td>
-                        <td class="text-center fw-bold text-dark">{{ number_format(($result->superior_score ?? 0) * 0.40, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="ps-3 fw-semibold"><i class="bi bi-people me-2 text-info"></i>Rekan Sejawat (Peer)</td>
-                        <td>30%</td>
-                        <td class="text-center fw-semibold">{{ number_format($result->peer_score ?? 0, 2) }}</td>
-                        <td class="text-center fw-bold text-dark">{{ number_format(($result->peer_score ?? 0) * 0.30, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="ps-3 fw-semibold"><i class="bi bi-person-down me-2 text-warning"></i>Bawahan Langsung (Subordinate)</td>
-                        <td>20%</td>
-                        <td class="text-center fw-semibold">{{ number_format($result->subordinate_score ?? 0, 2) }}</td>
-                        <td class="text-center fw-bold text-dark">{{ number_format(($result->subordinate_score ?? 0) * 0.20, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="ps-3 fw-semibold"><i class="bi bi-person me-2 text-secondary"></i>Penilaian Diri (Self)</td>
-                        <td>10%</td>
-                        <td class="text-center fw-semibold">{{ number_format($result->self_score ?? 0, 2) }}</td>
-                        <td class="text-center fw-bold text-dark">{{ number_format(($result->self_score ?? 0) * 0.10, 2) }}</td>
-                    </tr>
+                    @if($isKabid)
+                        <tr>
+                            <td class="ps-3 fw-semibold"><i class="bi bi-person-up me-2 text-primary"></i>Atasan (Kepala BKPSDM)</td>
+                            <td>{{ number_format(($result->subordinate_weight ?? 0.50) * 100, 0) }}%</td>
+                            <td class="text-center fw-semibold">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
+                            <td class="text-center fw-bold text-dark">{{ number_format(($result->subordinate_average ?? 0) * ($result->subordinate_weight ?? 0.50), 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3 fw-semibold"><i class="bi bi-people me-2 text-info"></i>Rekan Sejawat (Rekan Kabid)</td>
+                            <td>{{ number_format(($result->peer_weight ?? 0.30) * 100, 0) }}%</td>
+                            <td class="text-center fw-semibold">{{ number_format($result->peer_average ?? 0, 2) }}</td>
+                            <td class="text-center fw-bold text-dark">{{ number_format(($result->peer_average ?? 0) * ($result->peer_weight ?? 0.30), 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3 fw-semibold"><i class="bi bi-person-down me-2 text-warning"></i>Bawahan Langsung (Staff)</td>
+                            <td>{{ number_format(($result->superior_weight ?? 0.20) * 100, 0) }}%</td>
+                            <td class="text-center fw-semibold">{{ number_format($result->superior_average ?? 0, 2) }}</td>
+                            <td class="text-center fw-bold text-dark">{{ number_format(($result->superior_average ?? 0) * ($result->superior_weight ?? 0.20), 2) }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td class="ps-3 fw-semibold"><i class="bi bi-person-up me-2 text-primary"></i>Atasan (Kepala Bidang)</td>
+                            <td>{{ number_format(($result->subordinate_weight ?? 0.50) * 100, 0) }}%</td>
+                            <td class="text-center fw-semibold">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
+                            <td class="text-center fw-bold text-dark">{{ number_format(($result->subordinate_average ?? 0) * ($result->subordinate_weight ?? 0.50), 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3 fw-semibold"><i class="bi bi-people me-2 text-info"></i>Rekan Sejawat (Peer Staff)</td>
+                            <td>{{ number_format(($result->peer_weight ?? 0.50) * 100, 0) }}%</td>
+                            <td class="text-center fw-semibold">{{ number_format($result->peer_average ?? 0, 2) }}</td>
+                            <td class="text-center fw-bold text-dark">{{ number_format(($result->peer_average ?? 0) * ($result->peer_weight ?? 0.50), 2) }}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>

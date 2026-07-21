@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/assessment', [AssessmentController::class, 'history'])->name('assessment.index');
+    Route::get('/assessment/export-all-pdf', [AssessmentController::class, 'exportAllPdf'])->name('assessment.exportAllPdf');
+    Route::get('/assessment/export-all-excel', [AssessmentController::class, 'exportAllExcel'])->name('assessment.exportAllExcel');
+    Route::get('/assessment/{result}/export-pdf', [AssessmentController::class, 'exportPdf'])->name('assessment.exportPdf');
+    Route::get('/assessment/{result}/export-excel', [AssessmentController::class, 'exportExcel'])->name('assessment.exportExcel');
 
     Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
     Route::get('/report/print', [\App\Http\Controllers\ReportController::class, 'print'])->name('report.print');

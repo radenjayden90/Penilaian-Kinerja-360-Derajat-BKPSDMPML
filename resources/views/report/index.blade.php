@@ -89,24 +89,29 @@
                             <td class="text-center">{{ number_format($res->subordinate_score ?? 0, 2) }}</td>
                             <td class="text-center">{{ number_format($res->self_score ?? 0, 2) }}</td>
                             <td class="text-center">
-                                <span class="fw-bold fs-5 text-primary" style="color: #1E3A5F !important;">
+                                <span class="fw-semibold text-dark">
                                     {{ number_format($res->final_score ?? 0, 2) }}
                                 </span>
                             </td>
                             <td class="text-center">
-                                @php
-                                    $catVal = is_object($res->category) ? $res->category->value : $res->category;
-                                    $badgeColor = match($catVal) {
-                                        'SANGAT_BAIK' => 'bg-success',
-                                        'BAIK' => 'bg-primary',
-                                        'CUKUP' => 'bg-warning text-dark',
-                                        'KURANG' => 'bg-danger',
-                                        default => 'bg-secondary'
-                                    };
-                                @endphp
-                                <span class="badge {{ $badgeColor }} px-3 py-1.5 fs-6">
-                                    {{ str_replace('_', ' ', $catVal ?? '-') }}
-                                </span>
+                                @if($res->category)
+                                    @php
+                                        $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                                        $textColor = match($catEnum) {
+                                            \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
+                                            \App\Enums\ResultCategory::GOOD => 'text-primary',
+                                            \App\Enums\ResultCategory::FAIR => 'text-warning',
+                                            \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'text-danger',
+                                            default => 'text-secondary'
+                                        };
+                                        $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
+                                    @endphp
+                                    <span class="fw-semibold {{ $textColor }}" {!! $style !!}>
+                                        {{ $catEnum ? $catEnum->label() : $res->category }}
+                                    </span>
+                                @else
+                                    <span class="text-muted small">-</span>
+                                @endif
                             </td>
                         </tr>
                     @empty

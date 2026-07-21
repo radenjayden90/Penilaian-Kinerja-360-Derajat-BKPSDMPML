@@ -190,12 +190,12 @@
         </div>
     </div>
 
-    <!-- Recent Employees Table -->
+    <!-- Top 5 Employees by Score Table -->
     <div class="col-12 col-lg-8">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
-                <span class="fw-semibold"><i class="bi bi-people text-primary me-2"></i>Pegawai Terbaru Terdaftar</span>
-                <a href="{{ route('master.employees.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                <span class="fw-semibold"><i class="bi bi-trophy text-primary me-2"></i>5 Pegawai dengan Skor Kinerja Tertinggi</span>
+                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -205,29 +205,28 @@
                                 <th class="ps-3">Nama / NIP</th>
                                 <th>Unit Kerja</th>
                                 <th>Jabatan</th>
-                                <th>Status</th>
+                                <th class="text-center">Skor Akhir 360°</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($recentEmployees as $emp)
-                                <tr>
-                                    <td class="ps-3">
-                                        <div class="fw-semibold text-dark">{{ $emp->name }}</div>
-                                        <small class="text-muted">NIP. {{ $emp->nip }}</small>
-                                    </td>
-                                    <td>{{ $emp->department->name ?? '-' }}</td>
-                                    <td>{{ $emp->position->name ?? '-' }}</td>
-                                    <td>
-                                        @if($emp->is_active)
-                                            <span class="badge bg-success bg-opacity-10 text-success px-2 py-1">Aktif</span>
-                                        @else
-                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1">Nonaktif</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                            @forelse($topResults as $res)
+                                @php $emp = $res->employee; @endphp
+                                @if($emp)
+                                    <tr>
+                                        <td class="ps-3">
+                                            <div class="fw-semibold text-dark">{{ $emp->name }}</div>
+                                            <small class="text-muted">NIP. {{ $emp->nip }}</small>
+                                        </td>
+                                        <td>{{ $emp->department->name ?? '-' }}</td>
+                                        <td>{{ $emp->position->name ?? '-' }}</td>
+                                        <td class="text-center">
+                                            <span class="fw-bold text-primary">{{ number_format($res->final_score, 2) }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data pegawai terdaftar.</td>
+                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data perhitungan nilai pegawai.</td>
                                 </tr>
                             @endforelse
                         </tbody>

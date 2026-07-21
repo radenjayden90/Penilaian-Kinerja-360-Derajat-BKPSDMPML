@@ -27,11 +27,22 @@ class CalculationController extends Controller
             $this->calculator->calculateAll($activePeriod);
         }
         
-        $query = Employee::with(['department', 'position', 'assessmentResult' => function($q) use ($activePeriod) {
-            if ($activePeriod) {
-                $q->where('period_id', $activePeriod->id);
-            }
-        }]);
+        $query = Employee::where('is_active', true)
+            ->whereHas('role', function($q) {
+                $q->whereNotIn('name', ['ADMIN', 'SUPER_ADMIN']);
+            })
+            ->where(function($q) {
+                $q->whereNull('position_id')
+                  ->orWhereHas('position', function($pos) {
+                      $pos->where('level', '!=', '1')
+                          ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kepala bkpsdm%');
+                  });
+            })
+            ->with(['department', 'position', 'assessmentResult' => function($q) use ($activePeriod) {
+                if ($activePeriod) {
+                    $q->where('period_id', $activePeriod->id);
+                }
+            }]);
 
         if ($request->search) {
             $term = mb_strtolower($request->search, 'UTF-8');

@@ -58,6 +58,19 @@
     </div>
 @endif
 
+<!-- Incoming Assessment Notification Banner -->
+@if(isset($receivedAssessmentsCount) && $receivedAssessmentsCount > 0)
+    <div class="alert alert-success border-0 shadow-sm d-flex align-items-center gap-3 p-3 mb-4">
+        <div class="bg-success text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+            <i class="bi bi-bell-fill fs-5"></i>
+        </div>
+        <div>
+            <div class="fw-bold text-success-emphasis" style="color: #0f5132 !important;">Notifikasi Penilaian Kinerja Masuk</div>
+            <small class="text-muted">Sudah ada <strong>{{ $receivedAssessmentsCount }}</strong> user yang telah memberikan penilaian kepada Anda untuk periode ini.</small>
+        </div>
+    </div>
+@endif
+
 <!-- Evaluation Task Cards -->
 <div class="row g-3 mb-4">
     <div class="col-12 col-sm-6 col-lg-3">
@@ -115,66 +128,5 @@
     </div>
 </div>
 
-<!-- My Evaluation List Table -->
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
-        <span class="fw-semibold"><i class="bi bi-list-check text-primary me-2"></i>Daftar Penilaian Periode Ini</span>
-        <a href="{{ route('transaction.assessments.index') }}" class="btn btn-sm btn-primary">
-            Lihat Semua Penilaian Saya
-        </a>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-3">Target Pegawai</th>
-                        <th>Jabatan / Unit Kerja</th>
-                        <th>Tipe Evaluasi</th>
-                        <th>Status</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($myAssessments as $assessment)
-                        <tr>
-                            <td class="ps-3">
-                                <div class="fw-semibold text-dark">{{ $assessment->employee->name ?? '-' }}</div>
-                                <small class="text-muted">NIP. {{ $assessment->employee->nip ?? '-' }}</small>
-                            </td>
-                            <td>
-                                <div>{{ $assessment->employee->position->name ?? '-' }}</div>
-                                <small class="text-muted">{{ $assessment->employee->department->name ?? '-' }}</small>
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary">
-                                    {{ $assessment->assessment_type->value ?? $assessment->assessment_type }}
-                                </span>
-                            </td>
-                            <td>
-                                @if(($assessment->status->value ?? $assessment->status) === 'COMPLETED')
-                                    <span class="badge bg-success bg-opacity-10 text-success">Selesai</span>
-                                @else
-                                    <span class="badge bg-warning bg-opacity-10 text-warning">Belum Diisi</span>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                <a href="{{ route('transaction.assessments.index') }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-pencil me-1"></i> Isi Evaluasi
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
-                                Belum ada daftar penilaian yang ditugaskan kepada Anda pada periode ini.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+
 @endsection

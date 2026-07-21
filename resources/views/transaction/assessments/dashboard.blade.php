@@ -88,7 +88,7 @@
                                 @if($superior->assessment_status === 'COMPLETED')
                                     <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
                                 @else
-                                    <a href="{{ route('transaction.assessments.create', ['target_id' => $superior->id, 'type' => 'SUPERIOR']) }}" class="btn btn-sm btn-primary w-100">
+                                    <a href="{{ route('transaction.assessments.create', ['target_id' => $superior->id, 'type' => 'SUPERIOR']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $superior->id }}">
                                         <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                     </a>
                                 @endif
@@ -122,8 +122,8 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                 @forelse($peers as $peer)
                     <div class="col">
-                        @if($peer->assessment_status === 'FULL')
-                            {{-- Greyed-out / Muted Card for Full Quota (3/3) --}}
+                        @if($peer->assessment_status === 'FULL' || $peer->assessment_status === 'LIMIT_REACHED')
+                            {{-- Greyed-out / Muted Card for Full Quota or Limit Reached --}}
                             <div class="card h-100 border bg-light opacity-75 rounded-3">
                                 <div class="card-body p-3">
                                     <div class="d-flex align-items-start gap-3 mb-3">
@@ -147,12 +147,20 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between pt-1 border-top border-secondary-subtle">
                                         <span class="fs-7 text-muted">Kuota Penilai:</span>
-                                        <span class="badge bg-secondary bg-opacity-25 text-secondary"><i class="bi bi-lock me-1"></i>Kuota Penuh (3/3)</span>
+                                        @if($peer->assessment_status === 'FULL')
+                                            <span class="badge bg-secondary bg-opacity-25 text-secondary"><i class="bi bi-lock me-1"></i>Kuota Penuh</span>
+                                        @else
+                                            <span class="badge bg-secondary bg-opacity-25 text-secondary"><i class="bi bi-lock me-1"></i>Batas Penilaian Terpenuhi</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
                                     <button class="btn btn-sm btn-secondary w-100 opacity-75" disabled>
-                                        <i class="bi bi-lock me-1"></i>Kuota 3/3 Terpenuhi
+                                        @if($peer->assessment_status === 'FULL')
+                                            <i class="bi bi-lock me-1"></i>Kuota Terpenuhi
+                                        @else
+                                            <i class="bi bi-lock me-1"></i>Batas 3 Rekan Terpenuhi
+                                        @endif
                                     </button>
                                 </div>
                             </div>
@@ -181,7 +189,7 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between pt-1 border-top">
                                         <small class="text-muted fs-7">
-                                            <i class="bi bi-people me-1"></i>Penilai: <strong>{{ $peer->received_assessments_count ?? 0 }}/3</strong>
+                                            <i class="bi bi-people me-1"></i>Penilai: <strong>{{ $peer->received_assessments_count ?? 0 }}</strong>
                                         </small>
                                         @if($peer->assessment_status === 'COMPLETED')
                                             <span class="badge bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle me-1"></i>Selesai</span>
@@ -194,7 +202,7 @@
                                     @if($peer->assessment_status === 'COMPLETED')
                                         <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
                                     @else
-                                        <a href="{{ route('transaction.assessments.create', ['target_id' => $peer->id, 'type' => 'PEER']) }}" class="btn btn-sm btn-primary w-100">
+                                        <a href="{{ route('transaction.assessments.create', ['target_id' => $peer->id, 'type' => 'PEER']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $peer->id }}">
                                             <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                         </a>
                                     @endif
@@ -262,7 +270,7 @@
                                     @if($sub->assessment_status === 'COMPLETED')
                                         <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
                                     @else
-                                        <a href="{{ route('transaction.assessments.create', ['target_id' => $sub->id, 'type' => 'SUBORDINATE']) }}" class="btn btn-sm btn-primary w-100">
+                                        <a href="{{ route('transaction.assessments.create', ['target_id' => $sub->id, 'type' => 'SUBORDINATE']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $sub->id }}">
                                             <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                         </a>
                                     @endif
@@ -275,4 +283,35 @@
         </div>
     @endif
 @endif
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isiButtons = document.querySelectorAll('.btn-isi-penilaian');
+    isiButtons.forEach(btn => {
+        const targetId = btn.dataset.targetId;
+        const draftKey = 'draft_assessment_' + targetId;
+        if (localStorage.getItem(draftKey)) {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-warning', 'text-dark', 'fw-semibold');
+            btn.innerHTML = '<i class="bi bi-play-circle-fill me-1"></i>Lanjutkan Penilaian';
+            
+            const card = btn.closest('.card');
+            if (card) {
+                card.classList.remove('border', 'shadow-sm');
+                card.style.border = '2px dashed #ffc107';
+                card.style.backgroundColor = '#fffdf5';
+                
+                const badge = card.querySelector('.badge.bg-warning');
+                if (badge) {
+                    badge.classList.remove('bg-warning', 'bg-opacity-10', 'text-warning');
+                    badge.classList.add('bg-warning', 'text-dark');
+                    badge.innerHTML = '<i class="bi bi-file-earmark-diff me-1"></i>Draft Tersimpan';
+                }
+            }
+        }
+    });
+});
+</script>
+@endpush
 @endsection

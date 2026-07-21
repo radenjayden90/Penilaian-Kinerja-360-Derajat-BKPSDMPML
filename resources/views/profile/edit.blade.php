@@ -103,19 +103,18 @@
                             <div class="p-3 rounded border bg-light text-center">
                                 <small class="text-muted d-block mb-1 fw-semibold">Predikat Kategori</small>
                                 @php
-                                    $catVal = is_object($latestResult->category) ? $latestResult->category->value : $latestResult->category;
-                                    $badgeColor = match($catVal) {
-                                        'SANGAT_BAIK' => 'bg-success',
-                                        'BAIK' => 'bg-primary',
-                                        'CUKUP' => 'bg-warning text-dark',
-                                        'KURANG' => 'bg-danger',
-                                        default => 'bg-secondary'
+                                    $catEnum = $latestResult->category instanceof \App\Enums\ResultCategory ? $latestResult->category : \App\Enums\ResultCategory::tryFrom($latestResult->category);
+                                    $textColor = match($catEnum) {
+                                        \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
+                                        \App\Enums\ResultCategory::GOOD => 'text-primary',
+                                        \App\Enums\ResultCategory::FAIR => 'text-warning',
+                                        \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'text-danger',
+                                        default => 'text-secondary'
                                     };
+                                    $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                 @endphp
-                                <div class="mt-2">
-                                    <span class="badge {{ $badgeColor }} px-3 py-2 fs-6">
-                                        {{ str_replace('_', ' ', $catVal ?? '-') }}
-                                    </span>
+                                <div class="mt-2 fw-semibold {{ $textColor }}" {!! $style !!}>
+                                    {{ $catEnum ? $catEnum->label() : ($latestResult->category ?? '-') }}
                                 </div>
                             </div>
                         </div>
@@ -151,30 +150,53 @@
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('profileAssessmentChart').getContext('2d');
         
+        @php
+            $posName = strtolower($employee->position?->name ?? '');
+            $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+        @endphp
+
+        @if($isKabid)
+            const labels = ['Skor Atasan (50%)', 'Skor Sejawat (30%)', 'Skor Bawahan (20%)'];
+            const data = [
+                {{ number_format($latestResult->subordinate_average ?? 0, 2) }},
+                {{ number_format($latestResult->peer_average ?? 0, 2) }},
+                {{ number_format($latestResult->superior_average ?? 0, 2) }}
+            ];
+            const bgColors = [
+                'rgba(30, 58, 95, 0.85)',
+                'rgba(13, 110, 253, 0.75)',
+                'rgba(108, 117, 125, 0.75)'
+            ];
+            const borderColors = [
+                '#1E3A5F',
+                '#0d6efd',
+                '#6c757d'
+            ];
+        @else
+            const labels = ['Skor Atasan (50%)', 'Skor Sejawat (50%)'];
+            const data = [
+                {{ number_format($latestResult->subordinate_average ?? 0, 2) }},
+                {{ number_format($latestResult->peer_average ?? 0, 2) }}
+            ];
+            const bgColors = [
+                'rgba(30, 58, 95, 0.85)',
+                'rgba(13, 110, 253, 0.75)'
+            ];
+            const borderColors = [
+                '#1E3A5F',
+                '#0d6efd'
+            ];
+        @endif
+
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Skor Atasan (50%)', 'Skor Sejawat', 'Skor Bawahan', 'Nilai Akhir 360°'],
+                labels: labels,
                 datasets: [{
                     label: 'Skor Penilaian',
-                    data: [
-                        {{ number_format($latestResult->superior_average ?? 0, 2) }},
-                        {{ number_format($latestResult->peer_average ?? 0, 2) }},
-                        {{ number_format($latestResult->subordinate_average ?? 0, 2) }},
-                        {{ number_format(($latestResult->final_score ?? 0) / 10, 2) }}
-                    ],
-                    backgroundColor: [
-                        'rgba(30, 58, 95, 0.85)',
-                        'rgba(13, 110, 253, 0.75)',
-                        'rgba(108, 117, 125, 0.75)',
-                        'rgba(25, 135, 84, 0.85)'
-                    ],
-                    borderColor: [
-                        '#1E3A5F',
-                        '#0d6efd',
-                        '#6c757d',
-                        '#198754'
-                    ],
+                    data: data,
+                    backgroundColor: bgColors,
+                    borderColor: borderColors,
                     borderWidth: 1.5,
                     borderRadius: 6
                 }]

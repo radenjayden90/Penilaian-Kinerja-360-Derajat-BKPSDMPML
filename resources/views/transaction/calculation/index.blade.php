@@ -10,9 +10,7 @@
 @endsection
 
 @section('action_buttons')
-    <button type="button" class="btn btn-success fw-semibold shadow-sm btn-hover-scale" data-bs-toggle="modal" data-bs-target="#confirmKalkulasiModal">
-        <i class="bi bi-calculator me-1"></i> Hitung Ulang Seluruh Pegawai
-    </button>
+    <!-- Automatic Calculation -->
 @endsection
 
 @section('content')
@@ -53,7 +51,7 @@
                         <th>Jabatan & Unit Kerja</th>
                         <th class="text-center">Skor Akhir 360°</th>
                         <th class="text-center">Kategori Nilai</th>
-                        <th class="text-end pe-3" style="width: 170px;">Aksi Kalkulasi</th>
+                        <th class="text-end pe-3" style="width: 200px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +71,7 @@
                             </td>
                             <td class="text-center">
                                 @if($res && $res->final_score !== null)
-                                    <span class="fw-bold fs-5 text-primary" style="color: #1E3A5F !important;">
+                                    <span class="fw-semibold text-dark">
                                         {{ number_format($res->final_score, 2) }}
                                     </span>
                                 @else
@@ -83,34 +81,33 @@
                             <td class="text-center">
                                 @if($res && $res->category)
                                     @php
-                                        $catVal = is_object($res->category) ? $res->category->value : $res->category;
-                                        $badgeColor = match($catVal) {
-                                            'SANGAT_BAIK' => 'bg-success',
-                                            'BAIK' => 'bg-primary',
-                                            'CUKUP' => 'bg-warning text-dark',
-                                            'KURANG' => 'bg-danger',
-                                            default => 'bg-secondary'
+                                        $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                                        $textColor = match($catEnum) {
+                                            \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
+                                            \App\Enums\ResultCategory::GOOD => 'text-primary',
+                                            \App\Enums\ResultCategory::FAIR => 'text-warning',
+                                            \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'text-danger',
+                                            default => 'text-secondary'
                                         };
+                                        $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                     @endphp
-                                    <span class="badge {{ $badgeColor }} px-3 py-1.5 fs-6">
-                                        {{ str_replace('_', ' ', $catVal) }}
+                                    <span class="fw-semibold {{ $textColor }}" {!! $style !!}>
+                                        {{ $catEnum ? $catEnum->label() : $res->category }}
                                     </span>
                                 @else
-                                    <span class="badge bg-light text-muted border">Belum Dihitung</span>
+                                    <span class="text-muted small">Belum Dihitung</span>
                                 @endif
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <form action="{{ route('transaction.calculations.calculate', $emp) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-outline-primary" title="Hitung Skor Pegawai Ini">
-                                            <i class="bi bi-calculator me-1"></i>Hitung
-                                        </button>
-                                    </form>
                                     @if($res)
-                                        <a href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Rincian Rapor">
-                                            <i class="bi bi-eye"></i>
+                                        <a href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Detail Penilaian">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail Penilaian
                                         </a>
+                                    @else
+                                        <button type="button" class="btn btn-outline-secondary" disabled>
+                                            <i class="bi bi-eye-slash me-1"></i> Belum Ada Data
+                                        </button>
                                     @endif
                                 </div>
                             </td>

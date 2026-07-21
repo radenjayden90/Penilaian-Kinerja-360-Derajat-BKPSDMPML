@@ -21,10 +21,16 @@
             <span class="nav-link-text">Penilaian Saya</span>
         </a>
 
+        @php
+            $posName = strtolower(Auth::user()->position?->name ?? '');
+            $isKepalaBkpsdm = (Auth::user()->position?->level == '1' || str_contains($posName, 'kepala bkpsdm'));
+        @endphp
+        @if(!$isKepalaBkpsdm)
         <a href="{{ route('assessment.index') }}" class="nav-link {{ request()->routeIs('assessment.*') ? 'active' : '' }}">
             <i class="bi bi-clock-history"></i>
             <span class="nav-link-text">Riwayat Penilaian</span>
         </a>
+        @endif
 
         <div class="nav-label">Pengaturan</div>
         <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
