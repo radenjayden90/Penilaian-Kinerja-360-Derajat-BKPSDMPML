@@ -14,7 +14,7 @@ use App\Http\Controllers\Master\AssessmentIndicatorController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 Route::middleware('auth')->group(function () {

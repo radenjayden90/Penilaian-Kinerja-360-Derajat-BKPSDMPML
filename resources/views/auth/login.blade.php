@@ -14,51 +14,122 @@
     <link rel="stylesheet" href="{{ asset('css/app-custom.css') }}">
     <style>
         body {
-            background: #F8F9FA;
+            background: linear-gradient(135deg, #1E3A5F 0%, #0F1D30 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Inter', sans-serif;
-        }
-        .login-card {
-            width: 100%;
-            max-width: 440px;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            position: relative;
             overflow: hidden;
-            background: #FFFFFF;
+        }
+        
+        /* Decorative Background Elements */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 15s infinite ease-in-out alternate;
+        }
+        .shape-1 {
+            width: 500px; height: 500px;
+            background: rgba(59, 130, 246, 0.4); /* Blue */
+            top: -150px; left: -150px;
+        }
+        .shape-2 {
+            width: 600px; height: 600px;
+            background: rgba(14, 165, 233, 0.3); /* Sky */
+            bottom: -200px; right: -100px;
+            animation-delay: -5s;
+        }
+        .shape-3 {
+            width: 400px; height: 400px;
+            background: rgba(16, 185, 129, 0.2); /* Emerald */
+            bottom: 20%; left: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 460px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin: 0 20px;
         }
         .login-header {
-            background-color: #1E3A5F;
-            color: #FFFFFF;
-            padding: 2rem 1.5rem;
+            background: transparent;
+            color: #1E3A5F;
+            padding: 2.5rem 2rem 1rem;
             text-align: center;
         }
         .btn-primary-gov {
-            background-color: #1E3A5F;
-            border-color: #1E3A5F;
+            background: linear-gradient(to right, #1E3A5F, #2563EB);
+            border: none;
             color: #FFFFFF;
             font-weight: 600;
-            padding: 0.65rem 1rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4);
         }
         .btn-primary-gov:hover {
-            background-color: #142843;
-            border-color: #142843;
-            color: #FFFFFF;
+            background: linear-gradient(to right, #142843, #1D4ED8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.5);
+        }
+        .input-group-text {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-right: none;
+            background-color: #F8FAFC;
+        }
+        .form-control {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-left: none;
+            background-color: #F8FAFC;
+            padding: 0.65rem 1rem;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+            background-color: #FFFFFF;
+        }
+        .form-control:focus + .input-group-text,
+        .input-group:focus-within .input-group-text {
+            background-color: #FFFFFF;
+            border-color: #dee2e6;
         }
     </style>
 </head>
 <body>
+    <!-- Decorative Background -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
     <div class="login-card">
         <div class="login-header">
-            <div class="mb-2">
-                <i class="bi bi-shield-check text-warning fs-1"></i>
+            <div class="mb-3">
+                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm" style="width: 80px; height: 80px; padding: 10px;">
+                    <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="img-fluid" style="max-height: 100%;">
+                </div>
             </div>
-            <h4 class="fw-bold mb-1">360° Kinerja ASN</h4>
-            <small class="text-white-50">BKPSDM Kabupaten Pemalang</small>
+            <h4 class="fw-bold mb-1 text-dark">360° Kinerja ASN</h4>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mt-1 rounded-pill fw-medium">BKPSDM Kabupaten Pemalang</span>
         </div>
 
         <div class="card-body p-4">

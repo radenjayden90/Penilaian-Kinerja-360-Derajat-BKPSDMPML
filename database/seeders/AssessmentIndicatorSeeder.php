@@ -12,39 +12,39 @@ class AssessmentIndicatorSeeder extends Seeder
     {
         $indicatorsData = [
             "Berorientasi Pelayanan" => [
-                "Memahami dan secara proaktif memenuhi kebutuhan masyarakat atau rekan kerja.",
-                "Selalu bersikap ramah, cekatan, solutif, dan dapat diandalkan dalam memberikan pelayanan.",
-                "Terus melakukan perbaikan tiada henti terhadap proses pelayanan atau pekerjaan."
+                "Memahami dan memenuhi kebutuhan pihak yang dilayani.",
+                "Ramah, cekatan, solutif, dan dapat diandalkan dalam memberikan pelayanan.",
+                "Melakukan perbaikan dalam pelaksanaan tugas dan pelayanan tiada henti."
             ],
             "Akuntabel" => [
                 "Melaksanakan tugas dengan jujur, bertanggung jawab, cermat, disiplin, dan berintegritas tinggi.",
-                "Menggunakan fasilitas dan barang milik instansi secara bertanggung jawab, efektif, dan efisien.",
-                "Tidak menyalahgunakan kewenangan jabatan untuk kepentingan pribadi atau golongan."
+                "Menggunakan kekayaan dan barang milik negara secara bertanggung jawab, efektif, dan efisien.",
+                "Tidak menyalahgunakan kewenangan jabatan."
             ],
             "Kompeten" => [
-                "Aktif meningkatkan kompetensi diri untuk menjawab tantangan pekerjaan yang selalu berubah.",
-                "Bersedia meluangkan waktu untuk membantu rekan kerja lain belajar dan berkembang.",
-                "Selalu berupaya melaksanakan tugas yang diberikan dengan kualitas hasil terbaik."
+                "Meningkatkan kompetensi diri untuk menjawab tantangan tugas yang selalu berubah.",
+                "Membantu orang lain belajar.",
+                "Melaksanakan tugas dengan kualitas terbaik."
             ],
             "Harmonis" => [
-                "Menghargai setiap orang terlepas dari perbedaan latar belakang, suku, agama, maupun ras.",
-                "Suka menolong orang lain yang sedang mengalami kesulitan baik terkait pekerjaan maupun hal lain.",
-                "Mampu membangun dan menjaga lingkungan kerja yang kondusif, aman, dan nyaman."
+                "Menghargai setiap orang apapun latar belakangnya.",
+                "Suka menolong orang lain baik dalam pelaksanaan tugas, pelayanan, maupun kegiatan kemasyarakatan.",
+                "Membangun lingkungan kerja yang kondusif."
             ],
             "Loyal" => [
-                "Memegang teguh nilai-nilai Pancasila, UUD 1945, serta setia kepada instansi dan negara.",
-                "Menjaga nama baik sesama rekan kerja, pimpinan, instansi, dan negara dalam setiap tindakan.",
-                "Dapat dipercaya untuk menjaga rahasia jabatan, instansi, dan kerahasiaan data pekerjaan."
+                "Memegang teguh ideologi Pancasila, Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, setia kepada Negara Kesatuan Republik Indonesia serta pemerintahan yang sah.",
+                "Menjaga nama baik sesama aparatur sipil negara, pimpinan, instansi, dan negara.",
+                "Menjaga rahasia jabatan dan negara."
             ],
             "Adaptif" => [
-                "Cepat menyesuaikan diri menghadapi perubahan lingkungan, kebijakan, atau teknologi baru.",
-                "Terus berinovasi dan antusias mengembangkan kreativitas dalam mencari solusi atas masalah.",
-                "Bertindak proaktif dan selalu mengambil inisiatif positif tanpa harus selalu menunggu perintah."
+                "Cepat menyesuaikan diri menghadapi perubahan.",
+                "Terus berinovasi dan mengembangkan kreativitas.",
+                "Bertindak proaktif dalam pelaksanaan tugas dan memberikan pelayanan."
             ],
             "Kolaboratif" => [
-                "Memberi kesempatan dan apresiasi kepada berbagai pihak untuk ikut berkontribusi.",
-                "Terbuka dalam bekerja sama dengan rekan lintas bidang untuk menghasilkan karya/nilai tambah.",
-                "Mampu menggerakkan dan mensinergikan pemanfaatan berbagai sumber daya untuk tujuan bersama."
+                "Memberi kesempatan kepada berbagai pihak untuk berkontribusi.",
+                "Terbuka dalam bekerja sama untuk menghasilkan nilai tambah.",
+                "Menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama."
             ],
         ];
 

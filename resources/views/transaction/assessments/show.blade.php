@@ -52,7 +52,7 @@
                                 <td>{{ $score->indicator->name ?? $score->indicator->question }}</td>
                                 <td class="text-center">
                                     <span class="badge bg-primary px-3 py-2 fs-6" style="background-color: #1E3A5F !important;">
-                                        {{ $score->score }} / 5
+                                        {{ $score->score }} / 10
                                     </span>
                                 </td>
                             </tr>
