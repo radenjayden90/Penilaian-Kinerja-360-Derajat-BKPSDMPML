@@ -86,7 +86,7 @@ class Employee extends Authenticatable
     public function subordinates() { return $this->hasMany(Employee::class, "supervisor_id"); }
     public function assessments() { return $this->hasMany(Assessment::class, "employee_id"); }
     public function results() { return $this->hasMany(AssessmentResult::class, "employee_id"); }
-    public function assessmentResult() { return $this->hasOne(AssessmentResult::class, "employee_id")->latestOfMany(); }
+    public function assessmentResult() { return $this->hasOne(AssessmentResult::class, "employee_id")->latest('created_at'); }
 
     public function isAdmin(): bool
     {

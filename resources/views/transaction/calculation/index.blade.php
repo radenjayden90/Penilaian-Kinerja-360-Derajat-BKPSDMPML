@@ -10,12 +10,9 @@
 @endsection
 
 @section('action_buttons')
-    <form action="{{ route('transaction.calculations.calculateAll') }}" method="POST" class="d-inline" onsubmit="return confirm('Proses ini akan menghitung ulang skor akhir seluruh pegawai pada periode aktif. Lanjutkan?')">
-        @csrf
-        <button type="submit" class="btn btn-success fw-semibold">
-            <i class="bi bi-calculator me-1"></i> Hitung Ulang Seluruh Pegawai
-        </button>
-    </form>
+    <button type="button" class="btn btn-success fw-semibold shadow-sm btn-hover-scale" data-bs-toggle="modal" data-bs-target="#confirmKalkulasiModal">
+        <i class="bi bi-calculator me-1"></i> Hitung Ulang Seluruh Pegawai
+    </button>
 @endsection
 
 @section('content')
@@ -143,3 +140,98 @@
     @endif
 </div>
 @endsection
+
+<!-- Custom Premium Modal -->
+<div class="modal fade" id="confirmKalkulasiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-body p-4 text-center">
+                <div class="icon-box mb-4 mx-auto">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h4 class="fw-bold mb-2" style="color: #1e3a5f;">Kalkulasi Ulang?</h4>
+                <p class="text-muted mb-4" style="font-size: 0.95rem;">
+                    Proses ini akan menghitung ulang skor akhir seluruh pegawai secara masal. Tindakan ini membutuhkan waktu beberapa saat.
+                </p>
+                
+                <form action="{{ route('transaction.calculations.calculateAll') }}" method="POST" id="kalkulasiForm">
+                    @csrf
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-light px-4 rounded-pill fw-medium btn-hover-scale border" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill fw-medium btn-gradient shadow-sm btn-hover-scale" onclick="showLoadingState(this)">
+                            <i class="bi bi-calculator me-1"></i> Ya, Hitung!
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+    .custom-modal-content {
+        border-radius: 24px;
+        border: none;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.98);
+    }
+    .icon-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
+        animation: pulse-warning 2s infinite;
+    }
+    .icon-box i {
+        font-size: 2.5rem;
+        color: #ffc107;
+    }
+    .btn-gradient {
+        background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+        border: none;
+        color: white;
+    }
+    .btn-gradient:hover {
+        background: linear-gradient(135deg, #146c43 0%, #0f5132 100%);
+        color: white;
+    }
+    .btn-hover-scale {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-hover-scale:hover {
+        transform: scale(1.05);
+    }
+    @keyframes pulse-warning {
+        0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 193, 7, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+    }
+    /* Custom Backdrop for Glassmorphism effect */
+    .modal-backdrop.show {
+        backdrop-filter: blur(5px);
+        background-color: rgba(15, 23, 42, 0.6) !important;
+        opacity: 1 !important;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    function showLoadingState(btn) {
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Menghitung...';
+        btn.classList.add('disabled');
+        
+        const cancelBtn = btn.previousElementSibling;
+        if (cancelBtn) {
+            cancelBtn.classList.add('disabled');
+        }
+    }
+</script>
+@endpush
