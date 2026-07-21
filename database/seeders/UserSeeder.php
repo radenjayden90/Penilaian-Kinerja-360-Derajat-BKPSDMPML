@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
         $deptPSDM = Department::where('code', 'PSDM')->first() ?? Department::firstOrCreate(['code' => 'PSDM'], ['name' => 'Bidang Pengembangan Sumber Daya Manusia', 'is_active' => true]);
 
         // 3. Positions
-        $posKepalaBkpsdm = Position::firstOrCreate(['name' => 'Kepala BKPSDM', 'department_id' => $deptSekretariat->id], ['level' => '1', 'is_active' => true]);
+        $posKepalaBkpsdm = Position::firstOrCreate(['name' => 'Kepala BKPSDM Kabupaten Pemalang', 'department_id' => $deptSekretariat->id], ['level' => '1', 'is_active' => true]);
         
         // Eselon 3 (Sekretaris & Kabid)
         $posSekretaris = Position::firstOrCreate(['name' => 'Sekretaris', 'department_id' => $deptSekretariat->id], ['level' => '2', 'is_active' => true]);
@@ -62,11 +62,11 @@ class UserSeeder extends Seeder
 
         // B. Kepala BKPSDM (Pimpinan Utama - Tidak masuk ke bidang manapun)
         $kepala = Employee::updateOrCreate([
-            'nip' => '197005121995031001'
+            'nip' => '196803231990031012'
         ], [
-            'name' => 'Dr. H. Yudi Prasetyo, M.Si',
+            'name' => 'Khaeron, S.H., M.M.',
             'email' => 'kepala@pemalang.go.id',
-            'password' => Hash::make('197005121995031001'),
+            'password' => Hash::make('196803231990031012'),
             'gender' => 'L',
             'department_id' => null,
             'position_id' => $posKepalaBkpsdm->id,
@@ -165,31 +165,145 @@ class UserSeeder extends Seeder
             'is_active' => true,
         ]);
         
-        // I. Kabid PPIK (Head)
+        // --- BIDANG PPIK ---
+        $posKabidPPIKReal = Position::updateOrCreate(['name' => 'Kepala Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian', 'department_id' => $deptPPIK->id], ['level' => '2', 'is_active' => true]);
+        $posPrakomPertama = Position::firstOrCreate(['name' => 'Pranata Komputer Ahli Pertama', 'department_id' => $deptPPIK->id], ['level' => '3', 'is_active' => true]);
+        $posPengadministrasi = Position::firstOrCreate(['name' => 'Pengadministrasi Perkantoran', 'department_id' => $deptPPIK->id], ['level' => '4', 'is_active' => true]);
+        $posPenelaah = Position::firstOrCreate(['name' => 'Penelaah Teknis Kebijakan', 'department_id' => $deptPPIK->id], ['level' => '4', 'is_active' => true]);
+        $posPrakomMuda = Position::firstOrCreate(['name' => 'Pranata Komputer Ahli Muda', 'department_id' => $deptPPIK->id], ['level' => '3', 'is_active' => true]);
+        $posAnalisSDMPPIK = Position::firstOrCreate(['name' => 'Analis Sumber Daya Manusia Aparatur Ahli Muda', 'department_id' => $deptPPIK->id], ['level' => '3', 'is_active' => true]);
+        $posPrakomLanjutan = Position::firstOrCreate(['name' => 'Pranata Komputer Mahir/Pelaksana Lanjutan', 'department_id' => $deptPPIK->id], ['level' => '4', 'is_active' => true]);
+
+        // 1. Kabid PPIK
         $kabidPPIK = Employee::updateOrCreate([
-            'nip' => '198011252006041008'
+            'nip' => '197903072005011006'
         ], [
-            'name' => 'Eko Kurniawan, S.STP',
-            'email' => 'kabid.ppik@pemalang.go.id',
-            'password' => Hash::make('198011252006041008'),
+            'name' => 'HADI SISWANTO, S.Kom',
+            'email' => 'hadisiswanto@pemalang.go.id',
+            'password' => Hash::make('197903072005011006'),
             'gender' => 'L',
             'department_id' => $deptPPIK->id,
-            'position_id' => $posKabidPPIK->id,
+            'position_id' => $posKabidPPIKReal->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => $kepala->id,
             'is_active' => true,
         ]);
 
-        // J. Pengelola Kepegawaian PPIK
+        // 2. Fendi Heriawan
         Employee::updateOrCreate([
-            'nip' => '199512012019031009'
+            'nip' => '198104192009011005'
         ], [
-            'name' => 'Budi Santoso, S.Sos',
-            'email' => 'budi.ppik@pemalang.go.id',
-            'password' => Hash::make('199512012019031009'),
+            'name' => 'FENDI HERIAWAN, S.Kom',
+            'email' => 'fendiheriawan@pemalang.go.id',
+            'password' => Hash::make('198104192009011005'),
             'gender' => 'L',
             'department_id' => $deptPPIK->id,
-            'position_id' => $posPengelola->id,
+            'position_id' => $posPrakomPertama->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 3. Maskuri
+        Employee::updateOrCreate([
+            'nip' => '196810151992031007'
+        ], [
+            'name' => 'MASKURI',
+            'email' => 'maskuri@pemalang.go.id',
+            'password' => Hash::make('196810151992031007'),
+            'gender' => 'L',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPengadministrasi->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 4. Dian Fitriana
+        Employee::updateOrCreate([
+            'nip' => '197709192008012008'
+        ], [
+            'name' => 'DIAN FITRIANA, S.H.',
+            'email' => 'dianfitriana@pemalang.go.id',
+            'password' => Hash::make('197709192008012008'),
+            'gender' => 'P',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPenelaah->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 5. Apit Setiawan
+        Employee::updateOrCreate([
+            'nip' => '198407302009031003'
+        ], [
+            'name' => 'APIT SETIAWAN, S.Kom.',
+            'email' => 'apitsetiawan@pemalang.go.id',
+            'password' => Hash::make('198407302009031003'),
+            'gender' => 'L',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPrakomMuda->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 6. Mohamad Tarmanto
+        Employee::updateOrCreate([
+            'nip' => '197508062007011012'
+        ], [
+            'name' => 'MOHAMAD TARMANTO',
+            'email' => 'mohamadtarmanto@pemalang.go.id',
+            'password' => Hash::make('197508062007011012'),
+            'gender' => 'L',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPengadministrasi->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 7. Abdul Wahid Zuhry
+        Employee::updateOrCreate([
+            'nip' => '197106071992031005'
+        ], [
+            'name' => 'ABDUL WAHID ZUHRY, S.IP, M.M.',
+            'email' => 'abdulwahidzuhry@pemalang.go.id',
+            'password' => Hash::make('197106071992031005'),
+            'gender' => 'L',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posAnalisSDMPPIK->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 8. Rizki Septina Kusumaningsih
+        Employee::updateOrCreate([
+            'nip' => '198609022015022001'
+        ], [
+            'name' => 'RIZKI SEPTINA KUSUMANINGSIH, S.T.',
+            'email' => 'rizkiseptina@pemalang.go.id',
+            'password' => Hash::make('198609022015022001'),
+            'gender' => 'P',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPrakomLanjutan->id,
+            'role_id' => $employeeRole?->id,
+            'supervisor_id' => $kabidPPIK->id,
+            'is_active' => true,
+        ]);
+
+        // 9. Tusmanto
+        Employee::updateOrCreate([
+            'nip' => '198208282014061003'
+        ], [
+            'name' => 'TUSMANTO',
+            'email' => 'tusmanto@pemalang.go.id',
+            'password' => Hash::make('198208282014061003'),
+            'gender' => 'L',
+            'department_id' => $deptPPIK->id,
+            'position_id' => $posPengadministrasi->id,
             'role_id' => $employeeRole?->id,
             'supervisor_id' => $kabidPPIK->id,
             'is_active' => true,
