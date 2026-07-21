@@ -10,13 +10,18 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $departments = [
-            ["name" => "Bidang Mutasi dan Promosi", "code" => "MUT"],
-            ["name" => "Bidang Pengembangan Kompetensi Aparatur", "code" => "BANGKOM"],
-            ["name" => "Bidang Pengadaan, Pemberhentian dan Informasi", "code" => "PPI"],
+            ["name" => "Sekretariat", "code" => "SEKRETARIAT"],
+            ["name" => "Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian", "code" => "PPIK"],
+            ["name" => "Bidang Mutasi dan Promosi", "code" => "MUTASI"],
+            ["name" => "Bidang Penilaian dan Evaluasi Kinerja Aparatur", "code" => "PEKA"],
+            ["name" => "Bidang Pengembangan Sumber Daya Manusia", "code" => "PSDM"],
         ];
         
         foreach ($departments as $d) {
-            Department::firstOrCreate(["code" => $d["code"]], $d);
+            Department::updateOrCreate(["code" => $d["code"]], [
+                "name" => $d["name"],
+                "is_active" => true
+            ]);
         }
     }
 }

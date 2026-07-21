@@ -17,11 +17,36 @@ class Period extends Model
     ];
 
     protected $casts = [
-        "start_date" => "date",
-        "end_date" => "date",
+        "start_date" => "datetime",
+        "end_date" => "datetime",
         "is_active" => "boolean",
         "status" => PeriodStatus::class,
     ];
+
+    /**
+     * Auto close active periods whose end_date has passed.
+     */
+    public static function autoCloseExpiredPeriods(): int
+    {
+        return static::where('is_active', true)
+            ->where('end_date', '<=', \Carbon\Carbon::now())
+            ->update([
+                'is_active' => false,
+                'status' => PeriodStatus::CLOSED->value,
+            ]);
+    }
+
+    /**
+     * Helper to get current active open period, automatically closing expired ones first.
+     */
+    public static function getActivePeriod()
+    {
+        static::autoCloseExpiredPeriods();
+        return static::where('is_active', true)
+            ->where('status', PeriodStatus::OPEN->value)
+            ->where('end_date', '>', \Carbon\Carbon::now())
+            ->first();
+    }
 
     public function assessments() { return $this->hasMany(Assessment::class); }
     public function results() { return $this->hasMany(AssessmentResult::class); }

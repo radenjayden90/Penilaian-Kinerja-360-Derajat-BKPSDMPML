@@ -47,7 +47,7 @@ class AssessmentCalculatorService
         $hasSubordinates = Employee::where('supervisor_id', $employee->id)->where('is_active', true)->exists();
 
         // 2. Fetch all SUBMITTED assessments for this employee in this period
-        $assessments = Assessment::with('scores')
+        $assessments = Assessment::with(['scores.indicator.category'])
             ->where('employee_id', $employee->id)
             ->where('period_id', $period->id)
             ->where('status', 'SUBMITTED')
@@ -98,8 +98,8 @@ class AssessmentCalculatorService
 
         $rawScore = ($superiorAvg * $superiorWeight) + ($peerAvg * $peerWeight) + ($subordinateAvg * $subordinateWeight);
         
-        // Scale 1-10 to 10-100 for category evaluation
-        $finalScore = $rawScore * 10;
+        // Scale 1-5 to 10-100 for category evaluation
+        $finalScore = $rawScore * 20;
 
         // 6. Determine Category
         $category = $this->determineCategory($finalScore);
@@ -127,19 +127,32 @@ class AssessmentCalculatorService
     {
         if ($assessments->isEmpty()) return 0;
 
-        // Formula: average of each assessment's average.
-        // Wait, the business rule says: "Contoh: 9, 8, 10, 8, 9 -> Average Assessment: 8.8. Nilai assessment inilah yang digunakan dalam proses pembobotan."
-        // Meaning, for each assessment, average its scores. Then if there are multiple peers, average the peers' averages.
-        
-        $assessmentAverages = collect();
+        $assessmentScores = collect();
 
         foreach ($assessments as $assessment) {
             if ($assessment->scores->count() > 0) {
-                $assessmentAverages->push($assessment->scores->avg('score'));
+                // Group scores by category
+                $groupedScores = $assessment->scores->groupBy(function($score) {
+                    return $score->indicator->category_id ?? 'unknown';
+                });
+
+                $totalAssessmentScore = 0;
+
+                foreach ($groupedScores as $categoryId => $scores) {
+                    $category = $scores->first()->indicator->category ?? null;
+                    if ($category) {
+                        $categoryAverage = $scores->avg('score');
+                        // Multiply category average by its weight (e.g., 14.28 / 100)
+                        $weightedCategoryScore = $categoryAverage * ($category->weight / 100);
+                        $totalAssessmentScore += $weightedCategoryScore;
+                    }
+                }
+                
+                $assessmentScores->push($totalAssessmentScore);
             }
         }
 
-        return $assessmentAverages->isEmpty() ? 0 : $assessmentAverages->avg();
+        return $assessmentScores->isEmpty() ? 0 : $assessmentScores->avg();
     }
 
     private function determineCategory($score)

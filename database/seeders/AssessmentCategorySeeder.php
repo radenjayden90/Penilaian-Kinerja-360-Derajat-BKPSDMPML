@@ -19,10 +19,16 @@ class AssessmentCategorySeeder extends Seeder
             "Kolaboratif"
         ];
         
+        $weightPerCategory = 100 / count($categories);
+
         foreach ($categories as $index => $c) {
-            AssessmentCategory::firstOrCreate(["name" => $c], [
-                "display_order" => $index + 1
-            ]);
+            AssessmentCategory::updateOrCreate(
+                ["name" => $c],
+                [
+                    "display_order" => $index + 1,
+                    "weight" => $weightPerCategory
+                ]
+            );
         }
     }
 }

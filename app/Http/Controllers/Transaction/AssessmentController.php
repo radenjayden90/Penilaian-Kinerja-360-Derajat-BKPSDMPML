@@ -47,25 +47,22 @@ class AssessmentController extends Controller
         // Get Superior
         $superior = $this->repository->getSuperior($employee);
         if ($superior) {
-            $superior->assessment_status = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $superior->id, AssessmentType::SUPERIOR->value);
+            $superior->load(['department', 'position']);
+            $supAssessment = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $superior->id, AssessmentType::SUPERIOR->value);
+            $superior->assessment_status = ($supAssessment && ($supAssessment->status?->value === 'SUBMITTED' || $supAssessment->status === 'SUBMITTED')) ? 'COMPLETED' : 'PENDING';
         }
 
-        // Get Peers
+        // Get Peers (Cross-department, including Kabid, with COMPLETED / FULL / PENDING status)
         $peers = $this->repository->getEligiblePeers($employee, $activePeriod);
-        $peers->map(function ($peer) use ($activePeriod, $employee) {
-            $peer->assessment_status = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $peer->id, AssessmentType::PEER->value);
-            return $peer;
-        });
 
-        // Get Subordinates
-        $subordinates = collect();
-        if ($employee->role?->name === 'Kabid' || $employee->role?->name === 'Kepala BKPSDM' || $this->repository->getSubordinates($employee)->count() > 0) {
-            $subordinates = $this->repository->getSubordinates($employee);
-            $subordinates->map(function ($subordinate) use ($activePeriod, $employee) {
-                $subordinate->assessment_status = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $subordinate->id, AssessmentType::SUBORDINATE->value);
-                return $subordinate;
-            });
-        }
+        // Get Subordinates (For Kabid: all employees in the same department/bidang)
+        $subordinates = $this->repository->getSubordinates($employee);
+        $subordinates->map(function ($subordinate) use ($activePeriod, $employee) {
+            $subordinate->load(['department', 'position']);
+            $subAssessment = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $subordinate->id, AssessmentType::SUBORDINATE->value);
+            $subordinate->assessment_status = ($subAssessment && ($subAssessment->status?->value === 'SUBMITTED' || $subAssessment->status === 'SUBMITTED')) ? 'COMPLETED' : 'PENDING';
+            return $subordinate;
+        });
 
         return view('transaction.assessments.dashboard', compact('activePeriod', 'superior', 'peers', 'subordinates', 'employee'));
     }

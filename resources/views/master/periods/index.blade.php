@@ -36,9 +36,9 @@
             <div class="col-12 col-md-4 d-flex gap-2">
                 <select name="status" class="form-select bg-light" onchange="this.form.submit()">
                     <option value="">-- Status --</option>
-                    <option value="ACTIVE" {{ request('status') === 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
-                    <option value="CLOSED" {{ request('status') === 'CLOSED' ? 'selected' : '' }}>Selesai/Tutup</option>
-                    <option value="DRAFT" {{ request('status') === 'DRAFT' ? 'selected' : '' }}>Draft</option>
+                    <option value="OPEN" {{ request('status') === 'OPEN' ? 'selected' : '' }}>Aktif / Terbuka</option>
+                    <option value="CLOSED" {{ request('status') === 'CLOSED' ? 'selected' : '' }}>Selesai / Ditutup</option>
+                    <option value="ARCHIVED" {{ request('status') === 'ARCHIVED' ? 'selected' : '' }}>Arsip</option>
                 </select>
                 @if(request('search') || request('year') || request('status'))
                     <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
@@ -57,8 +57,8 @@
                         <th class="ps-3" style="width: 50px;">No</th>
                         <th>Nama Periode</th>
                         <th>Tahun / Bulan</th>
-                        <th>Jadwal Pelaksanaan</th>
-                        <th>Status Aktif</th>
+                        <th>Jadwal Pelaksanaan (Tanggal & Jam)</th>
+                        <th>Status Periode</th>
                         <th class="text-end pe-3" style="width: 140px;">Aksi</th>
                     </tr>
                 </thead>
@@ -71,15 +71,23 @@
                             </td>
                             <td>Tahun {{ $period->year }} (Bulan {{ $period->month }})</td>
                             <td>
-                                <small class="text-dark">
-                                    <i class="bi bi-calendar-event text-primary me-1"></i>
-                                    {{ \Carbon\Carbon::parse($period->start_date)->format('d M Y') }} s/d {{ \Carbon\Carbon::parse($period->end_date)->format('d M Y') }}
+                                <small class="text-dark d-block">
+                                    <i class="bi bi-clock text-primary me-1"></i>
+                                    <strong>Mulai:</strong> {{ \Carbon\Carbon::parse($period->start_date)->format('d M Y, H:i') }} WIB
+                                </small>
+                                <small class="text-dark d-block">
+                                    <i class="bi bi-clock-history text-danger me-1"></i>
+                                    <strong>Selesai:</strong> {{ \Carbon\Carbon::parse($period->end_date)->format('d M Y, H:i') }} WIB
                                 </small>
                             </td>
                             <td>
                                 @if($period->is_active)
                                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 fs-6">
-                                        <i class="bi bi-check-circle me-1"></i>Aktif
+                                        <i class="bi bi-check-circle me-1"></i>Aktif (OPEN)
+                                    </span>
+                                @elseif($period->end_date && \Carbon\Carbon::parse($period->end_date)->isPast())
+                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1">
+                                        <i class="bi bi-lock me-1"></i>Selesai (CLOSED)
                                     </span>
                                 @else
                                     <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1">Tutup / Nonaktif</span>
