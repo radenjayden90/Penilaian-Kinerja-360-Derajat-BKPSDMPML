@@ -572,10 +572,75 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryTitle = document.getElementById('currentCategoryTitle');
     const categoryIndexText = document.getElementById('currentCategoryIndex');
     
-    // Switch Tab Logic
-    function switchTab(index) {
-        if(index < 0 || index >= totalCategories) return;
+    // Helper: Check if all questions in a category are answered
+    function isCategoryComplete(catIdx) {
+        const inputsInCat = document.querySelectorAll('#tab-' + catIdx + ' .form-score-input');
+        if (inputsInCat.length === 0) return true;
+        for (let input of inputsInCat) {
+            if (input.dataset.answered !== "true") {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper: Highlight unanswered questions in a category with red border & scroll to first
+    function highlightUnansweredQuestions(catIdx) {
+        const inputsInCat = document.querySelectorAll('#tab-' + catIdx + ' .form-score-input');
+        let firstUnansweredCard = null;
         
+        inputsInCat.forEach(input => {
+            const card = input.closest('.question-card');
+            if (input.dataset.answered !== "true") {
+                if (card) {
+                    card.style.border = '2px solid #EF4444';
+                    card.style.backgroundColor = '#FEF2F2';
+                    if (!firstUnansweredCard) firstUnansweredCard = card;
+                }
+            } else {
+                if (card) {
+                    card.style.border = '1px solid var(--card-border)';
+                    card.style.backgroundColor = '#FFFFFF';
+                }
+            }
+        });
+
+        if (firstUnansweredCard) {
+            firstUnansweredCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Helper: Toast alert notification for validation
+    function showCategoryAlert(message) {
+        let alertBox = document.getElementById('categoryValidationAlert');
+        if (!alertBox) {
+            alertBox = document.createElement('div');
+            alertBox.id = 'categoryValidationAlert';
+            alertBox.className = 'tw-fixed tw-top-5 tw-right-5 tw-z-[9999] tw-bg-rose-600 tw-text-white tw-px-6 tw-py-4 tw-rounded-2xl tw-shadow-2xl tw-flex tw-items-center tw-gap-3 tw-transition-all tw-duration-300 tw-opacity-0 tw-translate-y-[-10px]';
+            alertBox.innerHTML = `
+                <i class="bi bi-exclamation-triangle-fill tw-text-xl"></i>
+                <div>
+                    <div class="tw-font-bold tw-text-sm">Pengisian Kategori Belum Lengkap!</div>
+                    <div class="tw-text-xs tw-text-rose-100" id="categoryValidationMsg"></div>
+                </div>
+                <button type="button" class="tw-ml-auto tw-bg-transparent tw-border-0 tw-text-white tw-text-lg tw-cursor-pointer" onclick="this.parentElement.classList.add('tw-opacity-0', 'tw-pointer-events-none')">&times;</button>
+            `;
+            document.body.appendChild(alertBox);
+        }
+        document.getElementById('categoryValidationMsg').textContent = message;
+        alertBox.classList.remove('tw-opacity-0', 'tw-translate-y-[-10px]', 'tw-pointer-events-none');
+        alertBox.classList.add('tw-opacity-100', 'tw-translate-y-0');
+        
+        setTimeout(() => {
+            if (alertBox) {
+                alertBox.classList.remove('tw-opacity-100', 'tw-translate-y-0');
+                alertBox.classList.add('tw-opacity-0', 'tw-translate-y-[-10px]', 'tw-pointer-events-none');
+            }
+        }, 4500);
+    }
+
+    // Directly switch tab without validation (internal use)
+    function switchTabDirectly(index) {
         // Hide all
         tabContents.forEach(c => c.classList.remove('active'));
         tabs.forEach(t => {
@@ -593,7 +658,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tabs[index].querySelector('.tab-badge').classList.add('tw-bg-white/20');
         
         // Update Title
-        let titleText = tabs[index].textContent.replace(/[0-9]+\/[0-9]+/, '').trim();
+        let titleText = tabs[index].textContent.replace(/[0-9]+\/[0-9]+\s*✓?/, '').trim();
         categoryTitle.textContent = titleText;
         categoryIndexText.textContent = index + 1;
         
@@ -617,6 +682,28 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tabs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Switch Tab Logic with strict category completion check
+    function switchTab(index) {
+        if (index < 0 || index >= totalCategories) return;
+        
+        // Validate if advancing forward
+        if (index > currentTabIndex) {
+            for (let i = 0; i < index; i++) {
+                if (!isCategoryComplete(i)) {
+                    highlightUnansweredQuestions(i);
+                    const catName = tabs[i].textContent.replace(/[0-9]+\/[0-9]+\s*✓?/, '').trim();
+                    showCategoryAlert(`Mohon lengkapi seluruh pertanyaan pada Kategori "${catName}" terlebih dahulu.`);
+                    if (i !== currentTabIndex) {
+                        switchTabDirectly(i);
+                    }
+                    return;
+                }
+            }
+        }
+        
+        switchTabDirectly(index);
     }
 
     // Tab Clicks
@@ -690,6 +777,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const input = document.getElementById(inputId);
         input.value = val;
         input.dataset.answered = "true";
+        
+        // Restore question card border if previously highlighted red
+        const card = input.closest('.question-card');
+        if (card) {
+            card.style.border = '1px solid var(--card-border)';
+            card.style.backgroundColor = '#FFFFFF';
+        }
         
         // Update active number
         document.querySelectorAll(`[data-input="${inputId}"]`).forEach(btn => {
