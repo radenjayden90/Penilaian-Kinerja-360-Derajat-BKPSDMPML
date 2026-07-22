@@ -99,12 +99,7 @@
 
     @if($departments->hasPages())
         <div class="card-footer bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    Menampilkan {{ $departments->firstItem() }} - {{ $departments->lastItem() }} dari total {{ $departments->total() }} data
-                </small>
-                {{ $departments->withQueryString()->links() }}
-            </div>
+            {{ $departments->withQueryString()->links() }}
         </div>
     @endif
 </div>

@@ -103,12 +103,7 @@
 
     @if($categories->hasPages())
         <div class="card-footer bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    Menampilkan {{ $categories->firstItem() }} - {{ $categories->lastItem() }} dari total {{ $categories->total() }} data
-                </small>
-                {{ $categories->withQueryString()->links() }}
-            </div>
+            {{ $categories->withQueryString()->links() }}
         </div>
     @endif
 </div>

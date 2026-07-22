@@ -135,12 +135,7 @@
 
     @if($employees->hasPages())
         <div class="card-footer bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    Menampilkan {{ $employees->firstItem() }} - {{ $employees->lastItem() }} dari total {{ $employees->total() }} data
-                </small>
-                {{ $employees->withQueryString()->links() }}
-            </div>
+            {{ $employees->withQueryString()->links() }}
         </div>
     @endif
 </div>

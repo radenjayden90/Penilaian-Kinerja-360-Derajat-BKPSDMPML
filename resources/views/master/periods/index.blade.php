@@ -123,12 +123,7 @@
 
     @if($periods->hasPages())
         <div class="card-footer bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    Menampilkan {{ $periods->firstItem() }} - {{ $periods->lastItem() }} dari total {{ $periods->total() }} data
-                </small>
-                {{ $periods->withQueryString()->links() }}
-            </div>
+            {{ $periods->withQueryString()->links() }}
         </div>
     @endif
 </div>
