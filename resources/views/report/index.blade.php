@@ -15,7 +15,7 @@
             <i class="bi bi-printer me-1"></i> Cetak / PDF
         </a>
         <a href="{{ route('report.exportCsv', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" class="btn btn-success fw-semibold">
-            <i class="bi bi-file-earmark-excel me-1"></i> Ekspor CSV / Excel
+            <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Excel (.xlsx)
         </a>
     </div>
 @endsection

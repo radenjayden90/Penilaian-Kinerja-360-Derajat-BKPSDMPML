@@ -11,6 +11,10 @@ use App\Repositories\AssessmentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\AssessmentType;
+use App\Services\Export\AssessmentResultExporter;
+use App\Services\Export\AssessmentHistoryExporter;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Str;
 
 class AssessmentController extends Controller
 {
@@ -224,52 +228,19 @@ class AssessmentController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk mengekspor rapor ini.');
         }
 
-        $fileName = 'rapor_kinerja_360_' . ($result->employee->nip ?? 'pegawai') . '_' . date('Ymd_His') . '.csv';
+        $exporter = new AssessmentResultExporter($result);
+        $spreadsheet = $exporter->export();
 
-        $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
+        $empName = Str::slug($result->employee->name ?? 'pegawai', '_');
+        $fileName = 'Rekap_Penilaian_360_' . $empName . '_' . date('Ymd') . '.xlsx';
 
-        $posName = strtolower($result->employee->position?->name ?? '');
-        $isKabid = ($result->employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
-        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category);
-        $catLabel = $catEnum ? $catEnum->label() : $result->category;
-
-        $callback = function() use($result, $isKabid, $catLabel) {
-            $file = fopen('php://output', 'w');
-            fputs($file, "\xEF\xBB\xBF");
-
-            fputcsv($file, ['RAPOR INDIVIDU HASIL PENILAIAN KINERJA 360 DERAJAT']);
-            fputcsv($file, ['']);
-            fputcsv($file, ['Nama Pegawai', $result->employee->name ?? '-']);
-            fputcsv($file, ['NIP', $result->employee->nip ?? '-']);
-            fputcsv($file, ['Jabatan', $result->employee->position->name ?? '-']);
-            fputcsv($file, ['Unit Kerja', $result->employee->department->name ?? '-']);
-            fputcsv($file, ['Periode Penilaian', $result->period->name ?? '-']);
-            fputcsv($file, ['']);
-
-            fputcsv($file, ['No', 'Komponen Penilaian', 'Bobot', 'Skor Rata-Rata (1-10)', 'Skor Terbobot (10-100)']);
-
-            if ($isKabid) {
-                fputcsv($file, [1, 'Penilaian Atasan (Kepala BKPSDM)', '50%', number_format($result->subordinate_average ?? 0, 2), number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2)]);
-                fputcsv($file, [2, 'Penilaian Sejawat (Rekan Kepala Bidang)', '30%', number_format($result->peer_average ?? 0, 2), number_format(($result->peer_average ?? 0) * 10 * 0.30, 2)]);
-                fputcsv($file, [3, 'Penilaian Bawahan (Staf Divisi)', '20%', number_format($result->superior_average ?? 0, 2), number_format(($result->superior_average ?? 0) * 10 * 0.20, 2)]);
-            } else {
-                fputcsv($file, [1, 'Penilaian Atasan (Kepala Bidang)', '50%', number_format($result->subordinate_average ?? 0, 2), number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2)]);
-                fputcsv($file, [2, 'Penilaian Sejawat (Rekan Staff)', '50%', number_format($result->peer_average ?? 0, 2), number_format(($result->peer_average ?? 0) * 10 * 0.50, 2)]);
-            }
-
-            fputcsv($file, ['', '', '', 'Nilai Akhir Kinerja 360°', number_format($result->final_score ?? 0, 2)]);
-            fputcsv($file, ['', '', '', 'Predikat Kategori', strtoupper($catLabel ?? '-')]);
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function() use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 
     public function exportAllPdf(Request $request)
@@ -303,65 +274,18 @@ class AssessmentController extends Controller
             ->latest()
             ->get();
 
-        $fileName = 'rekap_rapor_kinerja_360_' . ($employee->nip ?? 'pegawai') . '_' . date('Ymd_His') . '.csv';
+        $exporter = new AssessmentHistoryExporter($employee, $results);
+        $spreadsheet = $exporter->export();
 
-        $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
+        $empName = Str::slug($employee->name ?? 'pegawai', '_');
+        $fileName = 'Rekap_Penilaian_360_' . $empName . '_' . date('Ymd') . '.xlsx';
 
-        $posName = strtolower($employee->position?->name ?? '');
-        $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
-
-        $callback = function() use($employee, $results, $isKabid) {
-            $file = fopen('php://output', 'w');
-            fputs($file, "\xEF\xBB\xBF");
-
-            fputcsv($file, ['REKAPITULASI HISTORI HASIL PENILAIAN KINERJA 360 DERAJAT']);
-            fputcsv($file, ['']);
-            fputcsv($file, ['Nama Pegawai', $employee->name ?? '-']);
-            fputcsv($file, ['NIP', $employee->nip ?? '-']);
-            fputcsv($file, ['Jabatan', $employee->position->name ?? '-']);
-            fputcsv($file, ['Unit Kerja', $employee->department->name ?? '-']);
-            fputcsv($file, ['']);
-
-            if ($isKabid) {
-                fputcsv($file, ['No', 'Periode Penilaian', 'Skor Atasan (50%)', 'Skor Sejawat (30%)', 'Skor Bawahan (20%)', 'Nilai Akhir Kinerja 360°', 'Kategori Predikat']);
-                foreach ($results as $index => $res) {
-                    $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
-                    $catLabel = $catEnum ? $catEnum->label() : $res->category;
-                    fputcsv($file, [
-                        $index + 1,
-                        $res->period->name ?? '-',
-                        number_format($res->subordinate_average ?? 0, 2),
-                        number_format($res->peer_average ?? 0, 2),
-                        number_format($res->superior_average ?? 0, 2),
-                        number_format($res->final_score ?? 0, 2),
-                        strtoupper($catLabel ?? '-')
-                    ]);
-                }
-            } else {
-                fputcsv($file, ['No', 'Periode Penilaian', 'Skor Atasan (50%)', 'Skor Sejawat (50%)', 'Nilai Akhir Kinerja 360°', 'Kategori Predikat']);
-                foreach ($results as $index => $res) {
-                    $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
-                    $catLabel = $catEnum ? $catEnum->label() : $res->category;
-                    fputcsv($file, [
-                        $index + 1,
-                        $res->period->name ?? '-',
-                        number_format($res->subordinate_average ?? 0, 2),
-                        number_format($res->peer_average ?? 0, 2),
-                        number_format($res->final_score ?? 0, 2),
-                        strtoupper($catLabel ?? '-')
-                    ]);
-                }
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function() use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 }

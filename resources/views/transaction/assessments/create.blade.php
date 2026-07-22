@@ -253,6 +253,108 @@
         </form>
     </div>
 </div>
+
+<!-- Custom Confirmation Modal -->
+<div id="customConfirmModal" class="tw-fixed tw-inset-0 tw-z-[9999] tw-hidden tw-items-center tw-justify-center tw-opacity-0 tw-transition-opacity tw-duration-300" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="tw-fixed tw-inset-0" style="backdrop-filter: blur(6px); background: rgba(15,23,42,.45);" aria-hidden="true" id="modalBackdrop"></div>
+
+    <!-- Modal Panel -->
+    <div class="tw-relative tw-w-full tw-max-w-[520px] tw-transform tw-overflow-hidden tw-rounded-[24px] tw-bg-white/95 tw-p-8 md:tw-p-10 tw-text-left tw-shadow-2xl tw-transition-all tw-scale-95 tw-duration-300 tw-border tw-border-white/40 tw-backdrop-blur-md tw-mx-4" id="modalPanel">
+        
+        <!-- Content Container: Confirm -->
+        <div id="modalContentConfirm" class="tw-block">
+            <!-- Icon -->
+            <div class="tw-mx-auto tw-flex tw-h-14 tw-w-14 tw-items-center tw-justify-center tw-rounded-full tw-bg-amber-100 tw-mb-6">
+                <!-- Triangle Alert Icon -->
+                <svg class="tw-h-7 tw-w-7 tw-text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            
+            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans" id="modal-title">Konfirmasi Pengiriman Penilaian</h3>
+            
+            <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-6">
+                Apakah Anda yakin ingin mengirim hasil penilaian ini?<br>
+                Setelah dikirim, jawaban tidak dapat diubah kembali.
+            </p>
+            
+            <!-- Warning Box -->
+            <div class="tw-rounded-xl tw-bg-amber-50 tw-border tw-border-amber-200 tw-p-4 tw-mb-8">
+                <p class="tw-text-sm tw-text-amber-800 tw-m-0 tw-flex tw-items-start tw-gap-2.5 tw-font-medium">
+                    <span class="tw-text-amber-500 tw-text-base">⚠</span> 
+                    Pastikan seluruh pertanyaan telah diisi dengan benar sebelum mengirim penilaian.
+                </p>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-3 tw-mt-2">
+                <button type="button" id="btnModalCancel" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-full tw-bg-white tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-slate-700 tw-shadow-sm tw-ring-1 tw-ring-inset tw-ring-slate-300 hover:tw-bg-slate-50 tw-transition-colors focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-300">
+                    <svg class="tw-h-5 tw-w-5 tw-text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                    Kembali
+                </button>
+                <button type="button" id="btnModalConfirm" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-full tw-bg-gradient-to-r tw-from-blue-600 tw-to-blue-500 tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-white tw-shadow-lg tw-shadow-blue-500/30 hover:tw-from-blue-700 hover:tw-to-blue-600 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-0">
+                    <svg class="tw-h-5 tw-w-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" id="iconConfirmCheck">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                    <svg class="tw-h-5 tw-w-5 tw-animate-spin tw-hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="iconConfirmLoading">
+                        <circle class="tw-opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="tw-opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span id="textConfirmBtn">Ya, Kirim Penilaian</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Container: Success -->
+        <div id="modalContentSuccess" class="tw-hidden">
+            <!-- Icon -->
+            <div class="tw-mx-auto tw-flex tw-h-16 tw-w-16 tw-items-center tw-justify-center tw-rounded-full tw-bg-emerald-100 tw-mb-6">
+                <svg class="tw-h-8 tw-w-8 tw-text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            
+            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Penilaian Berhasil Dikirim</h3>
+            
+            <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-8">
+                Terima kasih.<br>
+                Penilaian Anda telah berhasil disimpan.
+            </p>
+            
+            <div class="tw-flex tw-justify-center">
+                <button type="button" id="btnModalSuccess" class="tw-w-full tw-inline-flex tw-justify-center tw-items-center tw-rounded-full tw-bg-slate-900 tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-white tw-shadow-lg hover:tw-bg-slate-800 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-900 focus:tw-ring-offset-2 tw-border-0">
+                    Kembali ke Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Container: Error -->
+        <div id="modalContentError" class="tw-hidden">
+            <!-- Icon -->
+            <div class="tw-mx-auto tw-flex tw-h-16 tw-w-16 tw-items-center tw-justify-center tw-rounded-full tw-bg-rose-100 tw-mb-6">
+                <svg class="tw-h-8 tw-w-8 tw-text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            
+            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Gagal Mengirim Penilaian</h3>
+            
+            <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-8" id="errorDescription">
+                Terjadi kesalahan.<br>
+                Silakan coba beberapa saat lagi.
+            </p>
+            
+            <div class="tw-flex tw-justify-center">
+                <button type="button" id="btnModalError" class="tw-w-full tw-inline-flex tw-justify-center tw-items-center tw-rounded-full tw-bg-white tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-slate-700 tw-shadow-sm tw-ring-1 tw-ring-inset tw-ring-slate-300 hover:tw-bg-slate-50 tw-transition-colors focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-300 focus:tw-ring-offset-2 tw-border-0">
+                    Coba Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -461,13 +563,166 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Clear draft on submit
-    document.getElementById('assessmentForm').addEventListener('submit', function() {
-        if (!confirm('Apakah Anda yakin jawaban kuesioner ini sudah sesuai? Penilaian yang diserahkan tidak dapat diubah.')) {
-            event.preventDefault();
-            return false;
+    // --- Modal Logic ---
+    const form = document.getElementById('assessmentForm');
+    const customModal = document.getElementById('customConfirmModal');
+    const modalPanel = document.getElementById('modalPanel');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    
+    const contentConfirm = document.getElementById('modalContentConfirm');
+    const contentSuccess = document.getElementById('modalContentSuccess');
+    const contentError = document.getElementById('modalContentError');
+    
+    const btnModalCancel = document.getElementById('btnModalCancel');
+    const btnModalConfirm = document.getElementById('btnModalConfirm');
+    const btnModalSuccess = document.getElementById('btnModalSuccess');
+    const btnModalError = document.getElementById('btnModalError');
+    
+    const iconCheck = document.getElementById('iconConfirmCheck');
+    const iconLoading = document.getElementById('iconConfirmLoading');
+    const textBtn = document.getElementById('textConfirmBtn');
+    
+    let dashboardUrl = "{{ route('transaction.assessments.index') }}";
+    
+    function showModal() {
+        contentConfirm.classList.remove('tw-hidden');
+        contentSuccess.classList.add('tw-hidden');
+        contentError.classList.add('tw-hidden');
+        
+        btnModalConfirm.disabled = false;
+        btnModalConfirm.classList.remove('tw-opacity-70', 'tw-cursor-not-allowed');
+        iconCheck.classList.remove('tw-hidden');
+        iconLoading.classList.add('tw-hidden');
+        textBtn.textContent = 'Ya, Kirim Penilaian';
+        btnModalCancel.disabled = false;
+        
+        customModal.classList.remove('tw-hidden');
+        customModal.classList.add('tw-flex');
+        
+        setTimeout(() => {
+            customModal.classList.remove('tw-opacity-0');
+            customModal.classList.add('tw-opacity-100');
+            modalPanel.classList.remove('tw-scale-95');
+            modalPanel.classList.add('tw-scale-100');
+            btnModalConfirm.focus();
+        }, 10);
+        
+        document.addEventListener('keydown', handleKeydown);
+    }
+    
+    function closeModal() {
+        customModal.classList.remove('tw-opacity-100');
+        customModal.classList.add('tw-opacity-0');
+        modalPanel.classList.remove('tw-scale-100');
+        modalPanel.classList.add('tw-scale-95');
+        
+        setTimeout(() => {
+            customModal.classList.add('tw-hidden');
+            customModal.classList.remove('tw-flex');
+        }, 300);
+        
+        document.removeEventListener('keydown', handleKeydown);
+    }
+    
+    function handleKeydown(e) {
+        if (e.key === 'Escape' && !btnModalConfirm.disabled && contentSuccess.classList.contains('tw-hidden')) {
+            closeModal();
         }
+        if (e.key === 'Tab') {
+            const focusable = customModal.querySelectorAll('button:not([disabled])');
+            if (focusable.length > 0) {
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    last.focus();
+                    e.preventDefault();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    first.focus();
+                    e.preventDefault();
+                }
+            }
+        }
+    }
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showModal();
+    });
+    
+    btnModalCancel.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', () => {
+        if (!btnModalConfirm.disabled && contentSuccess.classList.contains('tw-hidden')) {
+            closeModal();
+        }
+    });
+    
+    btnModalConfirm.addEventListener('click', async function() {
+        btnModalConfirm.disabled = true;
+        btnModalConfirm.classList.add('tw-opacity-70', 'tw-cursor-not-allowed');
+        btnModalCancel.disabled = true;
+        
+        iconCheck.classList.add('tw-hidden');
+        iconLoading.classList.remove('tw-hidden');
+        textBtn.textContent = 'Mengirim Penilaian...';
+        
+        try {
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok && response.redirected && response.url !== window.location.href) {
+                dashboardUrl = response.url;
+                showSuccess();
+            } else if (response.ok && !response.redirected) {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    showSuccess();
+                } else {
+                    showError();
+                }
+            } else {
+                showError();
+            }
+        } catch (error) {
+            showError();
+        }
+    });
+    
+    function showSuccess() {
+        contentConfirm.classList.add('tw-hidden');
+        contentSuccess.classList.remove('tw-hidden');
         localStorage.removeItem('draft_assessment_{{ $target->id }}');
+        btnModalSuccess.focus();
+    }
+    
+    function showError() {
+        contentConfirm.classList.add('tw-hidden');
+        contentError.classList.remove('tw-hidden');
+        btnModalError.focus();
+    }
+    
+    btnModalSuccess.addEventListener('click', () => {
+        window.location.href = dashboardUrl;
+    });
+    
+    btnModalError.addEventListener('click', () => {
+        contentError.classList.add('tw-hidden');
+        contentConfirm.classList.remove('tw-hidden');
+        
+        btnModalConfirm.disabled = false;
+        btnModalConfirm.classList.remove('tw-opacity-70', 'tw-cursor-not-allowed');
+        iconCheck.classList.remove('tw-hidden');
+        iconLoading.classList.add('tw-hidden');
+        textBtn.textContent = 'Ya, Kirim Penilaian';
+        btnModalCancel.disabled = false;
+        
+        btnModalConfirm.focus();
     });
     
     // Initialize Progress

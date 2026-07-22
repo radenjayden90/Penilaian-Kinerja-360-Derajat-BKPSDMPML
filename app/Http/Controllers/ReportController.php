@@ -8,6 +8,9 @@ use App\Models\Department;
 use App\Models\Period;
 use App\Models\AssessmentResult;
 
+use App\Services\Export\ReportExporter;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class ReportController extends Controller
 {
     public function index(Request $request)
@@ -69,6 +72,9 @@ class ReportController extends Controller
         $selectedPeriodId = $request->input('period_id');
         $selectedDepartmentId = $request->input('department_id');
 
+        $period = Period::find($selectedPeriodId);
+        $department = Department::find($selectedDepartmentId);
+
         $results = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
             ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
                 return $q->where('period_id', $selectedPeriodId);
@@ -80,44 +86,17 @@ class ReportController extends Controller
             })
             ->get();
 
-        $fileName = 'laporan_kinerja_360_' . date('Ymd_His') . '.csv';
+        $exporter = new ReportExporter($results, $period, $department);
+        $spreadsheet = $exporter->export();
 
-        $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
+        $fileName = 'Rekap_Penilaian_360_Laporan_' . date('Ymd') . '.xlsx';
 
-        $columns = ['No', 'NIP', 'Nama Pegawai', 'Unit Kerja', 'Jabatan', 'Skor Atasan', 'Skor Sejawat', 'Skor Bawahan', 'Skor Diri', 'Nilai Akhir 360', 'Kategori Predikat'];
-
-        $callback = function() use($results, $columns) {
-            $file = fopen('php://output', 'w');
-            // Add UTF-8 BOM for Excel compatibility
-            fputs($file, "\xEF\xBB\xBF");
-            fputcsv($file, $columns);
-
-            foreach ($results as $index => $res) {
-                $catVal = is_object($res->category) ? $res->category->value : $res->category;
-                fputcsv($file, [
-                    $index + 1,
-                    $res->employee->nip ?? '-',
-                    $res->employee->name ?? '-',
-                    $res->employee->department->name ?? '-',
-                    $res->employee->position->name ?? '-',
-                    number_format($res->superior_score ?? 0, 2),
-                    number_format($res->peer_score ?? 0, 2),
-                    number_format($res->subordinate_score ?? 0, 2),
-                    number_format($res->self_score ?? 0, 2),
-                    number_format($res->final_score ?? 0, 2),
-                    str_replace('_', ' ', $catVal ?? '-')
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function() use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 }
