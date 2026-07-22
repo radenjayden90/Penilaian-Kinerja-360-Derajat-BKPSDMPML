@@ -45,8 +45,17 @@ class AssessmentController extends Controller
                 'peers' => collect(),
                 'subordinates' => collect(),
                 'employee' => $employee,
+                'isLimitReached' => false,
             ]);
         }
+        
+        $totalTugas = $this->repository->getTotalTugasPenilaian($employee);
+        $submittedCount = Assessment::where('assessor_id', $employee->id)
+            ->where('period_id', $activePeriod->id)
+            ->whereIn('status', ['COMPLETED', 'SUBMITTED'])
+            ->count();
+            
+        $isLimitReached = $submittedCount >= $totalTugas;
 
         // Get Superior
         $superior = $this->repository->getSuperior($employee);
@@ -85,7 +94,7 @@ class AssessmentController extends Controller
             ['path' => request()->url(), 'pageName' => 'subs_page']
         );
 
-        return view('transaction.assessments.dashboard', compact('activePeriod', 'superior', 'peers', 'subordinates', 'employee'));
+        return view('transaction.assessments.dashboard', compact('activePeriod', 'superior', 'peers', 'subordinates', 'employee', 'isLimitReached', 'totalTugas', 'submittedCount'));
     }
 
     public function create(Request $request)
@@ -102,6 +111,21 @@ class AssessmentController extends Controller
 
         if (!$targetId || !in_array($type, ['SUPERIOR', 'PEER', 'SUBORDINATE'])) {
             return redirect()->route('transaction.assessments.index')->with('error', 'Parameter tidak valid.');
+        }
+
+        $activePeriod = $this->repository->getActivePeriod();
+        if (!$activePeriod) {
+            return redirect()->route('transaction.assessments.index')->with('error', 'Tidak ada periode penilaian yang aktif.');
+        }
+
+        $totalTugas = $this->repository->getTotalTugasPenilaian($employee);
+        $submittedCount = Assessment::where('assessor_id', $employee->id)
+            ->where('period_id', $activePeriod->id)
+            ->whereIn('status', ['COMPLETED', 'SUBMITTED'])
+            ->count();
+            
+        if ($submittedCount >= $totalTugas) {
+            return redirect()->route('transaction.assessments.index')->with('error', 'Anda telah mencapai batas maksimal tugas penilaian ('.$totalTugas.' penilaian).');
         }
 
         $target = Employee::with('department', 'position')->findOrFail($targetId);
@@ -121,6 +145,19 @@ class AssessmentController extends Controller
         $user = Auth::user();
         $assessor = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first() ?? $user;
         $target = Employee::findOrFail($request->target_id);
+
+        $activePeriod = \App\Models\Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+        if ($activePeriod) {
+            $totalTugas = $this->repository->getTotalTugasPenilaian($assessor);
+            $submittedCount = Assessment::where('assessor_id', $assessor->id)
+                ->where('period_id', $activePeriod->id)
+                ->whereIn('status', [\App\Enums\AssessmentStatus::COMPLETED->value, \App\Enums\AssessmentStatus::SUBMITTED->value])
+                ->count();
+                
+            if ($submittedCount >= $totalTugas) {
+                return redirect()->route('transaction.assessments.index')->with('error', 'Anda telah mencapai batas maksimal tugas penilaian.');
+            }
+        }
 
         try {
             $this->assessmentService->storeAssessment($assessor, $target, $request->type, $request->scores, $request->general_notes);
@@ -185,6 +222,20 @@ class AssessmentController extends Controller
             ->latest()
             ->paginate(10);
 
+        foreach ($myResults as $res) {
+            $res->aspectAverages = \Illuminate\Support\Facades\DB::table('assessment_scores')
+                ->join('assessments', 'assessment_scores.assessment_id', '=', 'assessments.id')
+                ->join('assessment_indicators', 'assessment_scores.indicator_id', '=', 'assessment_indicators.id')
+                ->join('assessment_categories', 'assessment_indicators.category_id', '=', 'assessment_categories.id')
+                ->where('assessments.employee_id', $employee->id)
+                ->where('assessments.period_id', $res->period_id)
+                ->where('assessments.status', 'SUBMITTED')
+                ->select('assessment_categories.name', \Illuminate\Support\Facades\DB::raw('AVG(assessment_scores.score) as average_score'))
+                ->groupBy('assessment_categories.id', 'assessment_categories.name', 'assessment_categories.display_order')
+                ->orderBy('assessment_categories.display_order')
+                ->get();
+        }
+
         return view('assessment.index', compact(
             'employee',
             'periods',
@@ -215,7 +266,7 @@ class AssessmentController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assessment.print', compact('result'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
     public function exportExcel(Request $request, $id)
@@ -269,7 +320,7 @@ class AssessmentController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assessment.print_all', compact('employee', 'results'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 
     public function exportAllExcel(Request $request)

@@ -94,6 +94,8 @@ class DashboardController extends Controller
         $pendingCount = 0;
         $receivedAssessmentsCount = 0;
 
+        $totalTugas = app(\App\Repositories\AssessmentRepository::class)->getTotalTugasPenilaian($user);
+
         if ($user) {
             $myAssessmentsQuery = Assessment::with(['employee', 'employee.department', 'employee.position'])
                 ->where('assessor_id', $user->id);
@@ -104,8 +106,14 @@ class DashboardController extends Controller
 
             $myAssessments = $myAssessmentsQuery->get();
 
-            $submittedCount = $myAssessments->whereIn('status', [AssessmentStatus::COMPLETED->value, AssessmentStatus::SUBMITTED->value, 'COMPLETED', 'SUBMITTED'])->count();
-            $pendingCount = $myAssessments->whereNotIn('status', [AssessmentStatus::COMPLETED->value, AssessmentStatus::SUBMITTED->value, 'COMPLETED', 'SUBMITTED'])->count();
+            $submittedCount = $myAssessments->whereIn('status', [AssessmentStatus::COMPLETED, AssessmentStatus::SUBMITTED])->count();
+            
+            // Limit the count to totalTugas (max = total tugas penilaian)
+            if ($submittedCount > $totalTugas) {
+                $submittedCount = $totalTugas;
+            }
+            
+            $pendingCount = max(0, $totalTugas - $submittedCount);
 
             // Count incoming assessments that have been completed (exclude Kepala BKPSDM and admin)
             $posName = strtolower($user->position?->name ?? '');
@@ -113,11 +121,11 @@ class DashboardController extends Controller
             if ($activePeriod && !$isKepalaBkpsdm && !$user->isAdmin()) {
                 $receivedAssessmentsCount = Assessment::where('employee_id', $user->id)
                     ->where('period_id', $activePeriod->id)
-                    ->whereIn('status', [AssessmentStatus::COMPLETED->value, AssessmentStatus::SUBMITTED->value, 'COMPLETED', 'SUBMITTED'])
+                    ->whereIn('status', [AssessmentStatus::COMPLETED->value, AssessmentStatus::SUBMITTED->value])
                     ->count();
             }
         }
 
-        return view('dashboard.pegawai', compact('user', 'activePeriod', 'myAssessments', 'submittedCount', 'pendingCount', 'receivedAssessmentsCount'));
+        return view('dashboard.pegawai', compact('user', 'activePeriod', 'myAssessments', 'submittedCount', 'pendingCount', 'receivedAssessmentsCount', 'totalTugas'));
     }
 }

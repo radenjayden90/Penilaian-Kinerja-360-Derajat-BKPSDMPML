@@ -114,7 +114,8 @@
 
         .info-table td.label {
             font-weight: bold;
-            width: 130px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .info-table td.sep {
@@ -129,7 +130,6 @@
             border-collapse: collapse;
             margin-bottom: 12px;
             box-sizing: border-box;
-            table-layout: fixed;
         }
 
         .report-table th {
@@ -137,7 +137,6 @@
             color: #000000;
             font-size: 9.5pt;
             font-weight: bold;
-            text-transform: uppercase;
             padding: 7px 6px;
             border: 1px solid #000000;
             text-align: center;
@@ -235,8 +234,8 @@
         <tr>
             <td class="label">Nama Pegawai</td>
             <td class="sep">:</td>
-            <td><strong>{{ $employee->name ?? '-' }}</strong></td>
-            <td class="label">NIP</td>
+            <td style="width: 60%;"><strong>{{ $employee->name ?? '-' }}</strong></td>
+            <td class="label" style="padding-left: 10px;">NIP</td>
             <td class="sep">:</td>
             <td>{{ $employee->nip ?? '-' }}</td>
         </tr>
@@ -244,7 +243,7 @@
             <td class="label">Jabatan</td>
             <td class="sep">:</td>
             <td>{{ $employee->position->name ?? '-' }}</td>
-            <td class="label">Tanggal Cetak</td>
+            <td class="label" style="padding-left: 10px;">Tanggal Cetak</td>
             <td class="sep">:</td>
             <td>{{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
         </tr>
@@ -259,25 +258,25 @@
     <table class="report-table">
         <thead>
             <tr>
-                <th style="width: 25px;">NO</th>
-                <th>PERIODE PENILAIAN</th>
+                <th>No</th>
+                <th>Periode Penilaian</th>
                 @if($isKabid)
-                    <th style="width: 85px;">ATASAN (50%)</th>
-                    <th style="width: 85px;">SEJAWAT (30%)</th>
-                    <th style="width: 85px;">BAWAHAN (20%)</th>
+                    <th>Atasan (50%)</th>
+                    <th>Sejawat (30%)</th>
+                    <th>Bawahan (20%)</th>
                 @else
-                    <th style="width: 95px;">ATASAN (50%)</th>
-                    <th style="width: 95px;">SEJAWAT (50%)</th>
+                    <th>Atasan (50%)</th>
+                    <th>Sejawat (50%)</th>
                 @endif
-                <th style="width: 95px;">NILAI AKHIR</th>
-                <th style="width: 110px;">PREDIKAT</th>
+                <th>Nilai Akhir</th>
+                <th>Predikat</th>
             </tr>
         </thead>
         <tbody>
             @forelse($results as $index => $res)
                 @php
                     $resCatEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category ?? '');
-                    $resCatLabel = $resCatEnum ? $resCatEnum->label() : strtoupper((string)($res->category ?? '-'));
+                    $resCatLabel = $resCatEnum ? $resCatEnum->label() : ucwords(strtolower((string)($res->category ?? '-')));
                     
                     $mNum = (int)($res->period->month ?? date('m'));
                     $mName = \Carbon\Carbon::create()->month($mNum)->isoFormat('MMMM');
@@ -287,7 +286,7 @@
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>
-                        <strong>{{ $pText }}</strong>
+                        {{ $pText }}
                     </td>
                     @if($isKabid)
                         <td class="text-center">{{ number_format($res->subordinate_average ?? 0, 2) }}</td>
@@ -297,8 +296,8 @@
                         <td class="text-center">{{ number_format($res->subordinate_average ?? 0, 2) }}</td>
                         <td class="text-center">{{ number_format($res->peer_average ?? 0, 2) }}</td>
                     @endif
-                    <td class="text-center text-bold">{{ number_format($res->final_score ?? 0, 2) }}</td>
-                    <td class="text-center text-bold">{{ $resCatLabel }}</td>
+                    <td class="text-center">{{ number_format($res->final_score ?? 0, 2) }}</td>
+                    <td class="text-center">{{ $resCatLabel }}</td>
                 </tr>
             @empty
                 <tr>

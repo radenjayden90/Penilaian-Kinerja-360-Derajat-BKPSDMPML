@@ -18,6 +18,35 @@ class AssessmentRepository
     }
 
     /**
+     * Get Total Tugas Penilaian for an employee
+     */
+    public function getTotalTugasPenilaian(Employee $employee)
+    {
+        $roleName = strtolower($employee->role?->name ?? '');
+        $positionName = strtolower($employee->position?->name ?? '');
+        $isKepalaBkpsdm = ($employee->position?->level == '1' || str_contains($positionName, 'kepala bkpsdm'));
+        $isKabid = ($employee->position?->level == '2' || str_contains($positionName, 'kepala bidang') || str_contains($positionName, 'kabid') || str_contains($positionName, 'sekretaris'));
+
+        if ($isKepalaBkpsdm) {
+            // Count of Kabid
+            return Employee::where('is_active', true)
+                ->whereHas('position', function($q) {
+                    $q->where('level', '2')
+                      ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kepala bidang%')
+                      ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kabid%')
+                      ->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%sekretaris%');
+                })->count();
+        } elseif ($isKabid) {
+            // 3 peers + subordinates
+            $subordinatesCount = $this->getSubordinates($employee)->count();
+            return 3 + $subordinatesCount;
+        } else {
+            // 3 peers + 1 superior
+            return 4;
+        }
+    }
+
+    /**
      * Get Superior of an employee
      */
     public function getSuperior(Employee $employee)

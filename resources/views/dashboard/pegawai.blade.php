@@ -80,7 +80,7 @@
                     <span class="fw-semibold text-muted" style="font-size: 13px;">Total Tugas Penilaian</span>
                     <i class="bi bi-card-checklist text-primary fs-4"></i>
                 </div>
-                <h3 class="fw-bold mb-0" style="color: #1E3A5F;">{{ $myAssessments->count() }}</h3>
+                <h3 class="fw-bold mb-0" style="color: #1E3A5F;">{{ $totalTugas ?? 0 }}</h3>
                 <small class="text-muted">Target evaluasi disiapkan</small>
             </div>
         </div>

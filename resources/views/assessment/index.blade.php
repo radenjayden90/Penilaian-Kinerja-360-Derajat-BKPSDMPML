@@ -521,38 +521,20 @@
                                             Dihitung: {{ $res->calculated_at ? $res->calculated_at->format('d/m/Y H:i') : '-' }}
                                         </span>
                                     </div>
-                                    <div class="row g-2">
-                                        <div class="col-12 col-md-3">
-                                            <div class="bg-white p-3 rounded-3 border">
-                                                <small class="text-muted d-block fw-semibold">SKOR ATASAN</small>
-                                                <span class="fs-5 fw-bold text-dark">{{ number_format($res->subordinate_average ?? 0, 2) }}</span>
-                                                <span class="text-muted small"> (1-10)</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-3">
-                                            <div class="bg-white p-3 rounded-3 border">
-                                                <small class="text-muted d-block fw-semibold">SKOR SEJAWAT</small>
-                                                <span class="fs-5 fw-bold text-dark">{{ number_format($res->peer_average ?? 0, 2) }}</span>
-                                                <span class="text-muted small"> (1-10)</span>
-                                            </div>
-                                        </div>
-                                        @if($isKabid)
-                                            <div class="col-12 col-md-3">
-                                                <div class="bg-white p-3 rounded-3 border">
-                                                    <small class="text-muted d-block fw-semibold">SKOR BAWAHAN</small>
-                                                    <span class="fs-5 fw-bold text-dark">{{ number_format($res->superior_average ?? 0, 2) }}</span>
-                                                    <span class="text-muted small"> (1-10)</span>
+                                    @if(isset($res->aspectAverages) && $res->aspectAverages->count() > 0)
+                                        <div class="row g-2">
+                                            @foreach($res->aspectAverages as $aspect)
+                                                <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                                                    <div class="bg-white p-2 px-3 rounded-3 border d-flex justify-content-between align-items-center" style="box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                                                        <small class="text-muted fw-semibold" style="font-size: 0.75rem;">{{ $aspect->name }}</small>
+                                                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ number_format($aspect->average_score, 2) }}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endif
-                                        <div class="col-12 col-md-3">
-                                            <div class="bg-white p-3 rounded-3 border border-primary border-opacity-25">
-                                                <small class="text-primary d-block fw-bold">NILAI AKHIR 360°</small>
-                                                <span class="fs-4 fw-bold text-primary">{{ number_format($res->final_score ?? 0, 2) }}</span>
-                                                <span class="text-muted small"> / 100</span>
-                                            </div>
+                                            @endforeach
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="text-muted small">Detail komponen belum tersedia.</div>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

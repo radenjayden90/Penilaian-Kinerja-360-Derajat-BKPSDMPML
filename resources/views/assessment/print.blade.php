@@ -114,7 +114,8 @@
 
         .info-table td.label {
             font-weight: bold;
-            width: 130px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .info-table td.sep {
@@ -129,7 +130,6 @@
             border-collapse: collapse;
             margin-bottom: 12px;
             box-sizing: border-box;
-            table-layout: fixed;
         }
 
         .report-table th {
@@ -137,7 +137,6 @@
             color: #000000;
             font-size: 9.5pt;
             font-weight: bold;
-            text-transform: uppercase;
             padding: 7px 6px;
             border: 1px solid #000000;
             text-align: center;
@@ -205,7 +204,7 @@
         $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
 
         $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category ?? '');
-        $catLabel = $catEnum ? $catEnum->label() : strtoupper((string)($result->category ?? '-'));
+        $catLabel = $catEnum ? $catEnum->label() : ucwords(strtolower((string)($result->category ?? '-')));
 
         $monthNum = (int)($period->month ?? date('m'));
         $monthName = \Carbon\Carbon::create()->month($monthNum)->isoFormat('MMMM');
@@ -245,8 +244,8 @@
         <tr>
             <td class="label">Nama Pegawai</td>
             <td class="sep">:</td>
-            <td><strong>{{ $employee->name ?? '-' }}</strong></td>
-            <td class="label">NIP</td>
+            <td style="width: 60%;"><strong>{{ $employee->name ?? '-' }}</strong></td>
+            <td class="label" style="padding-left: 10px;">NIP</td>
             <td class="sep">:</td>
             <td>{{ $employee->nip ?? '-' }}</td>
         </tr>
@@ -254,7 +253,7 @@
             <td class="label">Jabatan</td>
             <td class="sep">:</td>
             <td>{{ $employee->position->name ?? '-' }}</td>
-            <td class="label">Tanggal Cetak</td>
+            <td class="label" style="padding-left: 10px;">Tanggal Cetak</td>
             <td class="sep">:</td>
             <td>{{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
         </tr>
@@ -269,12 +268,12 @@
     <table class="report-table">
         <thead>
             <tr>
-                <th style="width: 25px;">NO</th>
-                <th>PERIODE PENILAIAN / KOMPONEN 360°</th>
-                <th style="width: 85px;">ATASAN (50%)</th>
-                <th style="width: 85px;">SEJAWAT (50%)</th>
-                <th style="width: 95px;">NILAI AKHIR</th>
-                <th style="width: 110px;">PREDIKAT</th>
+                <th>No</th>
+                <th>Periode Penilaian / Komponen 360°</th>
+                <th>Atasan (50%)</th>
+                <th>Sejawat (50%)</th>
+                <th>Nilai Akhir</th>
+                <th>Predikat</th>
             </tr>
         </thead>
         <tbody>
@@ -284,8 +283,8 @@
                     <td>Penilaian Atasan (Kepala BKPSDM)</td>
                     <td class="text-center">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
                     <td class="text-center">{{ number_format($result->peer_average ?? 0, 2) }}</td>
-                    <td class="text-center text-bold">{{ number_format(($result->subordinate_average ?? 0) * 10 * 0.50 + ($result->peer_average ?? 0) * 10 * 0.30 + ($result->superior_average ?? 0) * 10 * 0.20, 2) }}</td>
-                    <td class="text-center text-bold">-</td>
+                    <td class="text-center">{{ number_format(($result->subordinate_average ?? 0) * 10 * 0.50 + ($result->peer_average ?? 0) * 10 * 0.30 + ($result->superior_average ?? 0) * 10 * 0.20, 2) }}</td>
+                    <td class="text-center">-</td>
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
@@ -309,16 +308,18 @@
                     <td>{{ $periodeFormatted }}</td>
                     <td class="text-center">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
                     <td class="text-center">{{ number_format($result->peer_average ?? 0, 2) }}</td>
-                    <td class="text-center text-bold">{{ number_format($result->final_score ?? 0, 2) }}</td>
-                    <td class="text-center text-bold">{{ $catLabel }}</td>
+                    <td class="text-center">{{ number_format($result->final_score ?? 0, 2) }}</td>
+                    <td class="text-center">{{ $catLabel }}</td>
                 </tr>
             @endif
             <tr>
-                <td colspan="4" class="text-right text-bold">NILAI AKHIR KINERJA 360°</td>
-                <td class="text-center text-bold" colspan="2">{{ number_format($result->final_score ?? 0, 2) }} ({{ $catLabel }})</td>
+                <td colspan="4" class="text-center">NILAI AKHIR KINERJA 360°</td>
+                <td class="text-center" colspan="2">{{ number_format($result->final_score ?? 0, 2) }} ({{ $catLabel }})</td>
             </tr>
         </tbody>
     </table>
+
+
 
     <!-- Footnote -->
     <div class="note-text">

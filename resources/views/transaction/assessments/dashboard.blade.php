@@ -32,6 +32,18 @@
         </div>
         <span class="badge bg-success px-3 py-2 fs-6">Periode Aktif</span>
     </div>
+    
+    @if(isset($isLimitReached) && $isLimitReached)
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-center gap-3 p-3 mb-4 rounded-3">
+            <div class="bg-success text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                <i class="bi bi-check2-all fs-5"></i>
+            </div>
+            <div>
+                <div class="fw-bold">Tugas Penilaian Selesai</div>
+                <small class="text-muted">Anda telah menyelesaikan seluruh tugas penilaian Anda untuk periode ini (Total: {{ $totalTugas }} penilaian). Terima kasih atas partisipasi Anda.</small>
+            </div>
+        </div>
+    @endif
 
     @php
         $posName = strtolower($employee->position?->name ?? '');
@@ -89,6 +101,8 @@
                             <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
                                 @if($superior->assessment_status === 'COMPLETED')
                                     <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
+                                @elseif(isset($isLimitReached) && $isLimitReached)
+                                    <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi</button>
                                 @else
                                     <a href="{{ route('transaction.assessments.create', ['target_id' => $superior->id, 'type' => 'SUPERIOR']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $superior->id }}">
                                         <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
@@ -207,6 +221,8 @@
                                 <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
                                     @if($peer->assessment_status === 'COMPLETED')
                                         <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
+                                    @elseif(isset($isLimitReached) && $isLimitReached)
+                                        <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi</button>
                                     @else
                                         <a href="{{ route('transaction.assessments.create', ['target_id' => $peer->id, 'type' => 'PEER']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $peer->id }}">
                                             <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
@@ -280,8 +296,10 @@
                                     </div>
                                 </div>
                                 <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
-                                    @if($sub->assessment_status === 'COMPLETED')
+                                @if($sub->assessment_status === 'COMPLETED')
                                         <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-check-lg me-1"></i>Sudah Dinilai</button>
+                                    @elseif(isset($isLimitReached) && $isLimitReached)
+                                        <button class="btn btn-sm btn-outline-secondary w-100" disabled><i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi</button>
                                     @else
                                         <a href="{{ route('transaction.assessments.create', ['target_id' => $sub->id, 'type' => 'SUBORDINATE']) }}" class="btn btn-sm btn-primary w-100 btn-isi-penilaian" data-target-id="{{ $sub->id }}">
                                             <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
