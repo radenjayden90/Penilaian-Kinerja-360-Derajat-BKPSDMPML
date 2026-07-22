@@ -311,39 +311,52 @@ body.sidebar-collapsed .app-sidebar {
 
 body.sidebar-collapsed .sidebar-brand-text,
 body.sidebar-collapsed .nav-label,
-body.sidebar-collapsed .nav-link-text,
-body.sidebar-collapsed .submenu {
+body.sidebar-collapsed .nav-link-text {
     display: none !important;
 }
 
-/* Strictly HIDE all dropdown arrows when sidebar is collapsed */
-body.sidebar-collapsed .app-sidebar .dropdown-arrow,
-body.sidebar-collapsed .app-sidebar .nav-link .dropdown-arrow,
-body.sidebar-collapsed .app-sidebar .nav-link i.dropdown-arrow,
-body.sidebar-collapsed .app-sidebar .nav-link i.bi-chevron-down {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+/* Allow dropdown arrow and submenu in collapsed mode */
+body.sidebar-collapsed .app-sidebar .dropdown-arrow {
+    display: inline-block !important;
+    font-size: 0.65rem !important;
+    margin-left: 4px !important;
+    opacity: 0.75;
+    transition: transform 0.2s ease;
+}
+
+body.sidebar-collapsed .app-sidebar .nav-link[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
 }
 
 body.sidebar-collapsed .app-sidebar .nav-link {
     justify-content: center !important;
-    padding: 0.75rem 0 !important;
+    padding: 0.65rem 0 !important;
     text-align: center !important;
 }
 
 body.sidebar-collapsed .app-sidebar .nav-link i.nav-main-icon,
 body.sidebar-collapsed .app-sidebar .nav-link > i:first-child {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 auto !important;
+    display: inline-block !important;
     font-size: 1.25rem !important;
-    width: auto !important;
+    vertical-align: middle;
+}
+
+body.sidebar-collapsed .app-sidebar .submenu {
+    padding: 0.25rem 0 !important;
+    margin: 4px 6px !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+    border-radius: 8px !important;
+}
+
+body.sidebar-collapsed .app-sidebar .submenu .nav-link {
+    padding: 0.5rem 0 !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+}
+
+body.sidebar-collapsed .app-sidebar .submenu .nav-link i {
+    font-size: 1rem !important;
+    margin: 0 !important;
 }
 
 /* Main Content Area */
