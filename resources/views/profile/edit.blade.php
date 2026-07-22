@@ -156,7 +156,7 @@
 
     $initials = collect(explode(' ', $empName))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->join('');
 
-    // Radar Chart 7 Dimensions Calculations
+    // Radar / Bar Chart 7 Dimensions Calculations
     if ($latestResult) {
         $finalScoreVal = (float)($latestResult->final_score ?? 0);
         $subAvg = (float)($latestResult->subordinate_average ?? 0) * 10;
@@ -165,16 +165,27 @@
 
         $base = $finalScoreVal > 0 ? $finalScoreVal : 75;
         
-        $dimPelayanan  = min(100, max(50, round($base + (($subAvg - $base) * 0.15) + 1.2, 1)));
-        $dimAkuntabel  = min(100, max(50, round($base + (($supAvg - $base) * 0.12) - 0.5, 1)));
-        $dimKompeten   = min(100, max(50, round($base + (($subAvg - $base) * 0.10) + 0.8, 1)));
-        $dimHarmonis   = min(100, max(50, round($base + (($peerAvg - $base) * 0.18) + 0.5, 1)));
-        $dimLoyal      = min(100, max(50, round($base + (($supAvg - $base) * 0.15) - 0.2, 1)));
-        $dimAdaptif    = min(100, max(50, round($base + (($peerAvg - $base) * 0.12) - 1.0, 1)));
-        $dimKolaboratif= min(100, max(50, round($base + (($peerAvg - $base) * 0.15) + 0.4, 1)));
+        if (isset($aspectAverages) && count($aspectAverages) > 0) {
+            $radarLabels = [];
+            $radarValues = [];
+            foreach ($aspectAverages as $asp) {
+                $rawScore = (float)$asp->average_score;
+                $scoreVal = round($rawScore <= 10 ? $rawScore * 10 : $rawScore, 1);
+                $radarLabels[] = $asp->name;
+                $radarValues[] = $scoreVal;
+            }
+        } else {
+            $dimPelayanan  = min(100, max(50, round($base + (($subAvg - $base) * 0.15) + 1.2, 1)));
+            $dimAkuntabel  = min(100, max(50, round($base + (($supAvg - $base) * 0.12) - 0.5, 1)));
+            $dimKompeten   = min(100, max(50, round($base + (($subAvg - $base) * 0.10) + 0.8, 1)));
+            $dimHarmonis   = min(100, max(50, round($base + (($peerAvg - $base) * 0.18) + 0.5, 1)));
+            $dimLoyal      = min(100, max(50, round($base + (($supAvg - $base) * 0.15) - 0.2, 1)));
+            $dimAdaptif    = min(100, max(50, round($base + (($peerAvg - $base) * 0.12) - 1.0, 1)));
+            $dimKolaboratif= min(100, max(50, round($base + (($peerAvg - $base) * 0.15) + 0.4, 1)));
 
-        $radarLabels = ['Berorientasi Pelayanan', 'Akuntabel', 'Kompeten', 'Harmonis', 'Loyal', 'Adaptif', 'Kolaboratif'];
-        $radarValues = [$dimPelayanan, $dimAkuntabel, $dimKompeten, $dimHarmonis, $dimLoyal, $dimAdaptif, $dimKolaboratif];
+            $radarLabels = ['Berorientasi Pelayanan', 'Akuntabel', 'Kompeten', 'Harmonis', 'Loyal', 'Adaptif', 'Kolaboratif'];
+            $radarValues = [$dimPelayanan, $dimAkuntabel, $dimKompeten, $dimHarmonis, $dimLoyal, $dimAdaptif, $dimKolaboratif];
+        }
 
         $dimScores = array_combine($radarLabels, $radarValues);
         arsort($dimScores);
@@ -322,34 +333,51 @@
     </div>
 </div>
 
-<!-- 3. 7 Dimensions BerAKHLAK Radar Chart Visualisation -->
+<!-- 3. 7 Dimensions BerAKHLAK Bar Chart Visualisation -->
 <div class="row g-4 mb-4">
-    <!-- Left Column: Radar Chart -->
+    <!-- Left Column: Bar Chart -->
     <div class="col-12 col-xl-7">
-        <div class="executive-card p-4 h-100">
+        <div class="executive-card p-4 h-100 shadow-sm border-0 rounded-4 bg-white">
             <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
                 <div>
                     <h5 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-hexagon me-2 text-primary"></i>Radar Profil 7 Dimensi BerAKHLAK
+                        <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Diagram Kompetensi 7 Dimensi BerAKHLAK
                     </h5>
                     <div class="text-muted small">Visualisasi kompetensi 360° berbasis Core Values ASN BerAKHLAK</div>
                 </div>
                 @if($latestResult)
                     <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
-                        {{ $latestResult->period->name ?? 'Periode Aktif' }}
+                        <i class="bi bi-calendar-check me-1"></i>{{ $latestResult->period->name ?? 'Periode Aktif' }}
                     </span>
                 @endif
             </div>
 
             @if($latestResult)
-                <div style="position: relative; height: 320px; width: 100%;">
-                    <canvas id="profileBerakhlakRadarChart"></canvas>
+                <div style="position: relative; height: 340px; width: 100%;">
+                    <canvas id="profileBerakhlakBarChart"></canvas>
                 </div>
+                @if(isset($aspectAverages) && count($aspectAverages) > 0)
+                    <div class="row g-2 mt-3 pt-3 border-top">
+                        @foreach($aspectAverages as $asp)
+                            @php
+                                $rawScore = (float)$asp->average_score;
+                                $scoreVal = round($rawScore <= 10 ? $rawScore * 10 : $rawScore, 1);
+                                $badgeStyle = $scoreVal >= 85 ? 'background-color: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;' : ($scoreVal >= 70 ? 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;' : ($scoreVal >= 60 ? 'background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;' : 'background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;'));
+                            @endphp
+                            <div class="col-6 col-sm-4 col-md-3 col-lg">
+                                <div class="p-2 rounded-3 text-center" style="{{ $badgeStyle }}">
+                                    <div class="text-truncate mb-0.5" style="font-size: 10px; font-weight: 700;" title="{{ $asp->name }}">{{ $asp->name }}</div>
+                                    <div class="fw-extrabold fs-6" style="line-height: 1.1;">{{ number_format($scoreVal, 1) }}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             @else
                 <div class="text-center py-5 text-muted">
-                    <i class="bi bi-hexagon fs-1 d-block mb-3 text-secondary"></i>
+                    <i class="bi bi-bar-chart-line fs-1 d-block mb-3 text-secondary"></i>
                     <h6 class="fw-semibold text-dark mb-1">Belum Ada Data Penilaian 360°</h6>
-                    <small>Grafik radar 7 dimensi kompetensi BerAKHLAK akan muncul setelah penilaian periode ini selesai dikalkulasi.</small>
+                    <small>Diagram 7 dimensi kompetensi BerAKHLAK akan muncul setelah penilaian periode ini selesai dikalkulasi.</small>
                 </div>
             @endif
         </div>
@@ -360,47 +388,47 @@
         <div class="d-flex flex-column gap-3 h-100">
             @if($latestResult)
                 <!-- Score Highlight Box -->
-                <div class="executive-card p-4 text-center">
-                    <div class="text-uppercase fw-bold text-muted mb-2 tracking-wider small">Nilai Akhir Kinerja 360°</div>
-                    <div class="fw-extrabold text-primary mb-2" style="font-size: 32px; line-height: 1; letter-spacing: -1px; color: #1E40AF !important;">{{ number_format($latestResult->final_score ?? 0, 2) }}</div>
-                    <div class="mb-3">
-                        <span class="badge-pill-custom" style="{{ $badgeStyle }}">
-                            <i class="bi bi-award me-1"></i> PREDIKAT: {{ $catLabel }}
+                <div class="executive-card p-4 text-center border-0 shadow-sm rounded-4" style="background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); color: white;">
+                    <div class="text-uppercase fw-bold text-white-50 mb-1 tracking-wider small">Nilai Akhir Kinerja 360°</div>
+                    <div class="fw-extrabold text-white mb-2" style="font-size: 38px; line-height: 1; letter-spacing: -1px;">{{ number_format($latestResult->final_score ?? 0, 2) }}</div>
+                    <div>
+                        <span class="badge bg-white text-primary px-3.5 py-2 rounded-pill fw-bold shadow-sm" style="font-size: 12px; color: #1E40AF !important;">
+                            <i class="bi bi-award-fill text-warning me-1"></i> PREDIKAT: {{ $catLabel }}
                         </span>
                     </div>
                 </div>
 
                 <!-- Strength Card -->
-                <div class="executive-card p-4 flex-fill border-start border-success border-4">
+                <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
                     <div class="d-flex align-items-center gap-3 mb-2">
-                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                            <i class="bi bi-star-fill fs-5"></i>
+                        <div class="bg-success bg-opacity-10 text-success rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+                            <i class="bi bi-star-fill fs-4"></i>
                         </div>
                         <div>
-                            <span class="text-success fw-bold text-uppercase small tracking-wider">Kekuatan Utama (Top Strength)</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px;">Kekuatan Utama (Top Strength)</span>
                             <h5 class="fw-bold text-dark mb-0">{{ $topStrength }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 mt-3">
-                        <span class="text-muted small">Skor Evaluasi Terhitung:</span>
-                        <span class="fw-bold text-success fs-5">{{ $topStrengthVal }} / 100</span>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #F0FDF4; border: 1px solid #DCFCE7;">
+                        <span class="text-success-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
+                        <span class="fw-extrabold text-success fs-5">{{ $topStrengthVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
                     </div>
                 </div>
 
                 <!-- Development Area Card -->
-                <div class="executive-card p-4 flex-fill border-start border-warning border-4">
+                <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-warning border-4">
                     <div class="d-flex align-items-center gap-3 mb-2">
-                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                            <i class="bi bi-arrow-up-circle-fill fs-5"></i>
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+                            <i class="bi bi-arrow-up-circle-fill fs-4"></i>
                         </div>
                         <div>
-                            <span class="text-warning-emphasis fw-bold text-uppercase small tracking-wider" style="color: #B45309 !important;">Area Pengembangan</span>
+                            <span class="badge bg-warning bg-opacity-10 fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px; color: #B45309 !important; background-color: #FEF3C7 !important;">Area Pengembangan</span>
                             <h5 class="fw-bold text-dark mb-0">{{ $areaImprovement }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 mt-3">
-                        <span class="text-muted small">Skor Evaluasi Terhitung:</span>
-                        <span class="fw-bold text-warning fs-5" style="color: #B45309 !important;">{{ $areaImprovementVal }} / 100</span>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #FFFBEB; border: 1px solid #FEF3C7;">
+                        <span class="text-warning-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
+                        <span class="fw-extrabold fs-5" style="color: #B45309 !important;">{{ $areaImprovementVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
                     </div>
                 </div>
             @else
@@ -421,62 +449,102 @@
 @if($latestResult)
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const canvas = document.getElementById('profileBerakhlakRadarChart');
+        const canvas = document.getElementById('profileBerakhlakBarChart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         
-        const radarLabels = {!! $aspectAverages->pluck('name')->toJson() !!};
-        const radarValues = {!! $aspectAverages->pluck('average_score')->map(fn($v) => round((float)$v, 2))->toJson() !!};
+        const rawLabels = {!! $aspectAverages->pluck('name')->toJson() !!};
+        const values = {!! $aspectAverages->pluck('average_score')->map(function($v) {
+            $val = (float)$v;
+            return round($val <= 10 ? $val * 10 : $val, 2);
+        })->toJson() !!};
+
+        // Format short labels for crisp X-axis presentation
+        const labels = rawLabels.map(l => {
+            if (l.toLowerCase().includes('berorientasi')) return ['Berorientasi', 'Pelayanan'];
+            return l;
+        });
+
+        const canvasHeight = canvas.clientHeight || 340;
+        
+        // Define rich linear gradients for each category bar
+        const gradientStops = [
+            { top: '#3B82F6', bottom: '#1D4ED8', border: '#1D4ED8' }, // Pelayanan: Electric Blue
+            { top: '#6366F1', bottom: '#4338CA', border: '#4338CA' }, // Akuntabel: Indigo
+            { top: '#06B6D4', bottom: '#0284C7', border: '#0284C7' }, // Kompeten: Cyan
+            { top: '#10B981', bottom: '#047857', border: '#047857' }, // Harmonis: Emerald
+            { top: '#F59E0B', bottom: '#D97706', border: '#D97706' }, // Loyal: Amber
+            { top: '#F43F5E', bottom: '#E11D48', border: '#E11D48' }, // Adaptif: Rose
+            { top: '#8B5CF6', bottom: '#6D28D9', border: '#6D28D9' }  // Kolaboratif: Violet
+        ];
+
+        const barGradients = gradientStops.map(s => {
+            const g = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            g.addColorStop(0, s.top);
+            g.addColorStop(1, s.bottom);
+            return g;
+        });
+        const barBorderColors = gradientStops.map(s => s.border);
+
+        // Dynamic minimum score scale (starts closely below minimum score, capped at min 40)
+        const minVal = values.length > 0 ? Math.min(...values) : 50;
+        const calculatedMin = Math.max(0, Math.min(50, Math.floor((minVal - 5) / 10) * 10));
 
         new Chart(ctx, {
-            type: 'radar',
+            type: 'bar',
             data: {
-                labels: radarLabels,
+                labels: labels,
                 datasets: [{
-                    label: 'Skor Evaluasi Kompetensi (Skala 100)',
-                    data: radarValues,
-                    backgroundColor: 'rgba(37, 99, 235, 0.22)',
-                    borderColor: '#2563EB',
-                    borderWidth: 2.5,
-                    pointBackgroundColor: '#2563EB',
-                    pointBorderColor: '#FFFFFF',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
+                    label: 'Skor Evaluasi',
+                    data: values,
+                    backgroundColor: barGradients.slice(0, values.length),
+                    borderColor: barBorderColors.slice(0, values.length),
+                    borderWidth: 2,
+                    borderRadius: { topLeft: 10, topRight: 10 },
+                    hoverBorderWidth: 3,
+                    hoverBorderColor: '#FFFFFF',
+                    barPercentage: 0.55,
+                    categoryPercentage: 0.7
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    r: {
-                        angleLines: { color: 'rgba(226, 232, 240, 0.8)' },
+                    y: {
+                        min: calculatedMin,
+                        max: 100,
                         grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                        pointLabels: {
-                            font: { family: 'Inter', size: 11, weight: '600' },
-                            color: '#0F172A'
-                        },
                         ticks: {
-                            stepSize: 20,
-                            backdropColor: 'transparent',
-                            font: { size: 9 },
+                            stepSize: 10,
+                            font: { family: 'Inter', size: 11, weight: '600' },
                             color: '#64748B'
-                        },
-                        suggestedMin: 50,
-                        suggestedMax: 100
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Inter', size: 11, weight: '700' },
+                            color: '#0F172A',
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
                     }
                 },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: '#0F172A',
-                        padding: 10,
-                        cornerRadius: 8,
-                        titleFont: { size: 12, weight: 'bold' },
-                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 10,
+                        titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                        bodyFont: { family: 'Inter', size: 12 },
+                        displayColors: false,
                         callbacks: {
+                            title: function(context) {
+                                const idx = context[0].dataIndex;
+                                return rawLabels[idx] || context[0].label;
+                            },
                             label: function(context) {
                                 return ' Skor: ' + context.raw + ' / 100';
                             }
