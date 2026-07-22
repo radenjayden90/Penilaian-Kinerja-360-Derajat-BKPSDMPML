@@ -7,7 +7,7 @@
         @page {
             size: A4 portrait;
             margin-top: 1.2cm;
-            margin-bottom: 2.5cm;
+            margin-bottom: 2.2cm;
             margin-left: 2.5cm;
             margin-right: 2.5cm;
         }
@@ -183,12 +183,15 @@
 
         /* Footer */
         .footer-line {
-            margin-top: 20px;
+            position: fixed;
+            bottom: -1.4cm;
+            left: 0;
+            right: 0;
+            height: 25px;
             border-top: 0.8px solid #666666;
             padding-top: 6px;
             font-size: 8pt;
             color: #555555;
-            width: 100%;
         }
     </style>
 </head>
