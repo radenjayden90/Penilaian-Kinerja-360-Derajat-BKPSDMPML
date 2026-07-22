@@ -48,22 +48,136 @@
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
         border-radius: 24px;
         color: #FFFFFF;
-        padding: 32px;
+        padding: 28px 40px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
+        animation: heroFadeIn 400ms ease-out forwards;
+    }
+
+    @keyframes heroFadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: -40px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
     }
 
     .hero-banner::after {
         content: '';
         position: absolute;
-        right: -40px;
-        bottom: -40px;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.08);
+        right: -30px;
+        bottom: -30px;
+        width: 170px;
+        height: 170px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
         border-radius: 50%;
         pointer-events: none;
+    }
+
+    .hero-icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(4px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .hero-badge {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.18);
+        color: #FFFFFF;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: transform 300ms ease;
+    }
+
+    .hero-badge:hover {
+        transform: scale(1.03);
+    }
+
+    .hero-title {
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+
+    .hero-desc {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.5;
+        max-width: 650px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-card-updated {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-width: 195px;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        animation: slideInRight 500ms ease-out forwards;
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(16px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .kpi-pill-item {
+        height: 44px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        padding: 10px 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(4px);
+        transition: transform 300ms ease;
+    }
+
+    .kpi-pill-item:hover {
+        transform: scale(1.03);
+    }
+
+    .kpi-pill-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+
+    .kpi-pill-lbl {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.85);
     }
 
     .toolbar-container {
@@ -231,25 +345,51 @@
 <div class="hero-banner mb-4">
     <div class="row align-items-center g-3">
         <div class="col-12 col-lg-8">
-            <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="badge bg-white text-primary fw-semibold px-3 py-2 rounded-pill fs-7">
-                    <i class="bi bi-shield-check me-1"></i> Dashboard ASN Pemalang
-                </span>
-                <span class="badge bg-white bg-opacity-20 text-white fw-medium px-3 py-2 rounded-pill fs-7">
-                    SIKINERJA 360°
+            <div style="margin-bottom: 16px;">
+                <span class="hero-badge">
+                    <i class="bi bi-shield-check me-1"></i> BKPSDM Kabupaten Pemalang
                 </span>
             </div>
-            <h2 class="fw-bold text-white mb-2 fs-3">📊 Riwayat Hasil Penilaian Saya</h2>
-            <p class="text-white text-opacity-80 mb-0 fs-6">
-                Pantau histori evaluasi kinerja ASN berbasis 360 Degree Feedback secara transparan, akuntabel, dan siap diunduh.
+            <div class="d-flex align-items-center gap-3" style="margin-bottom: 12px;">
+                <div class="hero-icon-box text-white">
+                    📊
+                </div>
+                <h1 class="hero-title text-white mb-0">Riwayat Hasil Penilaian Saya</h1>
+            </div>
+            <p class="hero-desc" style="margin-bottom: 18px;">
+                Lihat riwayat hasil penilaian kinerja ASN berbasis 360 Degree Feedback pada setiap periode penilaian, lengkap dengan ringkasan nilai serta laporan yang dapat diunduh.
             </p>
+
+            <!-- Inline Summary KPIs -->
+            <div class="d-flex align-items-center flex-wrap" style="gap: 16px; margin-bottom: 4px;">
+                <div class="kpi-pill-item">
+                    <span style="font-size: 18px;">⭐</span>
+                    <span class="kpi-pill-lbl">Nilai Terakhir:</span>
+                    <span class="kpi-pill-val">{{ $latestScore }}</span>
+                </div>
+                <div class="kpi-pill-item">
+                    <span style="font-size: 18px;">🏅</span>
+                    <span class="kpi-pill-lbl">Predikat:</span>
+                    <span class="kpi-pill-val">{{ $latestPredikatLabel }}</span>
+                </div>
+                <div class="kpi-pill-item">
+                    <span style="font-size: 18px;">📅</span>
+                    <span class="kpi-pill-lbl">Total Periode:</span>
+                    <span class="kpi-pill-val">{{ $totalCount }}</span>
+                </div>
+            </div>
         </div>
-        <div class="col-12 col-lg-4 text-lg-end">
-            <div class="d-inline-flex flex-column align-items-lg-end gap-1 bg-white bg-opacity-10 p-3 rounded-4 backdrop-blur">
-                <span class="text-white text-opacity-75 small">Terakhir Diperbarui</span>
-                <span class="fw-bold text-white fs-6">
-                    <i class="bi bi-clock-history me-1"></i>
-                    {{ $latestResult?->updated_at ? $latestResult->updated_at->diffForHumans() : date('d M Y') }}
+
+        <div class="col-12 col-lg-4 text-center text-lg-end">
+            <div class="hero-card-updated">
+                <span class="text-white text-opacity-85 d-block mb-1" style="font-size: 13px; font-weight: 500; white-space: nowrap;">
+                    <i class="bi bi-clock-history me-1"></i> Terakhir Diperbarui
+                </span>
+                <span class="fw-bold text-white d-block" style="font-size: 20px; line-height: 1.2; white-space: nowrap;">
+                    {{ \Carbon\Carbon::parse($latestResult?->updated_at ?? now())->locale('id')->translatedFormat('d F Y') }}
+                </span>
+                <span class="fw-semibold text-white text-opacity-90 d-block mt-1" style="font-size: 13px; white-space: nowrap;">
+                    {{ \Carbon\Carbon::parse($latestResult?->updated_at ?? now())->format('H.i') }} WIB
                 </span>
             </div>
         </div>

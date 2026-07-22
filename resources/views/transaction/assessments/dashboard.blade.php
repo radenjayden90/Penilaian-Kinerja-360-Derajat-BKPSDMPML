@@ -9,7 +9,116 @@
     <li class="breadcrumb-item active" aria-current="page">Penilaian Saya</li>
 @endsection
 
+@push('styles')
+<style>
+    .hero-banner-penilaian {
+        background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
+        border-radius: 24px;
+        color: #FFFFFF;
+        padding: 28px 40px;
+        box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
+        position: relative;
+        overflow: hidden;
+        animation: heroFadeIn 400ms ease-out forwards;
+    }
+
+    @keyframes heroFadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-banner-penilaian::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: -40px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .hero-banner-penilaian::after {
+        content: '';
+        position: absolute;
+        right: -30px;
+        bottom: -30px;
+        width: 170px;
+        height: 170px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .hero-badge-penilaian {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.18);
+        color: #FFFFFF;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .hero-title {
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+
+    .hero-desc {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.5;
+        max-width: 650px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+</style>
+@endpush
+
 @section('content')
+
+<!-- Executive Hero Header Section -->
+<div class="hero-banner-penilaian mb-4">
+    <div class="row align-items-center g-3">
+        <div class="col-12 col-lg-8">
+            <div style="margin-bottom: 16px;">
+                <span class="hero-badge-penilaian">
+                    <i class="bi bi-shield-check me-1"></i> BKPSDM Kabupaten Pemalang
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3" style="margin-bottom: 12px;">
+                <div class="hero-icon-box text-white" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); display: inline-flex; align-items: center; justify-content: center;">
+                    📝
+                </div>
+                <h1 class="hero-title text-white mb-0">Penilaian Saya</h1>
+            </div>
+            <p class="hero-desc mb-0">
+                Daftar instrumen evaluasi kuesioner yang harus Anda isi pada periode aktif secara obyektif, transparan, dan akuntabel.
+            </p>
+        </div>
+        <div class="col-12 col-lg-4 text-center text-lg-end">
+            <div class="d-inline-flex flex-column align-items-center justify-content-center" style="min-width: 195px; padding: 14px 20px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px;">
+                <span class="text-white text-opacity-85 d-block mb-1" style="font-size: 13px; font-weight: 500; white-space: nowrap;">
+                    <i class="bi bi-calendar-check me-1"></i> Periode Penilaian
+                </span>
+                <span class="fw-bold text-white d-block" style="font-size: 18px; line-height: 1.2; white-space: nowrap;">
+                    {{ $activePeriod ? $activePeriod->name : 'Tidak Ada Periode' }}
+                </span>
+                <span class="fw-semibold text-white text-opacity-90 d-block mt-1" style="font-size: 12px; white-space: nowrap;">
+                    {{ $activePeriod ? \Carbon\Carbon::parse($activePeriod->end_date)->isoFormat('D MMMM Y') : '-' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if(!$activePeriod)
     <div class="alert alert-warning border-0 shadow-sm p-4 text-center">
         <i class="bi bi-calendar-x fs-1 text-warning d-block mb-2"></i>

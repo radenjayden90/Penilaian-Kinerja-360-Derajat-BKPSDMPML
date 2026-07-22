@@ -1,10 +1,12 @@
 <aside class="app-sidebar">
     <div class="sidebar-header">
         <a href="{{ route('dashboard') }}" class="sidebar-brand">
-            <i class="bi bi-shield-check text-warning fs-4"></i>
+            <div class="sidebar-logo-box">
+                <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="sidebar-logo-img">
+            </div>
             <div class="sidebar-brand-text">
-                <div class="fw-bold lh-1" style="font-size: 15px;">360 Kinerja</div>
-                <small class="text-white-50" style="font-size: 11px;">BKPSDM Pemalang</small>
+                <h1 class="sidebar-brand-title">360° Kinerja</h1>
+                <span class="sidebar-brand-subtitle">BKPSDM Kabupaten Pemalang</span>
             </div>
         </a>
     </div>
@@ -40,6 +42,9 @@
     </nav>
 
     <div class="sidebar-footer">
+        <div class="sidebar-version-info">
+            Versi Sistem v1.0.0
+        </div>
         <form method="POST" action="{{ route('logout') }}" id="logout-form-pegawai">
             @csrf
             <button type="submit" class="btn btn-logout" title="Keluar Aplikasi">

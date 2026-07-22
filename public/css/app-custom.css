@@ -81,63 +81,139 @@ h1, .h1, h2, .h2, h3, .h3 {
 }
 
 .app-sidebar .sidebar-header {
-    height: var(--navbar-height);
+    height: auto;
+    min-height: 90px;
+    padding: 24px 16px 20px 16px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
-    padding: 0 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .app-sidebar .sidebar-brand {
-    font-weight: 700;
-    font-size: 17px;
-    color: #FFFFFF;
-    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
-    white-space: nowrap;
+    gap: 12px;
+    text-decoration: none;
+    width: 100%;
     overflow: hidden;
 }
 
+.sidebar-logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 300ms ease;
+}
+
+.sidebar-logo-img {
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.sidebar-logo-box:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-brand-title {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #FFFFFF;
+    line-height: 1.15;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-brand-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 2px;
+    line-height: 1.25;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
 .app-sidebar .sidebar-menu {
-    padding: 1rem 0.75rem;
+    padding: 28px 0.75rem 1rem;
     flex: 1;
     overflow-y: auto;
 }
 
 .app-sidebar .sidebar-footer {
-    padding: 0.65rem 0.75rem;
+    padding: 1rem 0.75rem 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.15);
     margin-top: auto;
+}
+
+.sidebar-version-info {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-bottom: 12px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .btn-logout {
     background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
     color: #FFFFFF !important;
     border: none;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 0.45rem 0.75rem;
-    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 0.6rem 0.85rem;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
-    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    transition: all 250ms ease;
     text-decoration: none;
     cursor: pointer;
 }
 
 .btn-logout:hover {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
     color: #FFFFFF !important;
-    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
-    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.45);
+    transform: translateY(-2px);
+}
+
+body.sidebar-collapsed .sidebar-header {
+    padding: 20px 10px;
+    justify-content: center;
+}
+
+body.sidebar-collapsed .sidebar-brand {
+    justify-content: center;
+}
+
+body.sidebar-collapsed .sidebar-brand-text,
+body.sidebar-collapsed .sidebar-version-info {
+    display: none !important;
+}
+
+body.sidebar-collapsed .sidebar-logo-box {
+    margin: 0 auto;
 }
 
 body.sidebar-collapsed .sidebar-footer {
@@ -156,26 +232,43 @@ body.sidebar-collapsed .sidebar-footer {
 .app-sidebar .nav-link {
     color: rgba(255, 255, 255, 0.8);
     padding: 0.65rem 0.85rem;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 250ms ease;
     text-decoration: none;
     margin-bottom: 2px;
+    position: relative;
+    overflow: hidden;
 }
 
 .app-sidebar .nav-link:hover {
     color: #FFFFFF;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.app-sidebar .nav-link:hover i {
+    color: #FFFFFF;
 }
 
 .app-sidebar .nav-link.active {
     color: #FFFFFF;
     background-color: rgba(255, 255, 255, 0.18);
     font-weight: 600;
+}
+
+.app-sidebar .nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #60A5FA;
+    border-radius: 0 999px 999px 0;
 }
 
 .app-sidebar .nav-link i {
