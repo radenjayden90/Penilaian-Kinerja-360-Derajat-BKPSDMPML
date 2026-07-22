@@ -399,36 +399,36 @@
                 </div>
 
                 <!-- Strength Card -->
-                <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
-                    <div class="d-flex align-items-center gap-3 mb-2">
-                        <div class="bg-success bg-opacity-10 text-success rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
-                            <i class="bi bi-star-fill fs-4"></i>
+                <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                            <i class="bi bi-star-fill fs-5"></i>
                         </div>
                         <div>
-                            <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px;">Kekuatan Utama (Top Strength)</span>
-                            <h5 class="fw-bold text-dark mb-0">{{ $topStrength }}</h5>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px;">Kekuatan Utama</span>
+                            <h6 class="fw-bold text-dark mb-0 fs-6">{{ $topStrength }}</h6>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #F0FDF4; border: 1px solid #DCFCE7;">
-                        <span class="text-success-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
-                        <span class="fw-extrabold text-success fs-5">{{ $topStrengthVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
+                    <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: #F0FDF4; border: 1px solid #DCFCE7;">
+                        <span class="text-success-emphasis fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
+                        <span class="fw-extrabold text-success fs-6">{{ $topStrengthVal }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
                     </div>
                 </div>
 
                 <!-- Development Area Card -->
-                <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-warning border-4">
-                    <div class="d-flex align-items-center gap-3 mb-2">
-                        <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
-                            <i class="bi bi-arrow-up-circle-fill fs-4"></i>
+                <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-warning border-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                            <i class="bi bi-arrow-up-circle-fill fs-5"></i>
                         </div>
                         <div>
-                            <span class="badge bg-warning bg-opacity-10 fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px; color: #B45309 !important; background-color: #FEF3C7 !important;">Area Pengembangan</span>
-                            <h5 class="fw-bold text-dark mb-0">{{ $areaImprovement }}</h5>
+                            <span class="badge bg-warning bg-opacity-10 fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px; color: #B45309 !important; background-color: #FEF3C7 !important;">Area Pengembangan</span>
+                            <h6 class="fw-bold text-dark mb-0 fs-6">{{ $areaImprovement }}</h6>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #FFFBEB; border: 1px solid #FEF3C7;">
-                        <span class="text-warning-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
-                        <span class="fw-extrabold fs-5" style="color: #B45309 !important;">{{ $areaImprovementVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
+                    <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: #FFFBEB; border: 1px solid #FEF3C7;">
+                        <span class="text-warning-emphasis fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
+                        <span class="fw-extrabold fs-6" style="color: #B45309 !important;">{{ $areaImprovementVal }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
                     </div>
                 </div>
             @else

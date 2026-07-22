@@ -56,16 +56,6 @@ class AssessmentResultExporter
         $sheet2->setTitle('Detail Penilaian');
         $this->buildSheetDetailPenilaian($sheet2);
 
-        // 4. Sheet 3: Grafik Penilaian
-        $sheet3 = $spreadsheet->createSheet();
-        $sheet3->setTitle('Grafik Penilaian');
-        $this->buildSheetGrafikPenilaian($sheet3);
-
-        // 5. Sheet 4: Riwayat Penilai
-        $sheet4 = $spreadsheet->createSheet();
-        $sheet4->setTitle('Riwayat Penilai');
-        $this->buildSheetRiwayatPenilai($sheet4);
-
         $spreadsheet->setActiveSheetIndex(0);
 
         return $spreadsheet;
@@ -77,9 +67,9 @@ class AssessmentResultExporter
         $employee = $result->employee;
         $period = $result->period;
 
-        // Position level check
-        $posName = strtolower($employee->position?->name ?? '');
-        $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+        // Role check
+        $roleName = strtoupper($employee->role->name ?? '');
+        $isHead = ($roleName === 'HEAD');
 
         // 1. Header Banner (Height ~68pt / 90px)
         $sheet->mergeCells('A1:F1');
@@ -234,11 +224,10 @@ class AssessmentResultExporter
         ]);
         $sheet->getRowDimension(14)->setRowHeight(26);
 
-        // Enable Freeze Pane under Table Header
-        $sheet->freezePane('A15');
+        // Remove freeze pane so user can scroll normally
 
         // Table Content
-        if ($isKabid) {
+        if ($isHead) {
             $rowsData = [
                 [1, 'Penilaian Atasan (Kepala BKPSDM)', 50, $result->subordinate_average ?? 0, ($result->subordinate_average ?? 0) * 10 * 0.50, 'Bobot 50%'],
                 [2, 'Penilaian Sejawat (Rekan Kepala Bidang)', 30, $result->peer_average ?? 0, ($result->peer_average ?? 0) * 10 * 0.30, 'Bobot 30%'],
@@ -380,7 +369,7 @@ class AssessmentResultExporter
         ]);
         $sheet->getRowDimension(3)->setRowHeight(26);
 
-        $sheet->freezePane('A4');
+        // Removed freezePane so user can scroll normally
 
         $row = 4;
         $counter = 0;
