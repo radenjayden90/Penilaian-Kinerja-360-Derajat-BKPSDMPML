@@ -216,8 +216,8 @@
                 </div>
                 <div class="text-muted small mt-1">
                     <i class="bi bi-clock me-1"></i> Jangka Waktu: 
-                    <strong>{{ \Carbon\Carbon::parse($activePeriod->start_date)->isoFormat('D MMMM Y') }}</strong> s/d 
-                    <strong>{{ \Carbon\Carbon::parse($activePeriod->end_date)->isoFormat('D MMMM Y') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($activePeriod->start_date)->locale('id')->isoFormat('D MMMM Y') }}</strong> s/d 
+                    <strong>{{ \Carbon\Carbon::parse($activePeriod->end_date)->locale('id')->isoFormat('D MMMM Y') }}</strong>
                 </div>
             </div>
         </div>

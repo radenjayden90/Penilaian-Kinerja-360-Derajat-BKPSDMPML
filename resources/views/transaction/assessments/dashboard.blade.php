@@ -191,7 +191,7 @@
                 </div>
                 <div class="text-muted small mt-1">
                     <i class="bi bi-clock me-1"></i> Batas Akhir Pengisian: 
-                    <strong>{{ \Carbon\Carbon::parse($activePeriod->end_date)->isoFormat('D MMMM Y') }}</strong> ({{ \Carbon\Carbon::parse($activePeriod->end_date)->format('H:i') }} WIB)
+                    <strong>{{ \Carbon\Carbon::parse($activePeriod->end_date)->locale('id')->isoFormat('D MMMM Y') }}</strong> ({{ \Carbon\Carbon::parse($activePeriod->end_date)->format('H:i') }} WIB)
                 </div>
             </div>
         </div>

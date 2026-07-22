@@ -665,13 +665,8 @@
         </div>
 
         @if($myResults->hasPages())
-            <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <small class="text-muted">
-                    Menampilkan {{ $myResults->firstItem() }} - {{ $myResults->lastItem() }} dari {{ $myResults->total() }} histori
-                </small>
-                <div>
-                    {{ $myResults->withQueryString()->links() }}
-                </div>
+            <div class="p-3 border-top">
+                {{ $myResults->withQueryString()->links() }}
             </div>
         @endif
     </div>

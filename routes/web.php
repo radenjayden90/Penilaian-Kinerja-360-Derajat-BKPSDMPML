@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
         Route::post('assessments', [AssessmentController::class, 'store'])->name('assessments.store');
         Route::get('assessments/{assessment}', [AssessmentController::class, 'show'])->name('assessments.show');
+        Route::get('assessments/{result}/export-pdf', [AssessmentController::class, 'exportPdf'])->name('assessments.export-pdf');
 
         Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
 

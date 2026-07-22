@@ -44,7 +44,11 @@ class EmployeeController extends Controller
         $departments = Department::where('is_active', true)->orderBy('name')->get();
         $positions = Position::where('is_active', true)->orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
-        $supervisors = Employee::where('is_active', true)->orderBy('name')->get();
+        $supervisors = Employee::where('is_active', true)
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN', 'Admin BKPSDM', 'Super Admin']);
+            })
+            ->orderBy('name')->get();
         
         return view('master.employees.create', compact('departments', 'positions', 'roles', 'supervisors'));
     }
@@ -65,7 +69,12 @@ class EmployeeController extends Controller
         $departments = Department::where('is_active', true)->orderBy('name')->get();
         $positions = Position::where('is_active', true)->orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
-        $supervisors = Employee::where('is_active', true)->where('id', '!=', $employee->id)->orderBy('name')->get();
+        $supervisors = Employee::where('is_active', true)
+            ->where('id', '!=', $employee->id)
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN', 'Admin BKPSDM', 'Super Admin']);
+            })
+            ->orderBy('name')->get();
         
         return view('master.employees.edit', compact('employee', 'departments', 'positions', 'roles', 'supervisors'));
     }

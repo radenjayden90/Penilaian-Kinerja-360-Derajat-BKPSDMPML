@@ -5,45 +5,79 @@
 @section('subtitle', 'Overview statistik master data dan status penilaian kinerja 360° ASN BKPSDM Kabupaten Pemalang')
 
 @section('content')
-<!-- Row Status Cards -->
+<!-- Executive Hero Banner -->
+<div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 55%, #2563EB 100%);">
+    <div class="card-body p-4 p-lg-5 text-white position-relative">
+        <div class="row align-items-center g-3">
+            <div class="col-12 col-lg-8">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-10 text-white border border-white border-opacity-20 mb-3" style="backdrop-filter: blur(10px); font-size: 12px; font-weight: 600; letter-spacing: 0.5px;">
+                    <i class="bi bi-shield-lock-fill text-warning"></i> BKPSDM KABUPATEN PEMALANG • PANEL ADMINISTRATOR
+                </div>
+                <h2 class="fw-extrabold text-white mb-2" style="font-size: 26px; letter-spacing: -0.5px;">
+                    Selamat Datang, Administrator 👋
+                </h2>
+                <p class="text-white text-opacity-80 mb-0" style="font-size: 14px; max-width: 680px; line-height: 1.6;">
+                    Kelola dan pantau seluruh instrumen penilaian kinerja 360 derajat ASN, data pegawai, unit kerja, indikator evaluasi, dan kalkulasi hasil akhir secara real-time.
+                </p>
+            </div>
+            <div class="col-12 col-lg-4 text-lg-end">
+                <div class="d-inline-flex flex-column align-items-lg-end p-3 rounded-4 bg-white bg-opacity-10 border border-white border-opacity-15" style="backdrop-filter: blur(10px);">
+                    <span class="text-white text-opacity-75 small mb-1">
+                        <i class="bi bi-calendar-event me-1"></i> Periode Penilaian Aktif
+                    </span>
+                    <span class="fw-bold text-white fs-6 mb-1">
+                        {{ $stats['active_period']->name ?? 'Tidak Ada Periode Aktif' }}
+                    </span>
+                    @if(isset($stats['active_period']) && $stats['active_period']->end_date)
+                        <span class="badge bg-success bg-opacity-20 text-success-light border border-success border-opacity-30 rounded-pill px-3 py-1" style="font-size: 11px;">
+                            <i class="bi bi-clock me-1"></i> s/d {{ \Carbon\Carbon::parse($stats['active_period']->end_date)->locale('id')->isoFormat('D MMMM Y') }}
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Executive Row Stat Cards -->
 <div class="row g-3 mb-4">
-    <!-- Stat 1: Pegawai -->
+    <!-- Stat 1: Total Pegawai -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body p-3">
+        <div class="card h-100 border-0 rounded-4 shadow-sm hover-lift" style="border-top: 4px solid #2563EB !important;">
+            <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Total Pegawai</small>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #1E3A5F;">{{ number_format($stats['total_pegawai']) }}</h3>
-                        <div class="mt-2" style="font-size: 12px;">
-                            <a href="{{ route('master.employees.index') }}" class="text-decoration-none text-primary fw-medium">
-                                Lihat Pegawai <i class="bi bi-arrow-right ms-1"></i>
+                        <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Total Pegawai ASN</span>
+                        <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_pegawai']) }}</h3>
+                        <div class="mt-3">
+                            <a href="{{ route('master.employees.index') }}" class="text-decoration-none text-primary fw-semibold small d-inline-flex align-items-center">
+                                Kelola Pegawai <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="rounded-3 p-3 bg-primary bg-opacity-10 text-primary">
-                        <i class="bi bi-people-fill fs-3" style="color: #1E3A5F;"></i>
+                    <div class="rounded-4 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; background: #EFF6FF; color: #2563EB;">
+                        <i class="bi bi-people-fill fs-3"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Stat 2: Unit Kerja -->
+    <!-- Stat 2: Unit Kerja / Bidang -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body p-3">
+        <div class="card h-100 border-0 rounded-4 shadow-sm hover-lift" style="border-top: 4px solid #0EA5E9 !important;">
+            <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Unit Kerja / Bidang</small>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #1E3A5F;">{{ number_format($stats['total_department']) }}</h3>
-                        <div class="mt-2" style="font-size: 12px;">
-                            <a href="{{ route('master.departments.index') }}" class="text-decoration-none text-primary fw-medium">
-                                Lihat Unit Kerja <i class="bi bi-arrow-right ms-1"></i>
+                        <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Unit Kerja / Bidang</span>
+                        <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_department']) }}</h3>
+                        <div class="mt-3">
+                            <a href="{{ route('master.departments.index') }}" class="text-decoration-none text-info fw-semibold small d-inline-flex align-items-center">
+                                Lihat Unit Kerja <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="rounded-3 p-3 bg-info bg-opacity-10 text-info">
+                    <div class="rounded-4 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; background: #E0F2FE; color: #0EA5E9;">
                         <i class="bi bi-building fs-3"></i>
                     </div>
                 </div>
@@ -51,21 +85,21 @@
         </div>
     </div>
 
-    <!-- Stat 3: Jabatan -->
+    <!-- Stat 3: Master Jabatan -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body p-3">
+        <div class="card h-100 border-0 rounded-4 shadow-sm hover-lift" style="border-top: 4px solid #8B5CF6 !important;">
+            <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Master Jabatan</small>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #1E3A5F;">{{ number_format($stats['total_position']) }}</h3>
-                        <div class="mt-2" style="font-size: 12px;">
-                            <a href="{{ route('master.positions.index') }}" class="text-decoration-none text-primary fw-medium">
-                                Lihat Jabatan <i class="bi bi-arrow-right ms-1"></i>
+                        <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Master Jabatan</span>
+                        <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_position']) }}</h3>
+                        <div class="mt-3">
+                            <a href="{{ route('master.positions.index') }}" class="text-decoration-none text-purple fw-semibold small d-inline-flex align-items-center" style="color: #8B5CF6;">
+                                Lihat Jabatan <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="rounded-3 p-3 bg-secondary bg-opacity-10 text-secondary">
+                    <div class="rounded-4 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; background: #F3E8FF; color: #8B5CF6;">
                         <i class="bi bi-person-badge fs-3"></i>
                     </div>
                 </div>
@@ -75,21 +109,21 @@
 
     <!-- Stat 4: Periode Penilaian -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body p-3">
+        <div class="card h-100 border-0 rounded-4 shadow-sm hover-lift" style="border-top: 4px solid #10B981 !important;">
+            <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Periode Aktif</small>
-                        <div class="fw-bold text-truncate mt-1" style="color: #1E3A5F; font-size: 16px; max-width: 140px;">
-                            {{ $stats['active_period']->name ?? 'Belum Ada Aktif' }}
-                        </div>
-                        <div class="mt-2" style="font-size: 12px;">
-                            <a href="{{ route('master.periods.index') }}" class="text-decoration-none text-primary fw-medium">
-                                Kelola Periode <i class="bi bi-arrow-right ms-1"></i>
+                        <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Status Periode</span>
+                        <h3 class="fw-bold mb-0 mt-2 text-truncate" style="color: #0F172A; font-size: 18px; max-width: 140px;">
+                            {{ $stats['active_period']->name ?? 'Belum Aktif' }}
+                        </h3>
+                        <div class="mt-3">
+                            <a href="{{ route('master.periods.index') }}" class="text-decoration-none text-success fw-semibold small d-inline-flex align-items-center">
+                                Kelola Periode <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
+                    <div class="rounded-4 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; background: #D1FAE5; color: #10B981;">
                         <i class="bi bi-calendar-check fs-3"></i>
                     </div>
                 </div>
@@ -101,34 +135,51 @@
 <!-- Performance Distribution Breakdown Cards -->
 <div class="row g-3 mb-4">
     <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3 fw-semibold">
-                <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribusi Predikat Kinerja ASN Periode Aktif
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-header bg-white py-3 px-4 fw-bold border-bottom-0 d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center gap-2 text-dark" style="font-size: 15px;">
+                    <i class="bi bi-bar-chart-line-fill text-primary"></i> Distribusi Predikat Kinerja ASN Periode Aktif
+                </span>
+                <span class="badge bg-slate-100 text-slate-600 rounded-pill px-3 py-1" style="font-size: 11px;">
+                    Kalkulasi BerAKHLAK 360°
+                </span>
             </div>
-            <div class="card-body p-3">
+            <div class="card-body px-4 pb-4 pt-0">
                 <div class="row text-center g-3">
                     <div class="col-6 col-md-3">
-                        <div class="p-3 border rounded bg-light">
-                            <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Sangat Baik</small>
-                            <h3 class="fw-bold text-success mb-0 mt-1">{{ $categoryStats['sangat_baik'] ?? 0 }}</h3>
+                        <div class="p-3.5 rounded-4 bg-emerald-50 border border-emerald-200">
+                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-emerald-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
+                                <i class="bi bi-stars"></i> Sangat Baik
+                            </div>
+                            <h3 class="fw-extrabold text-emerald-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['sangat_baik'] ?? 0 }}</h3>
+                            <small class="text-emerald-600 opacity-75" style="font-size: 11px;">ASN Terbanyak</small>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="p-3 border rounded bg-light">
-                            <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Baik</small>
-                            <h3 class="fw-bold text-primary mb-0 mt-1" style="color: #1E3A5F !important;">{{ $categoryStats['baik'] ?? 0 }}</h3>
+                        <div class="p-3.5 rounded-4 bg-blue-50 border border-blue-200">
+                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-blue-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
+                                <i class="bi bi-hand-thumbs-up-fill"></i> Baik
+                            </div>
+                            <h3 class="fw-extrabold text-blue-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['baik'] ?? 0 }}</h3>
+                            <small class="text-blue-600 opacity-75" style="font-size: 11px;">Sesuai Ekspektasi</small>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="p-3 border rounded bg-light">
-                            <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Cukup</small>
-                            <h3 class="fw-bold text-warning mb-0 mt-1">{{ $categoryStats['cukup'] ?? 0 }}</h3>
+                        <div class="p-3.5 rounded-4 bg-amber-50 border border-amber-200">
+                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-amber-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
+                                <i class="bi bi-exclamation-circle-fill"></i> Cukup
+                            </div>
+                            <h3 class="fw-extrabold text-amber-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['cukup'] ?? 0 }}</h3>
+                            <small class="text-amber-600 opacity-75" style="font-size: 11px;">Butuh Peningkatan</small>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="p-3 border rounded bg-light">
-                            <small class="text-uppercase fw-semibold text-muted" style="font-size: 11px;">Kurang</small>
-                            <h3 class="fw-bold text-danger mb-0 mt-1">{{ $categoryStats['kurang'] ?? 0 }}</h3>
+                        <div class="p-3.5 rounded-4 bg-rose-50 border border-rose-200">
+                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-rose-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
+                                <i class="bi bi-shield-x"></i> Kurang
+                            </div>
+                            <h3 class="fw-extrabold text-rose-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['kurang'] ?? 0 }}</h3>
+                            <small class="text-rose-600 opacity-75" style="font-size: 11px;">Perlu Pembinaan</small>
                         </div>
                     </div>
                 </div>
@@ -140,48 +191,49 @@
 <div class="row g-4">
     <!-- Quick Access Actions -->
     <div class="col-12 col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-bottom fw-semibold">
-                <i class="bi bi-lightning-charge text-warning me-2"></i>Aksi Cepat Administrator
+        <div class="card border-0 rounded-4 shadow-sm h-100">
+            <div class="card-header bg-white py-3 px-4 border-bottom fw-bold text-dark d-flex align-items-center justify-content-between">
+                <span><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Aksi Cepat Admin</span>
+                <span class="badge bg-amber-100 text-amber-800 rounded-pill px-2.5 py-1" style="font-size: 10px;">Shortcut</span>
             </div>
             <div class="card-body p-3">
-                <div class="list-group list-group-flush">
-                    <a href="{{ route('master.employees.index') }}" class="list-group-item list-group-item-action border-0 rounded-2 mb-2 p-2.5 d-flex align-items-center bg-light">
-                        <div class="bg-primary text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background-color: #1E3A5F !important;">
-                            <i class="bi bi-person-plus-fill"></i>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{{ route('master.employees.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
+                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-primary text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;">
+                            <i class="bi bi-person-plus-fill fs-5"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-dark mb-0" style="font-size: 14px;">Kelola Data Pegawai</div>
-                            <small class="text-muted" style="font-size: 12px;">Tambah, edit & nonaktifkan ASN</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Kelola Data Pegawai</div>
+                            <small class="text-muted" style="font-size: 12px;">Tambah, edit & atur ASN Pemalang</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('master.periods.index') }}" class="list-group-item list-group-item-action border-0 rounded-2 mb-2 p-2.5 d-flex align-items-center bg-light">
-                        <div class="bg-success text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                            <i class="bi bi-plus-circle"></i>
+                    <a href="{{ route('master.periods.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
+                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-success text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;">
+                            <i class="bi bi-plus-circle-fill fs-5"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-dark mb-0" style="font-size: 14px;">Buka Periode Penilaian</div>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Buka Periode Penilaian</div>
                             <small class="text-muted" style="font-size: 12px;">Atur jadwal penilaian semester/tahunan</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('master.assessment-indicators.index') }}" class="list-group-item list-group-item-action border-0 rounded-2 mb-2 p-2.5 d-flex align-items-center bg-light">
-                        <div class="bg-info text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                            <i class="bi bi-card-checklist"></i>
+                    <a href="{{ route('master.assessment-indicators.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
+                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-info text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%) !important;">
+                            <i class="bi bi-card-checklist fs-5"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-dark mb-0" style="font-size: 14px;">Indikator Penilaian 360°</div>
-                            <small class="text-muted" style="font-size: 12px;">Atur pertanyaan & bobot penilaian</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Indikator Penilaian 360°</div>
+                            <small class="text-muted" style="font-size: 12px;">Atur instrumen & indikator kuesioner</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('transaction.calculations.index') }}" class="list-group-item list-group-item-action border-0 rounded-2 p-2.5 d-flex align-items-center bg-light">
-                        <div class="bg-warning text-dark rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                            <i class="bi bi-calculator"></i>
+                    <a href="{{ route('transaction.calculations.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
+                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-warning text-dark" style="width: 42px; height: 42px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important; color: #FFF !important;">
+                            <i class="bi bi-calculator-fill fs-5"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-dark mb-0" style="font-size: 14px;">Hitung Hasil Penilaian</div>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Hitung Hasil Penilaian</div>
                             <small class="text-muted" style="font-size: 12px;">Kalkulasi skor akhir 360 derajat</small>
                         </div>
                     </a>
@@ -192,41 +244,67 @@
 
     <!-- Top 5 Employees by Score Table -->
     <div class="col-12 col-lg-8">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
-                <span class="fw-semibold"><i class="bi bi-trophy text-primary me-2"></i>5 Pegawai dengan Skor Kinerja Tertinggi</span>
-                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+        <div class="card border-0 rounded-4 shadow-sm h-100">
+            <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                <span class="fw-bold text-dark" style="font-size: 15px;">
+                    <i class="bi bi-trophy-fill text-amber-500 me-2"></i>5 Pegawai Skor Kinerja Tertinggi
+                </span>
+                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 12px;">
+                    Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                </a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                        <thead>
+                        <thead class="bg-slate-50 text-slate-600" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
                             <tr>
-                                <th class="ps-3">Nama / NIP</th>
-                                <th>Unit Kerja</th>
-                                <th>Jabatan</th>
-                                <th class="text-center">Skor Akhir 360°</th>
+                                <th class="ps-4 py-3">Peringkat & Pegawai</th>
+                                <th class="py-3">Unit Kerja</th>
+                                <th class="py-3">Jabatan</th>
+                                <th class="text-center pe-4 py-3">Skor 360°</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($topResults as $res)
+                            @forelse($topResults as $index => $res)
                                 @php $emp = $res->employee; @endphp
                                 @if($emp)
                                     <tr>
-                                        <td class="ps-3">
-                                            <div class="fw-semibold text-dark">{{ $emp->name }}</div>
-                                            <small class="text-muted">NIP. {{ $emp->nip }}</small>
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <span class="fw-bold fs-6" style="width: 24px;">
+                                                    @if($index === 0) 🥇
+                                                    @elseif($index === 1) 🥈
+                                                    @elseif($index === 2) 🥉
+                                                    @else <span class="badge bg-slate-100 text-slate-600 rounded-circle p-1.5" style="font-size: 11px;">{{ $index + 1 }}</span>
+                                                    @endif
+                                                </span>
+                                                <div>
+                                                    <div class="fw-bold text-dark" style="font-size: 14px;">{{ $emp->name }}</div>
+                                                    <small class="text-muted" style="font-size: 12px;">NIP. {{ $emp->nip }}</small>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td>{{ $emp->department->name ?? '-' }}</td>
-                                        <td>{{ $emp->position->name ?? '-' }}</td>
-                                        <td class="text-center">
-                                            <span class="fw-bold text-primary">{{ number_format($res->final_score, 2) }}</span>
+                                        <td class="py-3">
+                                            <span class="badge bg-slate-100 text-slate-700 fw-medium px-2.5 py-1 rounded-2" style="font-size: 12px;">
+                                                {{ $emp->department->name ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3 text-secondary" style="font-size: 13px;">
+                                            {{ $emp->position->name ?? '-' }}
+                                        </td>
+                                        <td class="text-center pe-4 py-3">
+                                            <span class="badge bg-blue-50 text-blue-700 border border-blue-200 fw-extrabold px-3 py-1.5 rounded-pill" style="font-size: 13px;">
+                                                {{ number_format($res->final_score, 2) }}
+                                            </span>
                                         </td>
                                     </tr>
                                 @endif
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data perhitungan nilai pegawai.</td>
+                                    <td colspan="4" class="text-center text-muted py-5">
+                                        <i class="bi bi-inbox text-slate-300 display-6 d-block mb-2"></i>
+                                        Belum ada data kalkulasi nilai pegawai pada periode ini.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>

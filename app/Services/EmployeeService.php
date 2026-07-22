@@ -9,6 +9,9 @@ class EmployeeService
     public function getPaginated($search = null, $departmentId = null, $positionId = null, $roleId = null, $status = null, $perPage = 10, $sortColumn = 'name', $sortDirection = 'asc')
     {
         return Employee::with(['department', 'position', 'role', 'supervisor'])
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN', 'Admin BKPSDM', 'Super Admin']);
+            })
             ->search($search)
             ->filterDepartment($departmentId)
             ->filterPosition($positionId)

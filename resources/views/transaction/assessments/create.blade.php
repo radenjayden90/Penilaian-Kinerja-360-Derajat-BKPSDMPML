@@ -286,7 +286,7 @@
                     {{ $activePeriod->name ?? 'Periode Aktif' }}
                 </span>
                 <span class="text-white text-opacity-90 small mt-1">
-                    <i class="bi bi-clock me-1"></i> Batas Akhir: {{ \Carbon\Carbon::parse($activePeriod->end_date)->isoFormat('D MMMM Y') }}
+                    <i class="bi bi-clock me-1"></i> Batas Akhir: {{ \Carbon\Carbon::parse($activePeriod->end_date)->locale('id')->isoFormat('D MMMM Y') }}
                 </span>
             </div>
         </div>
