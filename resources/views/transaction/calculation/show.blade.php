@@ -326,27 +326,44 @@
     </div>
 </div>
 
-<!-- 3. 7 Dimensions Radar Chart (BerAKHLAK) & Analysis -->
+<!-- 3. 7 Dimensions Bar Chart (BerAKHLAK) & Analysis -->
 <div class="row g-4 mb-4">
-    <!-- Left Column: Radar Chart Visualisation -->
+    <!-- Left Column: Bar Chart Visualisation -->
     <div class="col-12 col-xl-7">
-        <div class="chart-card h-100">
+        <div class="chart-card h-100 p-4 border-0 shadow-sm rounded-4 bg-white">
             <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
                 <div>
                     <h5 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-hexagon me-2 text-primary"></i>Radar Profil 7 Dimensi BerAKHLAK
+                        <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Diagram Kompetensi 7 Dimensi BerAKHLAK
                     </h5>
                     <div class="text-muted small">Visualisasi kekuatan kompetensi berbasis Core Values ASN BerAKHLAK</div>
                 </div>
                 <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
-                    Radar 360°
+                    <i class="bi bi-bar-chart-fill me-1"></i>Diagram 360°
                 </span>
             </div>
 
-            <!-- Canvas for Chart.js Radar Chart -->
-            <div style="position: relative; height: 320px; width: 100%;">
-                <canvas id="berakhlakRadarChart"></canvas>
+            <!-- Canvas for Chart.js Bar Chart -->
+            <div style="position: relative; height: 340px; width: 100%;">
+                <canvas id="berakhlakBarChart"></canvas>
             </div>
+
+            @if(isset($radarLabels) && isset($radarValues) && count($radarLabels) == count($radarValues))
+                <div class="row g-2 mt-3 pt-3 border-top">
+                    @foreach($radarLabels as $idx => $label)
+                        @php
+                            $val = round((float)($radarValues[$idx] ?? 0), 1);
+                            $badgeStyle = $val >= 85 ? 'background-color: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;' : ($val >= 70 ? 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;' : ($val >= 60 ? 'background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;' : 'background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;'));
+                        @endphp
+                        <div class="col-6 col-sm-4 col-md-3 col-lg">
+                            <div class="p-2 rounded-3 text-center" style="{{ $badgeStyle }}">
+                                <div class="text-truncate mb-0.5" style="font-size: 10px; font-weight: 700;" title="{{ $label }}">{{ $label }}</div>
+                                <div class="fw-extrabold fs-6" style="line-height: 1.1;">{{ number_format($val, 1) }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 
@@ -354,19 +371,19 @@
     <div class="col-12 col-xl-5">
         <div class="d-flex flex-column gap-3 h-100">
             <!-- Strength Card -->
-            <div class="executive-card p-4 flex-fill border-start border-success border-4">
+            <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
                 <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                        <i class="bi bi-star-fill fs-5"></i>
+                    <div class="bg-success bg-opacity-10 text-success rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+                        <i class="bi bi-star-fill fs-4"></i>
                     </div>
                     <div>
-                        <span class="text-success fw-bold text-uppercase small tracking-wider">Kekuatan Utama (Top Strength)</span>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px;">Kekuatan Utama (Top Strength)</span>
                         <h5 class="fw-bold text-dark mb-0">{{ $topStrength }}</h5>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 mt-3">
-                    <span class="text-muted small">Skor Evaluasi Terhitung:</span>
-                    <span class="fw-bold text-success fs-5">{{ $topStrengthVal }} / 100</span>
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #F0FDF4; border: 1px solid #DCFCE7;">
+                    <span class="text-success-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
+                    <span class="fw-extrabold text-success fs-5">{{ $topStrengthVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
                 </div>
                 <p class="text-muted small mt-2 mb-0">
                     Pegawai menunjukkan konsistensi dan kompetensi unggul pada dimensi ini sesuai penilaian 360°.
@@ -374,19 +391,19 @@
             </div>
 
             <!-- Development Opportunity Card -->
-            <div class="executive-card p-4 flex-fill border-start border-warning border-4">
+            <div class="executive-card p-4 flex-fill border-0 shadow-sm rounded-4 bg-white border-start border-warning border-4">
                 <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                        <i class="bi bi-arrow-up-circle-fill fs-5"></i>
+                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+                        <i class="bi bi-arrow-up-circle-fill fs-4"></i>
                     </div>
                     <div>
-                        <span class="text-warning-emphasis fw-bold text-uppercase small tracking-wider" style="color: #B45309 !important;">Area Pengembangan (Area to Improve)</span>
+                        <span class="badge bg-warning bg-opacity-10 fw-bold text-uppercase px-2.5 py-1 rounded-2 mb-1" style="font-size: 10px; letter-spacing: 0.5px; color: #B45309 !important; background-color: #FEF3C7 !important;">Area Pengembangan</span>
                         <h5 class="fw-bold text-dark mb-0">{{ $areaImprovement }}</h5>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 mt-3">
-                    <span class="text-muted small">Skor Evaluasi Terhitung:</span>
-                    <span class="fw-bold text-warning fs-5" style="color: #B45309 !important;">{{ $areaImprovementVal }} / 100</span>
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mt-3" style="background-color: #FFFBEB; border: 1px solid #FEF3C7;">
+                    <span class="text-warning-emphasis fw-medium small">Skor Evaluasi Terhitung:</span>
+                    <span class="fw-extrabold fs-5" style="color: #B45309 !important;">{{ $areaImprovementVal }} <span class="fs-6 text-muted fw-normal">/ 100</span></span>
                 </div>
                 <p class="text-muted small mt-2 mb-0">
                     Direkomendasikan untuk ditingkatkan melalui program pelatihan atau mentoring berorientasi pengembangan.
@@ -397,10 +414,10 @@
 </div>
 
 <!-- 4. Score Breakdown Table -->
-<div class="executive-card mb-4 overflow-hidden">
+<div class="executive-card mb-4 overflow-hidden shadow-sm border-0 rounded-4 bg-white">
     <div class="p-4 border-bottom bg-white d-flex align-items-center justify-content-between">
         <h5 class="fw-bold text-dark mb-0">
-            <i class="bi bi-pie-chart me-2 text-primary"></i>Rincian Skor Berdasarkan Sumber Penilai (360 Degree)
+            <i class="bi bi-pie-chart-fill me-2 text-primary"></i>Rincian Skor Berdasarkan Sumber Penilai (360 Degree)
         </h5>
         <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill small fw-semibold">
             Pembobotan Resmi
@@ -461,61 +478,100 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('berakhlakRadarChart');
-        if (!ctx) return;
+        const canvas = document.getElementById('berakhlakBarChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
 
-        const radarLabels = @json($radarLabels);
-        const radarValues = @json($radarValues);
+        const rawLabels = @json($radarLabels);
+        const rawValues = @json($radarValues);
+        const values = rawValues.map(v => { const val = parseFloat(v); return val <= 10 ? Math.round(val * 100) / 10 : val; });
+
+        // Format short labels for crisp X-axis presentation
+        const labels = rawLabels.map(l => {
+            if (l.toLowerCase().includes('berorientasi')) return ['Berorientasi', 'Pelayanan'];
+            return l;
+        });
+
+        const canvasHeight = canvas.clientHeight || 340;
+        
+        // Define rich linear gradients for each category bar
+        const gradientStops = [
+            { top: '#3B82F6', bottom: '#1D4ED8', border: '#1D4ED8' }, // Pelayanan: Electric Blue
+            { top: '#6366F1', bottom: '#4338CA', border: '#4338CA' }, // Akuntabel: Indigo
+            { top: '#06B6D4', bottom: '#0284C7', border: '#0284C7' }, // Kompeten: Cyan
+            { top: '#10B981', bottom: '#047857', border: '#047857' }, // Harmonis: Emerald
+            { top: '#F59E0B', bottom: '#D97706', border: '#D97706' }, // Loyal: Amber
+            { top: '#F43F5E', bottom: '#E11D48', border: '#E11D48' }, // Adaptif: Rose
+            { top: '#8B5CF6', bottom: '#6D28D9', border: '#6D28D9' }  // Kolaboratif: Violet
+        ];
+
+        const barGradients = gradientStops.map(s => {
+            const g = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            g.addColorStop(0, s.top);
+            g.addColorStop(1, s.bottom);
+            return g;
+        });
+        const barBorderColors = gradientStops.map(s => s.border);
+
+        // Dynamic minimum score scale (starts closely below minimum score, capped at min 40)
+        const minVal = values.length > 0 ? Math.min(...values) : 50;
+        const calculatedMin = Math.max(0, Math.min(50, Math.floor((minVal - 5) / 10) * 10));
 
         new Chart(ctx, {
-            type: 'radar',
+            type: 'bar',
             data: {
-                labels: radarLabels,
+                labels: labels,
                 datasets: [{
-                    label: 'Skor Evaluasi Kompetensi (Skala 100)',
-                    data: radarValues,
-                    backgroundColor: 'rgba(37, 99, 235, 0.22)',
-                    borderColor: '#2563EB',
-                    borderWidth: 2.5,
-                    pointBackgroundColor: '#2563EB',
-                    pointBorderColor: '#FFFFFF',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
+                    label: 'Skor Evaluasi',
+                    data: values,
+                    backgroundColor: barGradients.slice(0, values.length),
+                    borderColor: barBorderColors.slice(0, values.length),
+                    borderWidth: 2,
+                    borderRadius: { topLeft: 10, topRight: 10 },
+                    hoverBorderWidth: 3,
+                    hoverBorderColor: '#FFFFFF',
+                    barPercentage: 0.55,
+                    categoryPercentage: 0.7
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    r: {
-                        angleLines: { color: 'rgba(226, 232, 240, 0.8)' },
+                    y: {
+                        min: calculatedMin,
+                        max: 100,
                         grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                        pointLabels: {
-                            font: { family: 'Inter', size: 11, weight: '600' },
-                            color: '#0F172A'
-                        },
                         ticks: {
-                            stepSize: 20,
-                            backdropColor: 'transparent',
-                            font: { size: 9 },
+                            stepSize: 10,
+                            font: { family: 'Inter', size: 11, weight: '600' },
                             color: '#64748B'
-                        },
-                        suggestedMin: 50,
-                        suggestedMax: 100
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Inter', size: 11, weight: '700' },
+                            color: '#0F172A',
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
                     }
                 },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: '#0F172A',
-                        padding: 10,
-                        cornerRadius: 8,
-                        titleFont: { size: 12, weight: 'bold' },
-                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 10,
+                        titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                        bodyFont: { family: 'Inter', size: 12 },
+                        displayColors: false,
                         callbacks: {
+                            title: function(context) {
+                                const idx = context[0].dataIndex;
+                                return rawLabels[idx] || context[0].label;
+                            },
                             label: function(context) {
                                 return ' Skor: ' + context.raw + ' / 100';
                             }

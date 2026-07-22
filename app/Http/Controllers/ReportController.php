@@ -15,13 +15,24 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
-        $selectedPeriodId = $request->input('period_id', $activePeriod->id ?? null);
-        $selectedDepartmentId = $request->input('department_id');
-        $search = $request->input('search');
-
         $periods = Period::orderBy('year', 'desc')->orderBy('month', 'desc')->get();
         $departments = Department::orderBy('name')->get();
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+
+        if ($request->has('period_id')) {
+            $selectedPeriodId = $request->input('period_id');
+        } else {
+            // Default to active period if it has results, otherwise default to the latest period with results
+            if ($activePeriod && AssessmentResult::where('period_id', $activePeriod->id)->exists()) {
+                $selectedPeriodId = $activePeriod->id;
+            } else {
+                $latestPeriodId = AssessmentResult::latest()->value('period_id');
+                $selectedPeriodId = $latestPeriodId ?? ($activePeriod->id ?? null);
+            }
+        }
+
+        $selectedDepartmentId = $request->input('department_id');
+        $search = $request->input('search');
 
         $resultsQuery = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
             ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {

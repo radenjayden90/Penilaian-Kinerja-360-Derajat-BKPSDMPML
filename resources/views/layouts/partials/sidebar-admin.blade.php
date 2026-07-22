@@ -13,35 +13,33 @@
 
     <nav class="sidebar-menu">
         <div class="nav-label">Utama</div>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <i class="bi bi-speedometer2"></i>
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Dashboard">
+            <i class="bi bi-speedometer2 nav-main-icon"></i>
             <span class="nav-link-text">Dashboard</span>
         </a>
 
         <div class="nav-label">Master Data</div>
-        <a href="#masterSubmenu" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'true' : 'false' }}">
-            <div>
-                <i class="bi bi-database"></i>
-                <span class="nav-link-text ms-1">Master Data</span>
-            </div>
-            <i class="bi bi-chevron-down dropdown-arrow small"></i>
+        <a href="#masterSubmenu" class="nav-link nav-link-dropdown {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'true' : 'false' }}" title="Master Data">
+            <i class="bi bi-database nav-main-icon"></i>
+            <span class="nav-link-text">Master Data</span>
+            <i class="bi bi-chevron-down dropdown-arrow small ms-auto"></i>
         </a>
         <div class="collapse {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'show' : '' }}" id="masterSubmenu">
             <ul class="submenu">
                 <li>
-                    <a href="{{ route('master.employees.index') }}" class="nav-link {{ request()->routeIs('master.employees.*') ? 'active' : '' }}">
+                    <a href="{{ route('master.employees.index') }}" class="nav-link {{ request()->routeIs('master.employees.*') ? 'active' : '' }}" title="Pegawai">
                         <i class="bi bi-people"></i>
                         <span class="nav-link-text">Pegawai</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('master.positions.index') }}" class="nav-link {{ request()->routeIs('master.positions.*') ? 'active' : '' }}">
+                    <a href="{{ route('master.positions.index') }}" class="nav-link {{ request()->routeIs('master.positions.*') ? 'active' : '' }}" title="Jabatan">
                         <i class="bi bi-person-badge"></i>
                         <span class="nav-link-text">Jabatan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('master.departments.index') }}" class="nav-link {{ request()->routeIs('master.departments.*') ? 'active' : '' }}">
+                    <a href="{{ route('master.departments.index') }}" class="nav-link {{ request()->routeIs('master.departments.*') ? 'active' : '' }}" title="Unit Kerja">
                         <i class="bi bi-building"></i>
                         <span class="nav-link-text">Unit Kerja</span>
                     </a>
@@ -50,29 +48,27 @@
         </div>
 
         <div class="nav-label">Penilaian</div>
-        <a href="#penilaianSubmenu" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'true' : 'false' }}">
-            <div>
-                <i class="bi bi-clipboard-check"></i>
-                <span class="nav-link-text ms-1">Penilaian</span>
-            </div>
-            <i class="bi bi-chevron-down dropdown-arrow small"></i>
+        <a href="#penilaianSubmenu" class="nav-link nav-link-dropdown {{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'true' : 'false' }}" title="Penilaian">
+            <i class="bi bi-clipboard-check nav-main-icon"></i>
+            <span class="nav-link-text">Penilaian</span>
+            <i class="bi bi-chevron-down dropdown-arrow small ms-auto"></i>
         </a>
         <div class="collapse {{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'show' : '' }}" id="penilaianSubmenu">
             <ul class="submenu">
                 <li>
-                    <a href="{{ route('master.periods.index') }}" class="nav-link {{ request()->routeIs('master.periods.*') ? 'active' : '' }}">
+                    <a href="{{ route('master.periods.index') }}" class="nav-link {{ request()->routeIs('master.periods.*') ? 'active' : '' }}" title="Periode Penilaian">
                         <i class="bi bi-calendar-range"></i>
                         <span class="nav-link-text">Periode Penilaian</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('master.assessment-indicators.index') }}" class="nav-link {{ request()->routeIs('master.assessment-indicators.*') ? 'active' : '' }}">
+                    <a href="{{ route('master.assessment-indicators.index') }}" class="nav-link {{ request()->routeIs('master.assessment-indicators.*') ? 'active' : '' }}" title="Pertanyaan">
                         <i class="bi bi-question-circle"></i>
                         <span class="nav-link-text">Pertanyaan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('transaction.calculations.index') }}" class="nav-link {{ request()->routeIs('transaction.calculations.*') ? 'active' : '' }}">
+                    <a href="{{ route('transaction.calculations.index') }}" class="nav-link {{ request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" title="Hasil Penilaian">
                         <i class="bi bi-bar-chart-line"></i>
                         <span class="nav-link-text">Hasil Penilaian</span>
                     </a>
@@ -82,11 +78,18 @@
         </div>
 
         <div class="nav-label">Laporan & Pengaturan</div>
-        <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
+        <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}" title="Laporan">
             <i class="bi bi-file-earmark-text"></i>
             <span class="nav-link-text">Laporan</span>
         </a>
+<<<<<<< HEAD
 
+=======
+        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil">
+            <i class="bi bi-person-gear"></i>
+            <span class="nav-link-text">Profil</span>
+        </a>
+>>>>>>> 53b98395d2a4ff56b2063b30720e0475c84e6425
     </nav>
 
     <div class="sidebar-footer">
