@@ -20,10 +20,8 @@
 
         <div class="nav-label">Master Data</div>
         <a href="#masterSubmenu" class="nav-link nav-link-dropdown {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'true' : 'false' }}">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-database"></i>
-                <span class="nav-link-text ms-2">Master Data</span>
-            </div>
+            <i class="bi bi-database nav-main-icon"></i>
+            <span class="nav-link-text">Master Data</span>
             <i class="bi bi-chevron-down dropdown-arrow small ms-auto"></i>
         </a>
         <div class="collapse {{ request()->routeIs('master.employees.*') || request()->routeIs('master.positions.*') || request()->routeIs('master.departments.*') ? 'show' : '' }}" id="masterSubmenu">
@@ -51,10 +49,8 @@
 
         <div class="nav-label">Penilaian</div>
         <a href="#penilaianSubmenu" class="nav-link nav-link-dropdown {{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'true' : 'false' }}">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-clipboard-check"></i>
-                <span class="nav-link-text ms-2">Penilaian</span>
-            </div>
+            <i class="bi bi-clipboard-check nav-main-icon"></i>
+            <span class="nav-link-text">Penilaian</span>
             <i class="bi bi-chevron-down dropdown-arrow small ms-auto"></i>
         </a>
         <div class="collapse {{ request()->routeIs('master.periods.*') || request()->routeIs('master.assessment-indicators.*') || request()->routeIs('transaction.calculations.*') ? 'show' : '' }}" id="penilaianSubmenu">
