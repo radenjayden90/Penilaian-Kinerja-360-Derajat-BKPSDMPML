@@ -178,7 +178,7 @@ class UserSeeder extends Seeder
         $kabidPPIK = Employee::updateOrCreate([
             'nip' => '197903072005011006'
         ], [
-            'name' => 'HADI SISWANTO, S.Kom',
+            'name' => 'Hadi Siswanto, S.Kom',
             'email' => 'hadisiswanto@pemalang.go.id',
             'password' => Hash::make('197903072005011006'),
             'gender' => 'L',
@@ -193,7 +193,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '198104192009011005'
         ], [
-            'name' => 'FENDI HERIAWAN, S.Kom',
+            'name' => 'Fendi Heriawan, S.Kom',
             'email' => 'fendiheriawan@pemalang.go.id',
             'password' => Hash::make('198104192009011005'),
             'gender' => 'L',
@@ -208,7 +208,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '196810151992031007'
         ], [
-            'name' => 'MASKURI',
+            'name' => 'Maskuri',
             'email' => 'maskuri@pemalang.go.id',
             'password' => Hash::make('196810151992031007'),
             'gender' => 'L',
@@ -223,7 +223,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '197709192008012008'
         ], [
-            'name' => 'DIAN FITRIANA, S.H.',
+            'name' => 'Dian Fitriana, S.H.',
             'email' => 'dianfitriana@pemalang.go.id',
             'password' => Hash::make('197709192008012008'),
             'gender' => 'P',
@@ -238,7 +238,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '198407302009031003'
         ], [
-            'name' => 'APIT SETIAWAN, S.Kom.',
+            'name' => 'Apit Setiawan, S.Kom.',
             'email' => 'apitsetiawan@pemalang.go.id',
             'password' => Hash::make('198407302009031003'),
             'gender' => 'L',
@@ -253,7 +253,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '197508062007011012'
         ], [
-            'name' => 'MOHAMAD TARMANTO',
+            'name' => 'Mohamad Tarmanto',
             'email' => 'mohamadtarmanto@pemalang.go.id',
             'password' => Hash::make('197508062007011012'),
             'gender' => 'L',
@@ -268,7 +268,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '197106071992031005'
         ], [
-            'name' => 'ABDUL WAHID ZUHRY, S.IP, M.M.',
+            'name' => 'Abdul Wahid Zuhry, S.IP, M.M.',
             'email' => 'abdulwahidzuhry@pemalang.go.id',
             'password' => Hash::make('197106071992031005'),
             'gender' => 'L',
@@ -283,7 +283,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '198609022015022001'
         ], [
-            'name' => 'RIZKI SEPTINA KUSUMANINGSIH, S.T.',
+            'name' => 'Rizki Septina Kusumaningsih, S.T.',
             'email' => 'rizkiseptina@pemalang.go.id',
             'password' => Hash::make('198609022015022001'),
             'gender' => 'P',
@@ -298,7 +298,7 @@ class UserSeeder extends Seeder
         Employee::updateOrCreate([
             'nip' => '198208282014061003'
         ], [
-            'name' => 'TUSMANTO',
+            'name' => 'Tusmanto',
             'email' => 'tusmanto@pemalang.go.id',
             'password' => Hash::make('198208282014061003'),
             'gender' => 'L',
