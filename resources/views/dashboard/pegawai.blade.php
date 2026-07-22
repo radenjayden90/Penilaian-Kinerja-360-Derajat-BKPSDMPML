@@ -264,13 +264,8 @@
                 <div class="kpi-icon-wrapper bg-primary bg-opacity-10 text-primary">
                     <i class="bi bi-card-checklist"></i>
                 </div>
-<<<<<<< HEAD
-                <h3 class="fw-bold mb-0" style="color: #1E3A5F;">{{ $totalTugas ?? 0 }}</h3>
-                <small class="text-muted">Target evaluasi disiapkan</small>
-=======
->>>>>>> 0730e7d (feat: redesign Profile & Rapor 360 views with 7-dimension BerAKHLAK Radar Chart, senior-friendly biodata card, and unified hero headers)
             </div>
-            <div class="stat-number text-dark mb-1">{{ $myAssessments->count() }}</div>
+            <div class="stat-number text-dark mb-1">{{ $totalTugas ?? 0 }}</div>
             <div class="text-muted small">Target evaluasi disiapkan</div>
         </div>
     </div>
