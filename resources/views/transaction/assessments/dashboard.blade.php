@@ -13,9 +13,9 @@
 <style>
     .hero-banner-penilaian {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
-        border-radius: 24px;
+        border-radius: 20px;
         color: #FFFFFF;
-        padding: 28px 40px;
+        padding: 20px 28px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
@@ -66,14 +66,14 @@
     }
 
     .hero-title {
-        font-size: 38px;
+        font-size: 24px;
         font-weight: 700;
         letter-spacing: -0.5px;
         line-height: 1.2;
     }
 
     .hero-desc {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         line-height: 1.5;
         max-width: 650px;

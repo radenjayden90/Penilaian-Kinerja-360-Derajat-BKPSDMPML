@@ -37,9 +37,9 @@
 
     .hero-banner-profile {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
-        border-radius: 24px;
+        border-radius: 20px;
         color: #FFFFFF;
-        padding: 32px 36px;
+        padding: 20px 28px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
@@ -202,14 +202,14 @@
     <!-- Header Biodata Banner -->
     <div class="p-4 rounded-4 mb-4" style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); border: 1px solid #DBEAFE;">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-            <div class="avatar-prominent" style="width: 76px; height: 76px; min-width: 76px; font-size: 2rem; border-radius: 20px;">
+            <div class="avatar-prominent" style="width: 50px; height: 50px; min-width: 50px; font-size: 1.5rem; border-radius: 16px;">
                 {{ strtoupper($initials) }}
             </div>
             <div class="text-center text-md-start flex-grow-1">
-                <h2 class="fw-bold text-dark mb-1" style="font-size: 24px; color: #0F172A !important;">
+                <h2 class="fw-bold text-dark mb-1" style="font-size: 20px; color: #0F172A !important;">
                     {{ $empName }}
                 </h2>
-                <div class="fw-bold text-primary mb-2" style="font-size: 16px; color: #2563EB !important;">
+                <div class="fw-bold text-primary mb-2" style="font-size: 14px; color: #2563EB !important;">
                     NIP. {{ $empNip }}
                 </div>
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2">
@@ -361,11 +361,9 @@
             @if($latestResult)
                 <!-- Score Highlight Box -->
                 <div class="executive-card p-4 text-center">
-                    <span class="text-muted text-uppercase fw-semibold tracking-wider small mb-1 d-block">NILAI AKHIR KINERJA 360° TERAKHIR</span>
-                    <div class="fw-extrabold text-primary mb-2" style="font-size: 44px; line-height: 1; letter-spacing: -1px; color: #1E40AF !important;">
-                        {{ number_format($latestResult->final_score ?? 0, 2) }}
-                    </div>
-                    <div>
+                    <div class="text-uppercase fw-bold text-muted mb-2 tracking-wider small">Nilai Akhir Kinerja 360°</div>
+                    <div class="fw-extrabold text-primary mb-2" style="font-size: 32px; line-height: 1; letter-spacing: -1px; color: #1E40AF !important;">{{ number_format($latestResult->final_score ?? 0, 2) }}</div>
+                    <div class="mb-3">
                         <span class="badge-pill-custom" style="{{ $badgeStyle }}">
                             <i class="bi bi-award me-1"></i> PREDIKAT: {{ $catLabel }}
                         </span>

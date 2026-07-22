@@ -37,9 +37,9 @@
 
     .hero-banner-rincian {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
-        border-radius: 24px;
+        border-radius: 20px;
         color: #FFFFFF;
-        padding: 32px 36px;
+        padding: 20px 28px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
@@ -216,10 +216,10 @@
                     <i class="bi bi-shield-check me-1"></i> BKPSDM Kabupaten Pemalang
                 </span>
             </div>
-            <h1 class="fw-bold text-white mb-2" style="font-size: 28px; letter-spacing: -0.5px;">
+            <h1 class="fw-bold text-white mb-2" style="font-size: 24px; letter-spacing: -0.5px;">
                 📊 Rapor Perhitungan Hasil Kinerja 360°
             </h1>
-            <p class="text-white text-opacity-90 mb-0" style="font-size: 15px; font-weight: 500;">
+            <p class="text-white text-opacity-90 mb-0" style="font-size: 14px; font-weight: 500;">
                 Evaluasi komprehensif 7 dimensi BerAKHLAK dan kalkulasi agregat berbobot milik pegawai.
             </p>
         </div>

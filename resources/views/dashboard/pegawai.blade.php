@@ -42,9 +42,9 @@
 
     .hero-banner-pegawai {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
-        border-radius: 24px;
+        border-radius: 20px;
         color: #FFFFFF;
-        padding: 32px 36px;
+        padding: 20px 28px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
@@ -171,10 +171,10 @@
                     <i class="bi bi-shield-check me-1"></i> BKPSDM Kabupaten Pemalang
                 </span>
             </div>
-            <h2 class="fw-bold text-white mb-2" style="font-size: 28px; letter-spacing: -0.5px;">
+            <h2 class="fw-bold text-white mb-2" style="font-size: 24px; letter-spacing: -0.5px;">
                 Selamat Datang, {{ $user->name ?? 'Pegawai' }}! 👋
             </h2>
-            <p class="text-white text-opacity-90 mb-3" style="font-size: 15px; font-weight: 500;">
+            <p class="text-white text-opacity-90 mb-3" style="font-size: 14px; font-weight: 500;">
                 NIP. {{ $user->nip ?? '-' }} &bull; {{ $user->position->name ?? 'Jabatan Belum Diatur' }}
             </p>
             @php

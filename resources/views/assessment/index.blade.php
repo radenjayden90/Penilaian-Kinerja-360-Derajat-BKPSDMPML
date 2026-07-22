@@ -46,9 +46,9 @@
 
     .hero-banner {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
-        border-radius: 24px;
+        border-radius: 20px;
         color: #FFFFFF;
-        padding: 28px 40px;
+        padding: 20px 28px;
         box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
         position: relative;
         overflow: hidden;
@@ -116,14 +116,14 @@
     }
 
     .hero-title {
-        font-size: 38px;
+        font-size: 24px;
         font-weight: 700;
         letter-spacing: -0.5px;
         line-height: 1.2;
     }
 
     .hero-desc {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         line-height: 1.5;
         max-width: 650px;
@@ -356,28 +356,9 @@
                 </div>
                 <h1 class="hero-title text-white mb-0">Riwayat Hasil Penilaian Saya</h1>
             </div>
-            <p class="hero-desc" style="margin-bottom: 18px;">
+            <p class="hero-desc" style="margin-bottom: 0;">
                 Lihat riwayat hasil penilaian kinerja ASN berbasis 360 Degree Feedback pada setiap periode penilaian, lengkap dengan ringkasan nilai serta laporan yang dapat diunduh.
             </p>
-
-            <!-- Inline Summary KPIs -->
-            <div class="d-flex align-items-center flex-wrap" style="gap: 16px; margin-bottom: 4px;">
-                <div class="kpi-pill-item">
-                    <span style="font-size: 18px;">⭐</span>
-                    <span class="kpi-pill-lbl">Nilai Terakhir:</span>
-                    <span class="kpi-pill-val">{{ $latestScore }}</span>
-                </div>
-                <div class="kpi-pill-item">
-                    <span style="font-size: 18px;">🏅</span>
-                    <span class="kpi-pill-lbl">Predikat:</span>
-                    <span class="kpi-pill-val">{{ $latestPredikatLabel }}</span>
-                </div>
-                <div class="kpi-pill-item">
-                    <span style="font-size: 18px;">📅</span>
-                    <span class="kpi-pill-lbl">Total Periode:</span>
-                    <span class="kpi-pill-val">{{ $totalCount }}</span>
-                </div>
-            </div>
         </div>
 
         <div class="col-12 col-lg-4 text-center text-lg-end">
