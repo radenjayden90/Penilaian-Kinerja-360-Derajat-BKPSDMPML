@@ -228,7 +228,7 @@
                 <a href="{{ route('transaction.calculations.index') }}" class="btn btn-light text-primary fw-semibold px-3 py-2 rounded-3 shadow-sm">
                     <i class="bi bi-arrow-left me-1"></i> Kembali
                 </a>
-                <a href="{{ route('transaction.assessments.export-pdf', $result->id) }}" class="btn btn-danger fw-semibold px-3 py-2 rounded-3 shadow-sm">
+                <a href="{{ route('assessment.exportPdf', $result->id) }}" target="_blank" class="btn btn-danger fw-semibold px-3 py-2 rounded-3 shadow-sm">
                     <i class="bi bi-file-earmark-pdf me-1"></i> Unduh PDF
                 </a>
             </div>
