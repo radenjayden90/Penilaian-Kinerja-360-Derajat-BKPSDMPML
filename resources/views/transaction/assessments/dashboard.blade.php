@@ -11,7 +11,6 @@
 
 @push('styles')
 <style>
-<<<<<<< HEAD
     .hero-banner-penilaian {
         background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
         border-radius: 20px;
@@ -21,7 +20,7 @@
         position: relative;
         overflow: hidden;
         animation: heroFadeIn 400ms ease-out forwards;
-=======
+    }
     :root {
         --primary-blue: #2563EB;
         --primary-hover: #1D4ED8;
@@ -29,7 +28,6 @@
         --card-border: #E2E8F0;
         --text-dark: #0F172A;
         --text-muted: #64748B;
->>>>>>> 34e03f511bad0e4f6e79a01792320db30cd3ef18
     }
 
     .executive-card {
@@ -137,6 +135,9 @@
         padding: 10px 14px;
         font-size: 13px;
     }
+    .min-w-0 {
+        min-width: 0 !important;
+    }
 
     .badge-pill-custom {
         font-size: 12px;
@@ -145,7 +146,6 @@
         border-radius: 9999px;
         display: inline-flex;
         align-items: center;
-<<<<<<< HEAD
         gap: 6px;
     }
 
@@ -162,9 +162,6 @@
         line-height: 1.5;
         max-width: 650px;
         color: rgba(255, 255, 255, 0.9);
-=======
-        gap: 5px;
->>>>>>> 34e03f511bad0e4f6e79a01792320db30cd3ef18
     }
 </style>
 @endpush
@@ -286,7 +283,7 @@
         </div>
         <div class="card-body p-4">
             @if($superior)
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-3">
                     <div class="col">
                         <div class="target-card h-100 p-3 d-flex flex-column justify-content-between">
                             <div>
@@ -295,7 +292,7 @@
                                         {{ strtoupper(substr($superior->name, 0, 1)) }}
                                     </div>
                                     <div class="flex-grow-1 min-w-0">
-                                        <h6 class="fw-bold text-dark mb-1 lh-sm text-truncate" title="{{ $superior->name }}">{{ $superior->name }}</h6>
+                                        <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $superior->name }}">{{ $superior->name }}</h6>
                                         <small class="text-muted d-block">NIP. {{ $superior->nip }}</small>
                                     </div>
                                 </div>
@@ -375,7 +372,7 @@
             </span>
         </div>
         <div class="card-body p-4">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-3">
                 @forelse($peers as $peer)
                     <div class="col">
                         @if($peer->assessment_status === 'FULL' || $peer->assessment_status === 'LIMIT_REACHED')
@@ -387,7 +384,7 @@
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-secondary mb-1 lh-sm text-truncate" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                            <h6 class="fw-bold text-secondary mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
                                             <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
@@ -439,7 +436,7 @@
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 lh-sm text-truncate" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                            <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
                                             <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
@@ -529,7 +526,7 @@
                 </span>
             </div>
             <div class="card-body p-4">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-3">
                     @foreach($subordinates as $sub)
                         <div class="col">
                             <div class="target-card h-100 p-3 d-flex flex-column justify-content-between">
@@ -539,7 +536,7 @@
                                             {{ strtoupper(substr($sub->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 lh-sm text-truncate" title="{{ $sub->name }}">{{ $sub->name }}</h6>
+                                            <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $sub->name }}">{{ $sub->name }}</h6>
                                             <small class="text-muted d-block">NIP. {{ $sub->nip }}</small>
                                         </div>
                                     </div>
