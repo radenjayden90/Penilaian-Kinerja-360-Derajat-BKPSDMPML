@@ -21,10 +21,22 @@ class CalculationController extends Controller
     public function index(Request $request)
     {
         $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+        
+        $selectedPeriodId = $request->input('period_id');
+        if ($selectedPeriodId) {
+            $targetPeriod = Period::find($selectedPeriodId);
+        } else {
+            if ($activePeriod && AssessmentResult::where('period_id', $activePeriod->id)->exists()) {
+                $targetPeriod = $activePeriod;
+            } else {
+                $latestPeriodId = AssessmentResult::latest()->value('period_id');
+                $targetPeriod = $latestPeriodId ? Period::find($latestPeriodId) : $activePeriod;
+            }
+        }
 
         // Automatic real-time calculation sync
-        if ($activePeriod) {
-            $this->calculator->calculateAll($activePeriod);
+        if ($targetPeriod) {
+            $this->calculator->calculateAll($targetPeriod);
         }
         
         $query = Employee::where('is_active', true)
@@ -38,9 +50,9 @@ class CalculationController extends Controller
                           ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%kepala bkpsdm%');
                   });
             })
-            ->with(['department', 'position', 'assessmentResult' => function($q) use ($activePeriod) {
-                if ($activePeriod) {
-                    $q->where('period_id', $activePeriod->id);
+            ->with(['department', 'position', 'assessmentResult' => function($q) use ($targetPeriod) {
+                if ($targetPeriod) {
+                    $q->where('period_id', $targetPeriod->id);
                 }
             }]);
 
