@@ -128,4 +128,37 @@ class DashboardController extends Controller
 
         return view('dashboard.pegawai', compact('user', 'activePeriod', 'myAssessments', 'submittedCount', 'pendingCount', 'receivedAssessmentsCount', 'totalTugas'));
     }
+
+    public function notificationCount()
+    {
+        $user = Auth::user();
+        $authEmployee = Employee::where('email', $user->email)->orWhere('nip', $user->nip)->first() ?? $user;
+        
+        $assessmentCount = 0;
+        $lastUpdated = null;
+
+        if ($authEmployee && $authEmployee instanceof Employee) {
+            $query = Assessment::where('employee_id', $authEmployee->id)
+                ->whereIn('status', ['SUBMITTED', 'COMPLETED']);
+
+            $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+            if ($activePeriod) {
+                $query->where('period_id', $activePeriod->id);
+            }
+            
+            $assessmentCount = $query->count();
+            if ($assessmentCount > 0) {
+                $latest = $query->latest('updated_at')->first();
+                if ($latest) {
+                    \Carbon\Carbon::setLocale('id');
+                    $lastUpdated = $latest->updated_at->diffForHumans();
+                }
+            }
+        }
+        
+        return response()->json([
+            'count' => $assessmentCount,
+            'last_updated' => $lastUpdated
+        ]);
+    }
 }

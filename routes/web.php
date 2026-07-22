@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications/count', [DashboardController::class, 'notificationCount'])->name('notifications.count');
 
     Route::prefix('master')->name('master.')->group(function () {
         Route::get('/', function () {
