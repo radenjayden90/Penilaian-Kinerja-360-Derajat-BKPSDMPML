@@ -43,7 +43,7 @@ class ProfileController extends Controller
                 ->where('assessments.employee_id', $user->id)
                 ->where('assessments.period_id', $latestResult->period_id)
                 ->where('assessments.status', 'SUBMITTED')
-                ->select('assessment_categories.name', \Illuminate\Support\Facades\DB::raw('AVG(assessment_scores.score) as average_score'))
+                ->select('assessment_categories.name', \Illuminate\Support\Facades\DB::raw('ROUND(AVG(assessment_scores.score) * 10, 1) as average_score'))
                 ->groupBy('assessment_categories.id', 'assessment_categories.name', 'assessment_categories.display_order')
                 ->orderBy('assessment_categories.display_order')
                 ->get();

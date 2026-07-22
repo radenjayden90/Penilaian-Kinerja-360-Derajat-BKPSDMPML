@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SIKINERJA 360° - BKPSDM Kabupaten Pemalang</title>
+    <title>360° Kinerja ASN - BKPSDM Kabupaten Pemalang</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -108,6 +108,23 @@
             transform: translateY(0);
         }
 
+        @keyframes progressGrow {
+            0% { width: 0%; opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        .progress-animate {
+            animation: progressGrow 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hover-card-glow {
+            transition: all 0.35s ease;
+        }
+        .hover-card-glow:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
         /* Mockup Dashboard */
         .mac-frame {
             border-radius: 12px;
@@ -161,7 +178,7 @@
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="h-10 w-10">
                     <div>
-                        <h1 class="font-bold text-dark text-xl leading-none">SIKINERJA<span class="text-primary">360°</span></h1>
+                        <h1 class="font-bold text-dark text-xl leading-none">360° <span class="text-primary">Kinerja ASN</span></h1>
                         <p class="text-[10px] text-grayCustom font-semibold uppercase tracking-wider">BKPSDM Pemalang</p>
                     </div>
                 </div>
@@ -185,7 +202,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="beranda" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <section id="beranda" class="relative pt-24 pb-16 lg:pt-28 lg:pb-24 overflow-hidden">
         <!-- Background Blobs -->
         <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
         <div class="absolute top-0 -right-4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob" style="animation-delay: 2s"></div>
@@ -195,13 +212,6 @@
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <!-- Left Content -->
                 <div class="reveal-on-scroll">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-primary text-xs font-semibold mb-6">
-                        <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
-                        Sistem Penilaian Modern V2.0
-                    </div>
                     <h1 class="text-5xl lg:text-6xl font-extrabold tracking-tight text-dark mb-6 leading-[1.1]">
                         Evaluasi Kinerja <br/>
                         <span class="gradient-text">Objektif & Transparan</span>
@@ -323,7 +333,7 @@
     <section id="tentang" class="py-24 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
-                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-4">Apa itu SIKINERJA 360°?</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-4">Apa itu 360° Kinerja ASN?</h2>
                 <p class="text-lg text-grayCustom">Sistem Informasi Penilaian Kinerja ASN berbasis metode 360 Degree Feedback yang komprehensif, melibatkan berbagai sudut pandang untuk hasil yang adil dan objektif.</p>
             </div>
 
@@ -406,51 +416,139 @@
 
     <!-- Mengapa Memilih -->
     <section class="py-24 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Ambient Glowing Background Blobs -->
+        <div class="absolute top-1/4 -left-20 w-96 h-96 bg-blue-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+        <div class="absolute bottom-10 -right-20 w-96 h-96 bg-indigo-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob" style="animation-delay: 3.5s"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="reveal-on-scroll">
-                    <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6">Mengapa Memilih SIKINERJA?</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6">Mengapa Memilih 360° Kinerja ASN?</h2>
                     <p class="text-lg text-grayCustom mb-8">Transformasi dari penilaian konvensional satu arah menjadi penilaian modern pelbagai dimensi (360 derajat) membawa perubahan signifikan.</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="glass-panel p-6 rounded-xl">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                <i data-lucide="target" class="w-5 h-5 text-primary"></i>
+                        <div class="glass-panel p-6 rounded-xl hover-card-glow group">
+                            <div class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                <i data-lucide="target" class="w-5 h-5"></i>
                             </div>
-                            <h4 class="font-bold text-dark mb-1">Objektif</h4>
+                            <h4 class="font-bold text-dark mb-1 group-hover:text-primary transition-colors">Objektif</h4>
                             <p class="text-sm text-grayCustom">Mengurangi bias subjektivitas dari satu penilai tunggal.</p>
                         </div>
-                        <div class="glass-panel p-6 rounded-xl">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                <i data-lucide="eye" class="w-5 h-5 text-primary"></i>
+                        <div class="glass-panel p-6 rounded-xl hover-card-glow group">
+                            <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                <i data-lucide="eye" class="w-5 h-5"></i>
                             </div>
-                            <h4 class="font-bold text-dark mb-1">Transparan</h4>
+                            <h4 class="font-bold text-dark mb-1 group-hover:text-indigo-600 transition-colors">Transparan</h4>
                             <p class="text-sm text-grayCustom">Proses dan rekam jejak yang tercatat jelas dalam sistem.</p>
                         </div>
-                        <div class="glass-panel p-6 rounded-xl">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                <i data-lucide="zap" class="w-5 h-5 text-primary"></i>
+                        <div class="glass-panel p-6 rounded-xl hover-card-glow group">
+                            <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
                             </div>
-                            <h4 class="font-bold text-dark mb-1">Cepat</h4>
+                            <h4 class="font-bold text-dark mb-1 group-hover:text-amber-600 transition-colors">Cepat</h4>
                             <p class="text-sm text-grayCustom">Sistem digital tanpa kertas (paperless) mempercepat rekapitulasi.</p>
                         </div>
-                        <div class="glass-panel p-6 rounded-xl">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                <i data-lucide="network" class="w-5 h-5 text-primary"></i>
+                        <div class="glass-panel p-6 rounded-xl hover-card-glow group">
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                <i data-lucide="network" class="w-5 h-5"></i>
                             </div>
-                            <h4 class="font-bold text-dark mb-1">Terintegrasi</h4>
+                            <h4 class="font-bold text-dark mb-1 group-hover:text-emerald-600 transition-colors">Terintegrasi</h4>
                             <p class="text-sm text-grayCustom">Data master pegawai yang terpusat dan mudah diakses.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative lg:h-[500px] flex items-center justify-center reveal-on-scroll">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-full blur-3xl opacity-50"></div>
-                    <!-- Placeholder Abstract Image using external URL for visual flair, not Wikimedia to avoid 404 -->
-                    <div class="w-full h-full relative z-10 rounded-2xl shadow-2xl border border-white/40 rotate-2 hover:rotate-0 transition-transform duration-500 overflow-hidden bg-white">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
-                        <div class="h-full flex items-end p-8">
-                            <h3 class="text-3xl font-bold text-white shadow-sm">Digital Transformation.</h3>
+                <div class="relative flex items-center justify-center reveal-on-scroll">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/30 to-indigo-600/30 rounded-3xl blur-2xl opacity-60 animate-pulse"></div>
+                    <div class="w-full relative z-10 rounded-3xl shadow-2xl border border-slate-200/80 bg-white/95 backdrop-blur-xl p-6 lg:p-8 space-y-6 animate-float">
+                        <!-- Live Preview Card Header -->
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-600/10 text-primary flex items-center justify-center font-bold">
+                                    <i data-lucide="pie-chart" class="w-5 h-5 animate-spin-slow"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-dark text-base">Matriks Penilaian 360°</h4>
+                                    <p class="text-xs text-grayCustom">Sistem Evaluasi Multi-Perspektif</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100 shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                                Realtime Assessment
+                            </span>
+                        </div>
+
+                        <!-- 4 Assessment Sources Progress Bars -->
+                        <div class="space-y-4">
+                            <div class="group">
+                                <div class="flex justify-between text-xs font-semibold mb-1.5">
+                                    <span class="text-dark flex items-center gap-2 group-hover:text-blue-600 transition-colors">
+                                        <i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i> Penilaian Atasan Langsung
+                                    </span>
+                                    <span class="text-primary font-bold">96% (Sangat Baik)</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
+                                    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 h-2 rounded-full progress-animate shadow-sm" style="width: 96%"></div>
+                                </div>
+                            </div>
+
+                            <div class="group">
+                                <div class="flex justify-between text-xs font-semibold mb-1.5">
+                                    <span class="text-dark flex items-center gap-2 group-hover:text-indigo-600 transition-colors">
+                                        <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i> Penilaian Rekan Sejawat (Peers)
+                                    </span>
+                                    <span class="text-indigo-600 font-bold">92% (Sangat Baik)</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
+                                    <div class="bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 h-2 rounded-full progress-animate shadow-sm" style="width: 92%; animation-delay: 200ms;"></div>
+                                </div>
+                            </div>
+
+                            <div class="group">
+                                <div class="flex justify-between text-xs font-semibold mb-1.5">
+                                    <span class="text-dark flex items-center gap-2 group-hover:text-sky-600 transition-colors">
+                                        <i data-lucide="user-minus" class="w-4 h-4 text-sky-600"></i> Penilaian Bawahan Langsung
+                                    </span>
+                                    <span class="text-sky-600 font-bold">94% (Sangat Baik)</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
+                                    <div class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 h-2 rounded-full progress-animate shadow-sm" style="width: 94%; animation-delay: 400ms;"></div>
+                                </div>
+                            </div>
+
+                            <div class="group">
+                                <div class="flex justify-between text-xs font-semibold mb-1.5">
+                                    <span class="text-dark flex items-center gap-2 group-hover:text-emerald-600 transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4 text-emerald-600"></i> Self-Assessment (Diri Sendiri)
+                                    </span>
+                                    <span class="text-emerald-600 font-bold">90% (Baik)</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
+                                    <div class="bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600 h-2 rounded-full progress-animate shadow-sm" style="width: 90%; animation-delay: 600ms;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Highlight Metric Cards Row -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3 hover:-translate-y-1 hover:bg-blue-50/50 hover:border-blue-200 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[11px] text-grayCustom font-medium">Standar Evaluasi</div>
+                                    <div class="text-xs font-bold text-dark">PermenPANRB BerAKHLAK</div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3 hover:-translate-y-1 hover:bg-amber-50/50 hover:border-amber-200 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                    <i data-lucide="award" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[11px] text-grayCustom font-medium">Tingkat Akurasi</div>
+                                    <div class="text-xs font-bold text-dark">Multi-Rater Validated</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -529,7 +627,7 @@
                     <div class="text-sm font-semibold text-grayCustom uppercase tracking-wide">Arah Penilaian</div>
                 </div>
             </div>
-            <p class="text-xs text-slate-400 mt-8">*Statistik di atas merupakan representasi konsep SIKINERJA 360°</p>
+            <p class="text-xs text-slate-400 mt-8">*Statistik di atas merupakan representasi konsep 360° Kinerja ASN</p>
         </div>
     </section>
 
@@ -602,9 +700,10 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div>
                     <div class="flex items-center gap-3 mb-6">
-                        <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="h-10 w-10 brightness-0 invert">
+                        <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="h-12 w-auto object-contain">
                         <div>
-                            <h2 class="font-bold text-white text-xl">SIKINERJA<span class="text-accent">360°</span></h2>
+                            <h2 class="font-bold text-white text-xl">360° <span class="text-accent">Kinerja ASN</span></h2>
+                            <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">BKPSDM Pemalang</p>
                         </div>
                     </div>
                     <p class="text-sm text-slate-400 max-w-sm">Sistem Informasi Penilaian Kinerja ASN berbasis 360 Degree Feedback dan Core Values BerAKHLAK.</p>
