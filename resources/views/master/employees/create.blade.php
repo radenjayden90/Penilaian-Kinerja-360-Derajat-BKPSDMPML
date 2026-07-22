@@ -20,12 +20,12 @@
                 <div class="row align-items-center g-3">
                     <div class="col-12 col-md-8">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-white bg-opacity-15 text-white d-flex align-items-center justify-content-center fw-bold border border-white border-opacity-20 flex-shrink-0" style="width: 52px; height: 52px; font-size: 22px; backdrop-filter: blur(10px);">
-                                <i class="bi bi-person-plus-fill text-warning"></i>
+                            <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-extrabold shadow-sm flex-shrink-0" style="width: 54px; height: 54px; font-size: 22px; color: #1E40AF !important; border: 2px solid rgba(255, 255, 255, 0.9);">
+                                <i class="bi bi-person-plus-fill" style="color: #2563EB;"></i>
                             </div>
                             <div>
-                                <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-20 rounded-pill px-3 py-1 mb-1" style="font-size: 11px; letter-spacing: 0.5px;">
-                                    REGISTRASI PEGAWAI ASN
+                                <span class="badge rounded-pill px-3 py-1 mb-1" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(251, 191, 36, 0.4); font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">
+                                    <i class="bi bi-person-plus-fill me-1"></i> REGISTRASI PEGAWAI ASN
                                 </span>
                                 <h3 class="fw-bold text-white mb-0" style="font-size: 20px;">Pendaftaran Pegawai ASN Baru</h3>
                                 <p class="text-white text-opacity-75 small mb-0 mt-0.5">Isi seluruh data identitas, unit kerja, jabatan, dan atasan langsung pegawai</p>

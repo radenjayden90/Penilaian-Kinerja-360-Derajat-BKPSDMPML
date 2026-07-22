@@ -29,12 +29,12 @@
                                     $initials = mb_substr($words[0], 0, 2);
                                 }
                             @endphp
-                            <div class="rounded-circle bg-white bg-opacity-15 text-white d-flex align-items-center justify-content-center fw-bold border border-white border-opacity-20 flex-shrink-0" style="width: 52px; height: 52px; font-size: 18px; backdrop-filter: blur(10px);">
+                            <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-extrabold shadow-sm flex-shrink-0" style="width: 54px; height: 54px; font-size: 20px; color: #1E40AF !important; border: 2px solid rgba(255, 255, 255, 0.9);">
                                 {{ strtoupper($initials) }}
                             </div>
                             <div>
-                                <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-20 rounded-pill px-3 py-1 mb-1" style="font-size: 11px; letter-spacing: 0.5px;">
-                                    <i class="bi bi-pencil-square me-1 text-warning"></i> MODUL EDIT ASN
+                                <span class="badge rounded-pill px-3 py-1 mb-1" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(251, 191, 36, 0.4); font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">
+                                    <i class="bi bi-pencil-square me-1"></i> MODUL EDIT ASN
                                 </span>
                                 <h3 class="fw-bold text-white mb-0" style="font-size: 20px;">{{ $employee->name }}</h3>
                                 <div class="text-white text-opacity-75 small mt-0.5">
