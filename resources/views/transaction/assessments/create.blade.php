@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Form Penilaian Kinerja')
+@section('title', 'Form Penilaian Kinerja 360°')
+@section('header', 'Form Evaluasi Kinerja')
+@section('subtitle', 'Instrumen pengisian kuesioner penilaian kinerja 360 derajat ASN Kabupaten Pemalang')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Pengisian Penilaian</li>
+@endsection
 
 @push('styles')
 <!-- Tailwind CSS via CDN with prefix to avoid conflict with Bootstrap -->
@@ -12,8 +20,8 @@
         theme: {
             extend: {
                 colors: {
-                    primary: '#0ea5e9', // Sky 500
-                    'primary-dark': '#0284c7', // Sky 600
+                    primary: '#2563EB',
+                    'primary-dark': '#1D4ED8',
                 },
                 fontFamily: {
                     sans: ['Inter', 'sans-serif'],
@@ -22,21 +30,131 @@
         }
     }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    /* Prevent bootstrap conflicting with body font */
+    :root {
+        --primary-blue: #2563EB;
+        --primary-hover: #1D4ED8;
+        --surface-bg: #F8FAFC;
+        --card-border: #E2E8F0;
+        --text-dark: #0F172A;
+        --text-muted: #64748B;
+    }
+
     #assessment-app-container {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
-    
-    /* Glassmorphism utility */
-    .tw-glass {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+
+    /* Executive Target Banner */
+    .hero-banner-target {
+        background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 50%, #2563EB 100%);
+        border-radius: 24px;
+        color: #FFFFFF;
+        padding: 28px 36px;
+        box-shadow: 0 10px 30px -5px rgba(30, 58, 95, 0.25);
+        position: relative;
+        overflow: hidden;
+        animation: heroFadeIn 400ms ease-out forwards;
     }
-    
+
+    @keyframes heroFadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-banner-target::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .target-avatar-lg {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(6px);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .target-info-pill {
+        background: #FFFFFF;
+        color: #0F172A;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge-type-pill {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .period-box-glass {
+        background: rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        padding: 12px 18px;
+    }
+
+    /* Executive Question Card */
+    .question-card {
+        background: #FFFFFF;
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+        transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 24px;
+    }
+
+    .question-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.1);
+        border-color: #BFDBFE;
+    }
+
+    .question-num-circle {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: #EFF6FF;
+        color: #2563EB;
+        font-weight: 800;
+        font-size: 1.15rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
     /* Custom Slider Range */
     input[type=range].custom-range {
         -webkit-appearance: none;
@@ -50,27 +168,27 @@
         height: 24px;
         width: 24px;
         border-radius: 50%;
-        background: #0ea5e9;
+        background: #2563EB;
         cursor: pointer;
         margin-top: -9px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
         border: 3px solid white;
         transition: transform 0.15s ease;
     }
     input[type=range].custom-range::-webkit-slider-thumb:hover {
-        transform: scale(1.2);
+        transform: scale(1.25);
     }
     input[type=range].custom-range::-webkit-slider-runnable-track {
         width: 100%;
         height: 6px;
         cursor: pointer;
-        background: #e2e8f0;
+        background: #E2E8F0;
         border-radius: 9999px;
     }
     input[type=range].custom-range:focus {
         outline: none;
     }
-    
+
     /* Tab transitions */
     .tab-content {
         display: none;
@@ -83,42 +201,116 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .rating-number {
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .rating-number.active {
-        background-color: #0ea5e9 !important;
+        background-color: #2563EB !important;
         color: white !important;
         transform: scale(1.15);
-        box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3);
+        box-shadow: 0 8px 16px -2px rgba(37, 99, 235, 0.4);
     }
-    
-    /* Custom scrollbar for tabs */
+
     .custom-scrollbar::-webkit-scrollbar {
-        height: 4px;
+        height: 5px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: #F1F5F9;
         border-radius: 4px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: #CBD5E1;
         border-radius: 4px;
     }
 </style>
 @endpush
 
 @section('content')
-<div id="assessment-app-container" class="tw-font-sans tw-w-full tw-bg-slate-50 tw-p-2 md:tw-p-6 tw-rounded-xl tw-min-h-[85vh]">
+
+@php
+    $typeLabel = match($type) {
+        'SUPERIOR' => 'Atasan Langsung',
+        'PEER' => 'Rekan Sejawat (Peer)',
+        'SUBORDINATE' => 'Bawahan Langsung',
+        default => $type
+    };
+    $typeIcon = match($type) {
+        'SUPERIOR' => 'bi-person-up',
+        'PEER' => 'bi-people',
+        'SUBORDINATE' => 'bi-person-down',
+        default => 'bi-pencil-square'
+    };
+@endphp
+
+<!-- Executive Target Employee Header Banner -->
+<div class="hero-banner-target mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-12 col-lg-8">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge-type-pill">
+                    <i class="bi bi-shield-check"></i> Evaluasi Kinerja 360°
+                </span>
+                <span class="badge-type-pill" style="background: rgba(255,255,255,0.25);">
+                    <i class="bi {{ $typeIcon }}"></i> {{ $typeLabel }}
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="target-avatar-lg">
+                    {{ strtoupper(substr($target->name, 0, 1)) }}
+                </div>
+                <div>
+                    <h2 class="fw-bold text-white mb-1" style="font-size: 26px; letter-spacing: -0.5px;">
+                        {{ $target->name }}
+                    </h2>
+                    <div class="text-white text-opacity-90 small">
+                        <i class="bi bi-card-text me-1"></i>NIP. {{ $target->nip }}
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="target-info-pill">
+                    <i class="bi bi-briefcase text-primary me-1"></i> {{ $target->position->name ?? 'Jabatan Belum Diatur' }}
+                </span>
+                <span class="target-info-pill">
+                    <i class="bi bi-building text-primary me-1"></i> {{ $target->department->name ?? 'Unit Kerja Belum Diatur' }}
+                </span>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 text-lg-end">
+            <div class="period-box-glass d-inline-flex flex-column align-items-lg-end">
+                <span class="text-white text-opacity-80 small mb-1">
+                    <i class="bi bi-calendar-event me-1"></i> Periode Penilaian
+                </span>
+                <span class="fw-bold text-white fs-6">
+                    {{ $activePeriod->name ?? 'Periode Aktif' }}
+                </span>
+                <span class="text-white text-opacity-90 small mt-1">
+                    <i class="bi bi-clock me-1"></i> Batas Akhir: {{ \Carbon\Carbon::parse($activePeriod->end_date)->isoFormat('D MMMM Y') }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="assessment-app-container" class="tw-font-sans tw-w-full">
     
-    <!-- Header Modal-like Container -->
-    <div class="tw-max-w-6xl tw-mx-auto tw-glass tw-rounded-2xl tw-shadow-xl tw-overflow-hidden tw-border tw-border-slate-200/60">
+    <!-- Main Executive Form Container -->
+    <div class="tw-bg-white tw-rounded-2xl tw-shadow-xl tw-overflow-hidden tw-border tw-border-slate-200/80">
         
-        <!-- Header Section -->
-        <div class="tw-bg-white/80 tw-px-6 md:tw-px-10 tw-py-8 tw-border-b tw-border-slate-200">
-            <h1 class="tw-text-3xl tw-font-bold tw-text-slate-800 tw-tracking-tight tw-mb-0">Mulai Penilaian Pegawai</h1>
-            <p class="tw-text-slate-500 tw-mt-2 tw-mb-0">Evaluasi 360° untuk <span class="tw-font-semibold tw-text-primary">{{ $target->name }}</span> ({{ $target->nip }}) &nbsp;•&nbsp; Tipe: {{ $type }}</p>
+        <!-- Header Title Bar -->
+        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-6 md:tw-px-10 tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
+            <div>
+                <h3 class="tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
+                    <i class="bi bi-pencil-square tw-text-blue-400"></i> Pengisian Kuesioner Evaluasi
+                </h3>
+                <p class="tw-text-slate-300 tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
+            </div>
+            <div>
+                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-4 tw-py-1.5 tw-rounded-full tw-text-xs tw-font-semibold">
+                    <i class="bi bi-person-badge me-1"></i> Evaluator: {{ Auth::user()->name }}
+                </span>
+            </div>
         </div>
 
         <!-- Form Start -->
@@ -127,23 +319,22 @@
             <input type="hidden" name="target_id" value="{{ $target->id }}">
             <input type="hidden" name="type" value="{{ $type }}">
             
-            <!-- Progress Bar -->
-            <div class="tw-bg-slate-100 tw-h-1.5 tw-w-full">
-                <div id="progressBar" class="tw-bg-primary tw-h-1.5 tw-transition-all tw-duration-500 tw-ease-out" style="width: 0%"></div>
+            <!-- Animated Progress Bar -->
+            <div class="tw-bg-slate-100 tw-h-2 tw-w-full tw-relative">
+                <div id="progressBar" class="tw-bg-gradient-to-r tw-from-blue-600 tw-to-indigo-600 tw-h-2 tw-transition-all tw-duration-500 tw-ease-out tw-rounded-r-full" style="width: 0%"></div>
             </div>
 
             <div class="tw-flex tw-flex-col md:tw-flex-row tw-h-full">
-                
-                <!-- Sidebar / Tabs (Horizontal on mobile, vertical or horizontal on desktop) -->
-                <div class="tw-w-full tw-border-b tw-border-slate-200 tw-bg-white/50 tw-overflow-x-auto custom-scrollbar">
-                    <div class="tw-flex tw-flex-nowrap tw-min-w-max tw-p-2 tw-gap-2">
+                <!-- Category Tabs Navigation -->
+                <div class="tw-w-full tw-border-b tw-border-slate-200 tw-bg-slate-50/80 tw-overflow-x-auto custom-scrollbar">
+                    <div class="tw-flex tw-flex-nowrap tw-min-w-max tw-p-3 tw-gap-2">
                         @foreach($categories as $index => $category)
                             <button type="button" 
-                                    class="category-tab tw-px-5 tw-py-3 tw-rounded-xl tw-text-sm tw-font-medium tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-border-0
-                                    {{ $index === 0 ? 'tw-bg-primary tw-text-white tw-shadow-md' : 'tw-bg-transparent tw-text-slate-600 hover:tw-bg-slate-100' }}"
+                                    class="category-tab tw-px-5 tw-py-3 tw-rounded-xl tw-text-sm tw-font-semibold tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-border-0
+                                    {{ $index === 0 ? 'tw-bg-blue-600 tw-text-white tw-shadow-md' : 'tw-bg-white tw-text-slate-600 hover:tw-bg-slate-100 tw-border tw-border-slate-200' }}"
                                     data-target="tab-{{ $index }}">
                                 {{ $category->name }}
-                                <span class="tab-badge tw-ml-2 tw-text-xs tw-px-2 tw-py-0.5 tw-rounded-full {{ $index === 0 ? 'tw-bg-white/20' : 'tw-bg-slate-200' }}" id="badge-{{ $index }}">0/{{ count($category->indicators) }}</span>
+                                <span class="tab-badge tw-ml-2 tw-text-xs tw-px-2.5 tw-py-0.5 tw-rounded-full {{ $index === 0 ? 'tw-bg-white/20' : 'tw-bg-slate-100 tw-text-slate-600' }}" id="badge-{{ $index }}">0/{{ count($category->indicators) }}</span>
                             </button>
                         @endforeach
                     </div>
@@ -151,12 +342,15 @@
             </div>
 
             <!-- Content Area -->
-            <div class="tw-p-4 md:tw-p-10 tw-bg-slate-50/50">
+            <div class="tw-p-6 md:tw-p-10 tw-bg-slate-50/60">
                 
-                <div class="tw-mb-6 tw-flex tw-justify-between tw-items-center">
-                    <h2 id="currentCategoryTitle" class="tw-text-xl tw-font-semibold tw-text-slate-700 tw-m-0">{{ $categories[0]->name ?? 'Kategori' }}</h2>
-                    <div class="tw-text-sm tw-font-medium tw-text-slate-500 tw-bg-white tw-px-4 tw-py-2 tw-rounded-full tw-shadow-sm tw-border tw-border-slate-100">
-                        Kategori <span id="currentCategoryIndex">1</span> dari {{ count($categories) }} &nbsp;|&nbsp; Progress <span id="progressText">0%</span>
+                <div class="tw-mb-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
+                    <div>
+                        <h4 id="currentCategoryTitle" class="tw-text-xl tw-font-bold tw-text-slate-800 tw-m-0">{{ $categories[0]->name ?? 'Kategori' }}</h4>
+                        <small class="tw-text-slate-500">Pilihlah skor 1 - 10 untuk setiap pertanyaan di bawah ini</small>
+                    </div>
+                    <div class="tw-text-sm tw-font-semibold tw-text-slate-600 tw-bg-white tw-px-4 tw-py-2 tw-rounded-full tw-shadow-sm tw-border tw-border-slate-200">
+                        Kategori <span id="currentCategoryIndex">1</span> dari {{ count($categories) }} &nbsp;|&nbsp; Progress Evaluasi <span id="progressText" class="tw-text-blue-600 tw-font-bold">0%</span>
                     </div>
                 </div>
 
@@ -164,14 +358,14 @@
                     <div id="tab-{{ $catIndex }}" class="tab-content {{ $catIndex === 0 ? 'active' : '' }}">
                         <div class="tw-space-y-6">
                             @foreach($category->indicators as $indIndex => $indicator)
-                                <div class="tw-bg-white tw-rounded-2xl tw-p-6 md:tw-p-8 tw-shadow-sm tw-border tw-border-slate-100 hover:tw-shadow-md tw-transition-shadow">
+                                <div class="question-card">
                                     
-                                    <div class="tw-flex tw-gap-4 tw-mb-8">
-                                        <div class="tw-flex-shrink-0 tw-w-10 tw-h-10 tw-bg-slate-100 tw-text-slate-600 tw-rounded-full tw-flex tw-items-center tw-justify-center tw-font-bold tw-text-lg">
+                                    <div class="tw-flex tw-gap-4 tw-mb-6">
+                                        <div class="question-num-circle">
                                             {{ $loop->iteration }}
                                         </div>
                                         <div class="tw-pt-1">
-                                            <p class="tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-medium tw-m-0">
+                                            <p class="tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-semibold tw-m-0">
                                                 {{ $indicator->name ?? $indicator->question ?? $indicator->indicator }}
                                             </p>
                                         </div>
@@ -182,7 +376,7 @@
                                         <div class="tw-flex tw-justify-between tw-mb-4 tw-px-1">
                                             @for($i = 1; $i <= 10; $i++)
                                                 <button type="button" 
-                                                        class="rating-number tw-w-8 tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-600 tw-font-semibold tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-slate-200 tw-border-0"
+                                                        class="rating-number tw-w-8 tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-700 tw-font-bold tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-100 hover:tw-text-blue-700 tw-border-0"
                                                         data-value="{{ $i }}"
                                                         data-input="score_{{ $indicator->id }}">
                                                     {{ $i }}
@@ -192,11 +386,11 @@
                                         
                                         <div class="tw-relative tw-w-full tw-h-6 tw-flex tw-items-center">
                                             <!-- Colored track overlay -->
-                                            <div class="tw-absolute tw-left-0 tw-h-1.5 tw-bg-primary tw-rounded-full tw-pointer-events-none tw-z-0" 
+                                            <div class="tw-absolute tw-left-0 tw-h-2 tw-bg-gradient-to-r tw-from-blue-500 tw-to-emerald-500 tw-rounded-full tw-pointer-events-none tw-z-0" 
                                                  id="track_{{ $indicator->id }}" 
                                                  style="width: 0%; display: none;"></div>
                                                  
-                                            <!-- The actual input that gets submitted -->
+                                            <!-- Input range -->
                                             <input type="range" min="1" max="10" step="1" 
                                                    class="custom-range tw-w-full form-score-input" 
                                                    name="scores[{{ $indicator->id }}]" 
@@ -206,8 +400,9 @@
                                                    data-answered="false"
                                                    required>
                                         </div>
-                                        <div class="tw-flex tw-justify-between tw-text-xs tw-text-slate-400 tw-mt-2 tw-font-medium tw-px-1">
+                                        <div class="tw-flex tw-justify-between tw-text-xs tw-text-slate-400 tw-mt-2 tw-font-semibold tw-px-1">
                                             <span>1 - Sangat Kurang</span>
+                                            <span>5 - Cukup</span>
                                             <span>10 - Sangat Baik</span>
                                         </div>
                                     </div>
@@ -220,9 +415,15 @@
 
                 <!-- General Notes -->
                 <div id="tab-notes" class="tab-content tw-mt-6">
-                    <div class="tw-bg-white tw-rounded-2xl tw-p-6 md:tw-p-8 tw-shadow-sm tw-border tw-border-slate-100">
-                        <h3 class="tw-text-lg tw-font-semibold tw-text-slate-800 tw-mb-4">Catatan Tambahan (Opsional)</h3>
-                        <textarea name="general_notes" rows="4" class="tw-w-full tw-rounded-xl tw-border tw-border-slate-200 tw-p-4 focus:tw-border-primary focus:tw-ring focus:tw-ring-primary/20 tw-transition-all tw-bg-slate-50 focus:tw-bg-white" placeholder="Tuliskan apresiasi, masukan, atau saran perbaikan untuk pengembangan kinerja pegawai ini..."></textarea>
+                    <div class="question-card">
+                        <div class="tw-flex tw-items-center tw-gap-3 tw-mb-4">
+                            <div class="question-num-circle bg-amber-100 text-amber-700">
+                                <i class="bi bi-chat-square-text-fill"></i>
+                            </div>
+                            <h4 class="tw-text-lg tw-font-bold tw-text-slate-800 tw-m-0">Catatan Tambahan (Opsional)</h4>
+                        </div>
+                        <p class="tw-text-slate-500 tw-text-sm tw-mb-3">Tuliskan ulasan, masukan perbaikan, atau apresiasi atas kinerja pegawai ini untuk rekomendasi pengembangan karier.</p>
+                        <textarea name="general_notes" rows="4" class="tw-w-full tw-rounded-xl tw-border tw-border-slate-200 tw-p-4 focus:tw-border-blue-500 focus:tw-ring focus:tw-ring-blue-200 tw-transition-all tw-bg-slate-50 focus:tw-bg-white" placeholder="Tuliskan ulasan masukan perbaikan atau apresiasi..."></textarea>
                     </div>
                 </div>
 
@@ -232,20 +433,20 @@
             <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-4 md:tw-justify-between tw-items-center">
                 
                 <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-semibold hover:tw-bg-slate-200 tw-transition-colors tw-w-full sm:tw-w-auto">
-                        Kembali
+                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors tw-w-full sm:tw-w-auto">
+                        <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
-                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-700 tw-font-semibold hover:tw-bg-amber-200 tw-transition-colors tw-w-full sm:tw-w-auto">
-                        Simpan Sementara
+                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors tw-w-full sm:tw-w-auto">
+                        <i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara
                     </button>
                 </div>
 
                 <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-primary tw-text-white tw-font-semibold hover:tw-bg-primary-dark tw-shadow-lg tw-shadow-primary/30 tw-transition-all tw-w-full sm:tw-w-auto">
-                        Selanjutnya
+                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all tw-w-full sm:tw-w-auto">
+                        Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
-                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-500 tw-text-white tw-font-semibold hover:tw-bg-emerald-600 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all tw-w-full sm:tw-w-auto disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
-                        Submit Penilaian
+                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all tw-w-full sm:tw-w-auto disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                        <i class="bi bi-check-circle-fill me-1"></i> Submit Penilaian
                     </button>
                 </div>
 
@@ -266,13 +467,12 @@
         <div id="modalContentConfirm" class="tw-block">
             <!-- Icon -->
             <div class="tw-mx-auto tw-flex tw-h-14 tw-w-14 tw-items-center tw-justify-center tw-rounded-full tw-bg-amber-100 tw-mb-6">
-                <!-- Triangle Alert Icon -->
                 <svg class="tw-h-7 tw-w-7 tw-text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
             </div>
             
-            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans" id="modal-title">Konfirmasi Pengiriman Penilaian</h3>
+            <h3 class="tw-text-center tw-text-[26px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans" id="modal-title">Konfirmasi Pengiriman Penilaian</h3>
             
             <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-6">
                 Apakah Anda yakin ingin mengirim hasil penilaian ini?<br>
@@ -317,7 +517,7 @@
                 </svg>
             </div>
             
-            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Penilaian Berhasil Dikirim</h3>
+            <h3 class="tw-text-center tw-text-[26px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Penilaian Berhasil Dikirim</h3>
             
             <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-8">
                 Terima kasih.<br>
@@ -340,7 +540,7 @@
                 </svg>
             </div>
             
-            <h3 class="tw-text-center tw-text-[28px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Gagal Mengirim Penilaian</h3>
+            <h3 class="tw-text-center tw-text-[26px] tw-font-bold tw-leading-tight tw-text-slate-900 tw-mb-3 tw-font-sans">Gagal Mengirim Penilaian</h3>
             
             <p class="tw-text-center tw-text-slate-500 tw-text-base tw-leading-relaxed tw-mb-8" id="errorDescription">
                 Terjadi kesalahan.<br>
@@ -379,17 +579,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide all
         tabContents.forEach(c => c.classList.remove('active'));
         tabs.forEach(t => {
-            t.classList.remove('tw-bg-primary', 'tw-text-white', 'tw-shadow-md', 'tw-bg-transparent');
-            t.classList.add('tw-text-slate-600', 'tw-bg-transparent');
+            t.classList.remove('tw-bg-blue-600', 'tw-text-white', 'tw-shadow-md');
+            t.classList.add('tw-bg-white', 'tw-text-slate-600', 'tw-border', 'tw-border-slate-200');
             t.querySelector('.tab-badge').classList.remove('tw-bg-white/20');
-            t.querySelector('.tab-badge').classList.add('tw-bg-slate-200');
+            t.querySelector('.tab-badge').classList.add('tw-bg-slate-100', 'tw-text-slate-600');
         });
         
         // Show current
         document.getElementById('tab-' + index).classList.add('active');
-        tabs[index].classList.remove('tw-text-slate-600', 'tw-bg-transparent');
-        tabs[index].classList.add('tw-bg-primary', 'tw-text-white', 'tw-shadow-md');
-        tabs[index].querySelector('.tab-badge').classList.remove('tw-bg-slate-200');
+        tabs[index].classList.remove('tw-bg-white', 'tw-text-slate-600', 'tw-border', 'tw-border-slate-200');
+        tabs[index].classList.add('tw-bg-blue-600', 'tw-text-white', 'tw-shadow-md');
+        tabs[index].querySelector('.tab-badge').classList.remove('tw-bg-slate-100', 'tw-text-slate-600');
         tabs[index].querySelector('.tab-badge').classList.add('tw-bg-white/20');
         
         // Update Title
@@ -452,7 +652,11 @@ document.addEventListener('DOMContentLoaded', function() {
         tabs.forEach((tab, idx) => {
             const totalInCategory = document.querySelectorAll('#tab-' + idx + ' .form-score-input').length;
             const badge = document.getElementById('badge-' + idx);
-            badge.textContent = categoryCounts[idx] + '/' + totalInCategory;
+            if (categoryCounts[idx] === totalInCategory && totalInCategory > 0) {
+                badge.textContent = categoryCounts[idx] + '/' + totalInCategory + ' ✓';
+            } else {
+                badge.textContent = categoryCounts[idx] + '/' + totalInCategory;
+            }
         });
         
         // Enable submit button
@@ -476,9 +680,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function revertSaveDraftButton() {
         const btnSaveDraft = document.getElementById('btnSaveDraft');
         if (btnSaveDraft && btnSaveDraft.classList.contains('tw-bg-green-100')) {
-            btnSaveDraft.textContent = 'Simpan Sementara';
-            btnSaveDraft.classList.remove('tw-bg-green-100', 'tw-text-green-700');
-            btnSaveDraft.classList.add('tw-bg-amber-100', 'tw-text-amber-700');
+            btnSaveDraft.innerHTML = '<i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara';
+            btnSaveDraft.classList.remove('tw-bg-green-100', 'tw-text-green-800');
+            btnSaveDraft.classList.add('tw-bg-amber-100', 'tw-text-amber-800');
         }
     }
 
@@ -500,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const track = document.getElementById('track_' + inputId.replace('score_', ''));
         if (track) {
             track.style.display = 'block';
-            track.style.width = ((val - 1) * 11.11) + '%'; // Adjust width scale since it starts from 1 (1-10 scale)
+            track.style.width = ((val - 1) * 11.11) + '%';
         }
         
         revertSaveDraftButton();
@@ -523,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Save Draft Dummy
+    // Save Draft
     document.getElementById('btnSaveDraft').addEventListener('click', function() {
         const data = {};
         inputs.forEach(i => {
@@ -535,9 +739,9 @@ document.addEventListener('DOMContentLoaded', function() {
         data['general_notes'] = document.querySelector('textarea[name="general_notes"]').value;
         localStorage.setItem('draft_assessment_{{ $target->id }}', JSON.stringify(data));
         
-        this.innerHTML = 'Tersimpan Lokal';
-        this.classList.remove('tw-bg-amber-100', 'tw-text-amber-700');
-        this.classList.add('tw-bg-green-100', 'tw-text-green-700');
+        this.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Tersimpan Lokal';
+        this.classList.remove('tw-bg-amber-100', 'tw-text-amber-800');
+        this.classList.add('tw-bg-green-100', 'tw-text-green-800');
     });
 
     // Textarea input listener to revert button
@@ -730,3 +934,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+@endsection
