@@ -324,6 +324,12 @@
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
     }
+
+    /* Hover effect for dropdowns */
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+    }
 </style>
 @endpush
 
@@ -487,12 +493,40 @@
         </div>
         <div class="col-12 col-lg-6 text-lg-end">
             <div class="d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
-                <a href="{{ route('assessment.exportAllPdf') }}" target="_blank" class="btn btn-primary fw-semibold px-3 rounded-3">
-                    <i class="bi bi-file-pdf me-1"></i> Ekspor Rekap PDF
-                </a>
-                <a href="{{ route('assessment.exportAllExcel') }}" class="btn btn-outline-primary fw-semibold px-3 rounded-3">
-                    <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Rekap Excel
-                </a>
+                @php $availableYears = $periods->pluck('year')->unique(); @endphp
+                <!-- Dropdown Ekspor PDF -->
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-primary fw-semibold px-3 rounded-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-file-pdf me-1"></i> Ekspor Rekap PDF
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 220px;">
+                        <li><h6 class="dropdown-header">Pilih Rentang Waktu</h6></li>
+                        <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => 'all']) }}" target="_blank"><i class="bi bi-journal-text me-2 text-primary"></i>Seluruh Hasil Penilaian</a></li>
+                        @if($availableYears->isNotEmpty())
+                            <li><hr class="dropdown-divider"></li>
+                            @foreach($availableYears as $yr)
+                                <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => $yr]) }}" target="_blank"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+
+                <!-- Dropdown Ekspor Excel -->
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-primary fw-semibold px-3 rounded-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Rekap Excel
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 220px;">
+                        <li><h6 class="dropdown-header">Pilih Rentang Waktu</h6></li>
+                        <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => 'all']) }}"><i class="bi bi-journal-text me-2 text-success"></i>Seluruh Hasil Penilaian</a></li>
+                        @if($availableYears->isNotEmpty())
+                            <li><hr class="dropdown-divider"></li>
+                            @foreach($availableYears as $yr)
+                                <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => $yr]) }}"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -309,10 +309,22 @@ class AssessmentController extends Controller
             abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
         }
 
-        $results = \App\Models\AssessmentResult::with(['period'])
-            ->where('employee_id', $employee->id)
-            ->latest()
-            ->get();
+        $year = $request->query('year');
+
+        $query = \App\Models\AssessmentResult::with(['period'])
+            ->where('employee_id', $employee->id);
+
+        if ($year && $year !== 'all') {
+            $query->whereHas('period', function($q) use ($year) {
+                $q->where('year', $year);
+            });
+        }
+
+        $results = $query->latest()->get();
+
+        if ($results->isEmpty()) {
+            return back()->with('error', 'Tidak ada data penilaian untuk diekspor pada filter yang dipilih.');
+        }
 
         $empName = Str::slug($employee->name ?? 'pegawai', '_');
         $fileName = 'Rekap_Penilaian_360_Histori_' . $empName . '_' . date('Ymd') . '.pdf';
@@ -332,10 +344,22 @@ class AssessmentController extends Controller
             abort(403, 'Akun Anda tidak terhubung dengan data Pegawai.');
         }
 
-        $results = \App\Models\AssessmentResult::with(['period'])
-            ->where('employee_id', $employee->id)
-            ->latest()
-            ->get();
+        $year = $request->query('year');
+
+        $query = \App\Models\AssessmentResult::with(['period'])
+            ->where('employee_id', $employee->id);
+
+        if ($year && $year !== 'all') {
+            $query->whereHas('period', function($q) use ($year) {
+                $q->where('year', $year);
+            });
+        }
+
+        $results = $query->latest()->get();
+
+        if ($results->isEmpty()) {
+            return back()->with('error', 'Tidak ada data penilaian untuk diekspor pada filter yang dipilih.');
+        }
 
         $exporter = new AssessmentHistoryExporter($employee, $results);
         $spreadsheet = $exporter->export();

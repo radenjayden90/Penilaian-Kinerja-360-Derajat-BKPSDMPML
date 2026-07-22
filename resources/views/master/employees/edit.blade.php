@@ -198,13 +198,15 @@
                             <label for="supervisor_id" class="form-label fw-semibold text-slate-700" style="font-size: 13px;">Atasan Langsung</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-slate-50 border-slate-200 text-slate-400"><i class="bi bi-person-up"></i></span>
-                                <select name="supervisor_id" id="supervisor_id" class="form-select border-slate-200 bg-white @error('supervisor_id') is-invalid @enderror" style="text-overflow: ellipsis; padding-right: 2.5rem;">
-                                    <option value="">-- Tanpa Atasan (Kepala Instansi) --</option>
+                                <input type="hidden" name="supervisor_id" id="supervisor_id_hidden" value="{{ old('supervisor_id', $employee->supervisor_id) }}">
+                                <select id="supervisor_id" class="form-select border-slate-200 bg-white" disabled style="text-overflow: ellipsis; padding-right: 2.5rem; background-color: #f8fafc !important;">
+                                    <option value="">-- Tanpa Atasan (Terisi Otomatis) --</option>
                                     @foreach($supervisors as $sup)
                                         <option value="{{ $sup->id }}" data-department="{{ $sup->department_id }}" data-role="{{ $sup->role?->name }}" data-position="{{ $sup->position?->name }}" {{ old('supervisor_id', $employee->supervisor_id) == $sup->id ? 'selected' : '' }}>{{ $sup->name }} (NIP. {{ $sup->nip }})</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="text-slate-500 small mt-1"><i class="bi bi-info-circle me-1"></i>Atasan otomatis ditentukan oleh sistem berdasarkan unit kerja dan jabatan.</div>
                             @error('supervisor_id') <div class="text-rose-600 small mt-1">{{ $message }}</div> @enderror
                         </div>
 
@@ -269,7 +271,9 @@ function updateSupervisorAndRole() {
 
     // 1. Role Logic
     let targetRoleCode = 'EMPLOYEE';
-    if (positionText.includes('kepala bidang') || positionText.includes('kepala bkpsdm') || positionText.includes('sekretaris')) {
+    if (positionText.includes('administrator')) {
+        targetRoleCode = 'ADMIN';
+    } else if (positionText.includes('kepala bidang') || positionText.includes('kepala bkpsdm') || positionText.includes('sekretaris')) {
         targetRoleCode = 'HEAD';
     }
 
@@ -280,9 +284,10 @@ function updateSupervisorAndRole() {
     });
 
     // 2. Supervisor Logic
-    if (positionText.includes('kepala bkpsdm')) {
+    if (positionText.includes('kepala bkpsdm') || positionText.includes('administrator')) {
         if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
         else supervisorSelect.value = ""; // Tanpa atasan
+        document.getElementById('supervisor_id_hidden').value = "";
     } else if (positionText.includes('kepala bidang') || positionText.includes('sekretaris')) {
         let kepalaBkpsdmId = null;
         Array.from(supervisorSelect.options).forEach(option => {
@@ -294,12 +299,16 @@ function updateSupervisorAndRole() {
         if (kepalaBkpsdmId) {
             if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue(kepalaBkpsdmId);
             else supervisorSelect.value = kepalaBkpsdmId;
+            document.getElementById('supervisor_id_hidden').value = kepalaBkpsdmId;
+        } else {
+            document.getElementById('supervisor_id_hidden').value = "";
         }
     } else {
         // Pegawai Biasa -> Sesuaikan dengan unit kerjanya
         if (!selectedDeptId) {
             if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
             else supervisorSelect.value = "";
+            document.getElementById('supervisor_id_hidden').value = "";
         } else {
             let headId = null;
             Array.from(supervisorSelect.options).forEach(option => {
@@ -312,9 +321,11 @@ function updateSupervisorAndRole() {
             if (headId) {
                 if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue(headId);
                 else supervisorSelect.value = headId;
+                document.getElementById('supervisor_id_hidden').value = headId;
             } else {
                 if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
                 else supervisorSelect.value = "";
+                document.getElementById('supervisor_id_hidden').value = "";
             }
         }
     }

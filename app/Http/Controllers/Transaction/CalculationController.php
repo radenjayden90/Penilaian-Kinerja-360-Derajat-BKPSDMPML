@@ -116,6 +116,12 @@ class CalculationController extends Controller
             return back()->with('error', 'Belum ada data perhitungan untuk pegawai ini.');
         }
 
-        return view('transaction.calculation.show', compact('employee', 'result', 'activePeriod'));
+        $assessments = \App\Models\Assessment::where('employee_id', $employee->id)
+            ->where('period_id', $activePeriod->id)
+            ->where('status', \App\Enums\AssessmentStatus::COMPLETED)
+            ->with(['assessor.position', 'scores'])
+            ->get();
+
+        return view('transaction.calculation.show', compact('employee', 'result', 'activePeriod', 'assessments'));
     }
 }

@@ -353,7 +353,7 @@
             </div>
 
             @if($latestResult)
-                <div style="position: relative; height: 340px; width: 100%;">
+                <div style="position: relative; height: 180px; width: 100%;">
                     <canvas id="profileBerakhlakBarChart"></canvas>
                 </div>
                 @if(isset($aspectAverages) && count($aspectAverages) > 0)
@@ -465,7 +465,7 @@
             return l;
         });
 
-        const canvasHeight = canvas.clientHeight || 340;
+        const canvasHeight = canvas.clientHeight || 180;
         
         // Define rich linear gradients for each category bar
         const gradientStops = [

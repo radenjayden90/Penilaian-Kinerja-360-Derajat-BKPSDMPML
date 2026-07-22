@@ -124,9 +124,20 @@ class DashboardController extends Controller
                     ->whereIn('status', [AssessmentStatus::COMPLETED->value, AssessmentStatus::SUBMITTED->value])
                     ->count();
             }
+
+            // Historical Data for Chart (Last 12 periods)
+            $historicalResults = \App\Models\AssessmentResult::with('period')
+                ->where('employee_id', $user->id)
+                ->get()
+                ->sortBy(function($r) {
+                    return $r->period->year . '-' . str_pad($r->period->month, 2, '0', STR_PAD_LEFT);
+                })->take(-12); // Take last 12 periods
+
+            $chartLabels = $historicalResults->map(function($r) { return $r->period->name . ' ' . $r->period->year; })->values()->toArray();
+            $chartData = $historicalResults->map(function($r) { return $r->final_score; })->values()->toArray();
         }
 
-        return view('dashboard.pegawai', compact('user', 'activePeriod', 'myAssessments', 'submittedCount', 'pendingCount', 'receivedAssessmentsCount', 'totalTugas'));
+        return view('dashboard.pegawai', compact('user', 'activePeriod', 'myAssessments', 'submittedCount', 'pendingCount', 'receivedAssessmentsCount', 'totalTugas', 'chartLabels', 'chartData'));
     }
 
     public function notificationCount()

@@ -125,8 +125,32 @@
         const notificationBtn = document.getElementById('notificationDropdown');
 
         function updateBadgeVisibility(count, lastUpdated) {
-            currentAssessmentCount = count;
             const seenCount = parseInt(localStorage.getItem(storageKey)) || 0;
+            
+            // Show popup notification if count increased
+            if (count > currentAssessmentCount && count > seenCount) {
+                if (typeof Swal !== 'undefined') {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Ada Penilaian Baru',
+                        text: 'Seseorang baru saja memberikan penilaian untuk Anda.'
+                    });
+                }
+            }
+
+            currentAssessmentCount = count;
             
             // Check if there are unseen notifications
             if (count > 0 && count > seenCount) {

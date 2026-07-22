@@ -344,7 +344,7 @@
             </div>
 
             <!-- Canvas for Chart.js Bar Chart -->
-            <div style="position: relative; height: 340px; width: 100%;">
+            <div style="position: relative; height: 180px; width: 100%;">
                 <canvas id="berakhlakBarChart"></canvas>
             </div>
 
@@ -369,7 +369,7 @@
 
     <!-- Right Column: Analysis Cards (Strength & Development Area) -->
     <div class="col-12 col-xl-5">
-        <div class="d-flex flex-column gap-3">
+        <div class="d-flex flex-column gap-3 h-100">
             <!-- Strength Card -->
             <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
                 <div class="d-flex align-items-center gap-2 mb-2">
@@ -466,6 +466,67 @@
     </div>
 </div>
 
+<!-- 5. Rincian Evaluator Individual -->
+<div class="executive-card mb-4 overflow-hidden shadow-sm border-0 rounded-4 bg-white">
+    <div class="p-4 border-bottom bg-white d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold text-dark mb-0">
+            <i class="bi bi-people-fill me-2 text-primary"></i>Daftar Pemberi Nilai (Evaluator)
+        </h5>
+        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill small fw-semibold">
+            {{ $assessments->count() }} Evaluator
+        </span>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4 text-uppercase small fw-bold text-muted">Nama Evaluator</th>
+                    <th class="text-uppercase small fw-bold text-muted">Jabatan</th>
+                    <th class="text-center text-uppercase small fw-bold text-muted">Hubungan</th>
+                    <th class="text-center text-uppercase small fw-bold text-muted">Skor Diberikan (1-10)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($assessments as $assessment)
+                    @php
+                        $avgScore = $assessment->scores->avg('score');
+                        $roleType = match($assessment->assessment_type->value ?? $assessment->assessment_type) {
+                            'SUPERIOR' => ['label' => 'Atasan', 'color' => 'primary', 'icon' => 'bi-person-up', 'bg' => '#eff6ff', 'text' => '#1d4ed8'],
+                            'PEER' => ['label' => 'Sejawat', 'color' => 'info', 'icon' => 'bi-people', 'bg' => '#ecfeff', 'text' => '#0369a1'],
+                            'SUBORDINATE' => ['label' => 'Bawahan', 'color' => 'warning', 'icon' => 'bi-person-down', 'bg' => '#fffbeb', 'text' => '#b45309'],
+                            default => ['label' => 'Lainnya', 'color' => 'secondary', 'icon' => 'bi-person', 'bg' => '#f8fafc', 'text' => '#334155']
+                        };
+                    @endphp
+                    <tr>
+                        <td class="ps-4 fw-semibold text-dark">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px; font-size: 14px; background-color: {{ $roleType['bg'] }}; color: {{ $roleType['text'] }}; border: 1px solid {{ $roleType['text'] }}33;">
+                                    {{ collect(explode(' ', $assessment->assessor->name))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->join('') }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">{{ $assessment->assessor->name }}</div>
+                                    <div class="text-muted small" style="font-size: 11px;">NIP. {{ $assessment->assessor->nip }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted small" style="max-width: 200px;">{{ $assessment->assessor->position->name ?? '-' }}</td>
+                        <td class="text-center">
+                            <span class="badge px-2 py-1 rounded-pill" style="background-color: {{ $roleType['bg'] }}; color: {{ $roleType['text'] }}; border: 1px solid {{ $roleType['text'] }}40;">
+                                <i class="bi {{ $roleType['icon'] }} me-1"></i> {{ $roleType['label'] }}
+                            </span>
+                        </td>
+                        <td class="text-center fw-bold text-dark fs-6">{{ number_format($avgScore, 2) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">Belum ada data evaluator yang menyelesaikan penilaian.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -486,7 +547,7 @@
             return l;
         });
 
-        const canvasHeight = canvas.clientHeight || 340;
+        const canvasHeight = canvas.clientHeight || 180;
         
         // Define rich linear gradients for each category bar
         const gradientStops = [
