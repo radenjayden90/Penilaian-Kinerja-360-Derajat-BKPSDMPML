@@ -260,13 +260,17 @@ class AssessmentController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk mengekspor rapor ini.');
         }
 
+        if (!$request->has('download')) {
+            return view('assessment.preview', compact('result'));
+        }
+
         $empName = Str::slug($result->employee->name ?? 'pegawai', '_');
         $fileName = 'Rekap_Penilaian_360_' . $empName . '_' . date('Ymd') . '.pdf';
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assessment.print', compact('result'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->stream($fileName);
+        return $pdf->download($fileName);
     }
 
     public function exportExcel(Request $request, $id)
@@ -314,13 +318,17 @@ class AssessmentController extends Controller
             ->latest()
             ->get();
 
+        if (!$request->has('download')) {
+            return view('assessment.preview_all', compact('employee', 'results'));
+        }
+
         $empName = Str::slug($employee->name ?? 'pegawai', '_');
         $fileName = 'Rekap_Penilaian_360_Histori_' . $empName . '_' . date('Ymd') . '.pdf';
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assessment.print_all', compact('employee', 'results'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->stream($fileName);
+        return $pdf->download($fileName);
     }
 
     public function exportAllExcel(Request $request)
