@@ -63,7 +63,11 @@ class AssessmentRepository
             return null;
         }
 
-        return Employee::where('id', $employee->supervisor_id)->where('is_active', true)->first();
+        return Employee::where('id', $employee->supervisor_id)
+            ->where('is_active', true)
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']);
+            })->first();
     }
 
     /**
@@ -80,6 +84,9 @@ class AssessmentRepository
         if ($isKepalaBkpsdm) {
             return Employee::where('is_active', true)
                 ->where('id', '!=', $employee->id)
+                ->whereDoesntHave('role', function($q) {
+                    $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']);
+                })
                 ->whereHas('position', function($q) {
                     $q->where('level', '2')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kepala bidang%')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%kabid%')->orWhere(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%sekretaris%');
                 })
@@ -92,6 +99,9 @@ class AssessmentRepository
             return Employee::where('department_id', $employee->department_id)
                 ->where('id', '!=', $employee->id)
                 ->where('is_active', true)
+                ->whereDoesntHave('role', function($q) {
+                    $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']);
+                })
                 ->where(function($q) use ($employee) {
                     if ($employee->position && $employee->position->level) {
                         $level = (int)$employee->position->level;
@@ -106,6 +116,9 @@ class AssessmentRepository
 
         return Employee::where('supervisor_id', $employee->id)
             ->where('is_active', true)
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']);
+            })
             ->with(['department', 'position'])
             ->get();
     }
@@ -127,8 +140,8 @@ class AssessmentRepository
 
         $query = Employee::where('id', '!=', $employee->id)
             ->where('is_active', true)
-            ->whereHas('role', function($q) {
-                $q->where('name', '!=', 'ADMIN');
+            ->whereDoesntHave('role', function($q) {
+                $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']);
             });
 
         if ($isKabid) {
