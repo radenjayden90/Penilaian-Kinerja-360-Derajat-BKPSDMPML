@@ -2,147 +2,279 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapor Penilaian Kinerja 360° Individu - {{ $result->employee->name ?? '-' }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Rapor Penilaian Kinerja 360° - {{ $result->employee->name ?? '-' }}</title>
     <style>
+        @page {
+            size: A4 portrait;
+            margin-top: 1.2cm;
+            margin-bottom: 2.5cm;
+            margin-left: 2.5cm;
+            margin-right: 2.5cm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', Arial, sans-serif;
-            font-size: 12px;
-            color: #000;
-            background-color: #fff;
-            padding: 20px;
-        }
-        .header-kop {
-            text-align: center;
-            border-bottom: 3px double #000;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-        }
-        .header-kop h3 {
-            font-size: 18px;
-            font-weight: 700;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.3;
+            color: #000000;
+            background-color: #ffffff;
             margin: 0;
-            text-transform: uppercase;
+            padding: 0;
         }
-        .header-kop h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin: 2px 0;
-        }
-        .header-kop p {
-            font-size: 11px;
-            margin: 0;
-            color: #333;
-        }
-        .table-print {
+
+        /* Centered Kop Surat with Logo beside text */
+        .kop-container {
             width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .kop-table {
+            margin: 0 auto;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-        .table-print th, .table-print td {
-            border: 1px solid #000;
-            padding: 8px 10px;
-            font-size: 11px;
+
+        .kop-logo-cell {
+            vertical-align: middle;
+            padding-right: 15px;
+            text-align: right;
         }
-        .table-print th {
-            background-color: #f2f2f2 !important;
+
+        .kop-logo-cell img {
+            height: 2.6cm;
+            width: auto;
+        }
+
+        .kop-text-cell {
+            vertical-align: middle;
             text-align: center;
-            font-weight: 600;
         }
+
+        .kop-header-1 {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .kop-header-2 {
+            font-size: 10pt;
+            font-weight: normal;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        /* Garis Pembatas Kop Surat Ganda */
+        .kop-line {
+            border-top: 2.5px solid #000000;
+            border-bottom: 0.8px solid #000000;
+            height: 2px;
+            margin-top: 4px;
+            margin-bottom: 18px;
+        }
+
+        /* Document Title */
+        .title-block {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .doc-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .doc-subtitle {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* Info Table */
+        .info-table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+            box-sizing: border-box;
+        }
+
         .info-table td {
-            border: none;
-            padding: 4px 0;
+            padding: 4px 6px;
+            font-size: 10pt;
+            vertical-align: top;
         }
-        .ttd-container {
-            margin-top: 40px;
-            display: flex;
-            justify-content: flex-end;
+
+        .info-table td.label {
+            font-weight: bold;
+            width: 130px;
         }
-        .ttd-box {
+
+        .info-table td.sep {
+            width: 10px;
             text-align: center;
-            width: 250px;
         }
-        @media print {
-            .no-print { display: none !important; }
-            body { padding: 0; }
+
+        /* Main Data Table */
+        .report-table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            table-layout: fixed;
+        }
+
+        .report-table th {
+            background-color: #DBEAFE;
+            color: #000000;
+            font-size: 9.5pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 7px 6px;
+            border: 1px solid #000000;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        .report-table td {
+            padding: 6px;
+            font-size: 9.5pt;
+            border: 1px solid #000000;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-bold { font-weight: bold; }
+
+        /* Notes Footnote */
+        .note-text {
+            font-size: 9pt;
+            font-style: italic;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        /* Signature Table Pushed to Bottom Right */
+        .ttd-table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .ttd-cell {
+            width: 45%;
+            text-align: center;
+            vertical-align: top;
+            font-size: 10pt;
+        }
+
+        /* Footer */
+        .footer-line {
+            margin-top: 20px;
+            border-top: 0.8px solid #666666;
+            padding-top: 6px;
+            font-size: 8pt;
+            color: #555555;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <!-- Floating Action Toolbar for Screen View -->
-    <div class="no-print mb-4 d-flex justify-content-between align-items-center bg-light p-3 rounded border">
-        <div>
-            <strong>Ekspor PDF - Rapor Penilaian Kinerja 360°</strong>
-            <div class="text-muted small">Tekan tombol cetak di sebelah kanan untuk menyimpan rapor sebagai PDF atau mencetak dokumen ini.</div>
-        </div>
-        <div>
-            <button onclick="window.print()" class="btn btn-primary me-2">
-                Cetak / Simpan PDF
-            </button>
-            <button onclick="window.close()" class="btn btn-outline-secondary">
-                Tutup Window
-            </button>
-        </div>
-    </div>
 
-    <!-- Kop Surat Header Government Style -->
-    <div class="header-kop">
-        <h3>PEMERINTAH KABUPATEN PEMALANG</h3>
-        <h4>BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA</h4>
-        <p>Jalan Surohadikusumo No. 1 Pemalang, Jawa Tengah 52312 | Telp/Fax: (0284) 321010</p>
-        <p>Website: bkpsdm.pemalangkab.go.id | Email: bkpsdm@pemalangkab.go.id</p>
-    </div>
-
-    <div class="text-center mb-4">
-        <h5 class="fw-bold mb-1">RAPOR INDIVIDU HASIL PENILAIAN KINERJA 360 DERAJAT</h5>
-        <div class="small fw-semibold">PERIODE: {{ strtoupper($result->period->name ?? '-') }}</div>
-    </div>
-
-    <!-- Employee Profile Info -->
-    <div class="row mb-4">
-        <div class="col-8">
-            <table class="info-table w-100">
-                <tr>
-                    <td style="width: 130px;">Nama Pegawai</td>
-                    <td style="width: 15px;">:</td>
-                    <td><strong>{{ $result->employee->name ?? '-' }}</strong></td>
-                </tr>
-                <tr>
-                    <td>NIP</td>
-                    <td>:</td>
-                    <td>{{ $result->employee->nip ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Jabatan</td>
-                    <td>:</td>
-                    <td>{{ $result->employee->position->name ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Unit Kerja / Bidang</td>
-                    <td>:</td>
-                    <td>{{ $result->employee->department->name ?? '-' }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <!-- Score Table -->
     @php
-        $posName = strtolower($result->employee->position?->name ?? '');
-        $isKabid = ($result->employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
-        
-        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category);
+        $logoPath = public_path('images/logo-pemalang.png');
+        $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : asset('images/logo-pemalang.png');
+
+        $employee = $result->employee;
+        $period = $result->period;
+        $posName = strtolower($employee->position?->name ?? '');
+        $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+
+        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category ?? '');
+        $catLabel = $catEnum ? $catEnum->label() : strtoupper((string)($result->category ?? '-'));
+
+        $monthNum = (int)($period->month ?? date('m'));
+        $monthName = \Carbon\Carbon::create()->month($monthNum)->isoFormat('MMMM');
+        $yearVal = $period->year ?? date('Y');
+        $periodeFormatted = "Penilaian Kinerja Bulan " . $monthName . " Tahun " . $yearVal;
     @endphp
 
-    <table class="table-print">
+    <!-- Centered Kop Surat with Logo Beside Text -->
+    <div class="kop-container">
+        <table class="kop-table">
+            <tr>
+                <td class="kop-logo-cell">
+                    <img src="{{ $logoBase64 }}" alt="Logo Pemalang">
+                </td>
+                <td class="kop-text-cell">
+                    <div class="kop-header-1">PEMERINTAH KABUPATEN PEMALANG</div>
+                    <div class="kop-header-1">BADAN KEPEGAWAIAN DAN PENGEMBANGAN</div>
+                    <div class="kop-header-1">SUMBER DAYA MANUSIA</div>
+                    <div class="kop-header-2">Jalan Surohadikusumo Nomor 1, Pemalang, Jawa Tengah 52312</div>
+                    <div class="kop-header-2">Telepon (0284) 321376 Fax (0284) 321502 Website: https://bkpsdm.pemalangkab.go.id</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Double Line Separator -->
+    <div class="kop-line"></div>
+
+    <!-- Title Block -->
+    <div class="title-block">
+        <h1 class="doc-title">RAPOR HASIL PENILAIAN KINERJA ASN 360 DERAJAT</h1>
+        <div class="doc-subtitle">{{ $periodeFormatted }}</div>
+    </div>
+
+    <!-- Employee Information -->
+    <table class="info-table">
+        <tr>
+            <td class="label">Nama Pegawai</td>
+            <td class="sep">:</td>
+            <td><strong>{{ $employee->name ?? '-' }}</strong></td>
+            <td class="label">NIP</td>
+            <td class="sep">:</td>
+            <td>{{ $employee->nip ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="label">Jabatan</td>
+            <td class="sep">:</td>
+            <td>{{ $employee->position->name ?? '-' }}</td>
+            <td class="label">Tanggal Cetak</td>
+            <td class="sep">:</td>
+            <td>{{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
+        </tr>
+        <tr>
+            <td class="label">Unit Kerja / OPD</td>
+            <td class="sep">:</td>
+            <td colspan="4">{{ $employee->department->name ?? '-' }}</td>
+        </tr>
+    </table>
+
+    <!-- Assessment Data Table -->
+    <table class="report-table">
         <thead>
             <tr>
-                <th style="width: 50px;">NO</th>
-                <th>KOMPONEN PENILAIAN</th>
-                <th style="width: 120px;">BOBOT</th>
-                <th style="width: 150px;">SKOR RATA-RATA (1-10)</th>
-                <th style="width: 150px;">SKOR TERBOBOT (10-100)</th>
+                <th style="width: 25px;">NO</th>
+                <th>PERIODE PENILAIAN / KOMPONEN 360°</th>
+                <th style="width: 85px;">ATASAN (50%)</th>
+                <th style="width: 85px;">SEJAWAT (50%)</th>
+                <th style="width: 95px;">NILAI AKHIR</th>
+                <th style="width: 110px;">PREDIKAT</th>
             </tr>
         </thead>
         <tbody>
@@ -150,60 +282,69 @@
                 <tr>
                     <td class="text-center">1</td>
                     <td>Penilaian Atasan (Kepala BKPSDM)</td>
-                    <td class="text-center">50%</td>
                     <td class="text-center">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2) }}</td>
+                    <td class="text-center">{{ number_format($result->peer_average ?? 0, 2) }}</td>
+                    <td class="text-center text-bold">{{ number_format(($result->subordinate_average ?? 0) * 10 * 0.50 + ($result->peer_average ?? 0) * 10 * 0.30 + ($result->superior_average ?? 0) * 10 * 0.20, 2) }}</td>
+                    <td class="text-center text-bold">-</td>
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
                     <td>Penilaian Sejawat (Rekan Kepala Bidang)</td>
-                    <td class="text-center">30%</td>
+                    <td class="text-center">-</td>
                     <td class="text-center">{{ number_format($result->peer_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format(($result->peer_average ?? 0) * 10 * 0.30, 2) }}</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
                 </tr>
                 <tr>
                     <td class="text-center">3</td>
                     <td>Penilaian Bawahan (Staf Divisi)</td>
-                    <td class="text-center">20%</td>
-                    <td class="text-center">{{ number_format($result->superior_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format(($result->superior_average ?? 0) * 10 * 0.20, 2) }}</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
                 </tr>
             @else
                 <tr>
                     <td class="text-center">1</td>
-                    <td>Penilaian Atasan (Kepala Bidang)</td>
-                    <td class="text-center">50%</td>
+                    <td>{{ $periodeFormatted }}</td>
                     <td class="text-center">{{ number_format($result->subordinate_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format(($result->subordinate_average ?? 0) * 10 * 0.50, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="text-center">2</td>
-                    <td>Penilaian Sejawat (Rekan Staff)</td>
-                    <td class="text-center">50%</td>
                     <td class="text-center">{{ number_format($result->peer_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format(($result->peer_average ?? 0) * 10 * 0.50, 2) }}</td>
+                    <td class="text-center text-bold">{{ number_format($result->final_score ?? 0, 2) }}</td>
+                    <td class="text-center text-bold">{{ $catLabel }}</td>
                 </tr>
             @endif
-            <tr style="background-color: #f9f9f9;">
-                <td colspan="4" class="text-end"><strong>NILAI AKHIR KINERJA 360°</strong></td>
-                <td class="text-center"><strong>{{ number_format($result->final_score ?? 0, 2) }}</strong></td>
-            </tr>
-            <tr style="background-color: #f9f9f9;">
-                <td colspan="4" class="text-end"><strong>PREDIKAT KATEGORI</strong></td>
-                <td class="text-center"><strong>{{ $catEnum ? strtoupper($catEnum->label()) : strtoupper($result->category) }}</strong></td>
+            <tr>
+                <td colspan="4" class="text-right text-bold">NILAI AKHIR KINERJA 360°</td>
+                <td class="text-center text-bold" colspan="2">{{ number_format($result->final_score ?? 0, 2) }} ({{ $catLabel }})</td>
             </tr>
         </tbody>
     </table>
 
-    <!-- Signature Container -->
-    <div class="ttd-container">
-        <div class="ttd-box">
-            <p class="mb-1">Pemalang, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
-            <p class="fw-semibold mb-5">Kepala BKPSDM Kabupaten Pemalang,</p>
-            <br><br>
-            <p class="fw-bold mb-0"><u>________________________</u></p>
-            <p class="mb-0">NIP. 197501011998031002</p>
-        </div>
+    <!-- Footnote -->
+    <div class="note-text">
+        * Catatan: Skor Atasan, Sejawat, dan Bawahan menggunakan skala 1–10. Nilai Akhir merupakan hasil konversi berbobot ke skala 100.
     </div>
+
+    <!-- Official Signature Block Pushed to Bottom Right -->
+    <table class="ttd-table">
+        <tr>
+            <td style="width: 55%;"></td>
+            <td class="ttd-cell">
+                Pemalang, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}<br>
+                Kepala BKPSDM Kabupaten Pemalang,
+                <br><br><br><br><br>
+                <strong><u>Khaeron, S.H., M.M.</u></strong><br>
+                NIP. 196803231990031012
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer-line">
+        <div style="float: left;">SIKINERJA 360° - BKPSDM Kabupaten Pemalang</div>
+        <div style="float: right;">Dicetak pada {{ date('d/m/Y H:i') }} WIB</div>
+        <div style="clear: both;"></div>
+    </div>
+
 </body>
 </html>
