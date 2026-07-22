@@ -69,9 +69,9 @@ class AssessmentController extends Controller
         $allPeers = $this->repository->getEligiblePeers($employee, $activePeriod);
         $peersPage = request()->input('peers_page', 1);
         $peers = new \Illuminate\Pagination\LengthAwarePaginator(
-            $allPeers->forPage($peersPage, 9),
+            $allPeers->forPage($peersPage, 6),
             $allPeers->count(),
-            9,
+            6,
             $peersPage,
             ['path' => request()->url(), 'pageName' => 'peers_page']
         );
@@ -87,9 +87,9 @@ class AssessmentController extends Controller
 
         $subsPage = request()->input('subs_page', 1);
         $subordinates = new \Illuminate\Pagination\LengthAwarePaginator(
-            $allSubordinates->forPage($subsPage, 9),
+            $allSubordinates->forPage($subsPage, 6),
             $allSubordinates->count(),
-            9,
+            6,
             $subsPage,
             ['path' => request()->url(), 'pageName' => 'subs_page']
         );
