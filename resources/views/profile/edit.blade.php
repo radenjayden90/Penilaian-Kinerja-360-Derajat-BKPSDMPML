@@ -12,7 +12,7 @@
 @section('content')
 <div class="row g-4">
     <!-- Left Column: Data Singkat Pegawai -->
-    <div class="col-12 col-lg-5">
+    <div class="col-12 col-lg-6">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white py-3 border-bottom">
                 <h6 class="fw-bold text-dark mb-0">
@@ -73,7 +73,7 @@
     </div>
 
     <!-- Right Column: Visualisasi Nilai Kinerja Terakhir (Chart.js) -->
-    <div class="col-12 col-lg-7">
+    <div class="col-12 col-lg-6">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
                 <h6 class="fw-bold text-dark mb-0">
@@ -91,7 +91,7 @@
                     <!-- Key Summary Cards -->
                     <div class="row g-3 mb-4">
                         <div class="col-6 col-md-6">
-                            <div class="p-3 rounded border bg-light text-center">
+                            <div class="p-3 rounded border bg-light text-center h-100 d-flex flex-column justify-content-center align-items-center">
                                 <small class="text-muted d-block mb-1 fw-semibold">Nilai Akhir 360°</small>
                                 <span class="fs-2 fw-bold text-primary" style="color: #1E3A5F !important;">
                                     {{ number_format($latestResult->final_score ?? 0, 2) }}
@@ -100,7 +100,7 @@
                             </div>
                         </div>
                         <div class="col-6 col-md-6">
-                            <div class="p-3 rounded border bg-light text-center">
+                            <div class="p-3 rounded border bg-light text-center h-100 d-flex flex-column justify-content-center align-items-center">
                                 <small class="text-muted d-block mb-1 fw-semibold">Predikat Kategori</small>
                                 @php
                                     $catEnum = $latestResult->category instanceof \App\Enums\ResultCategory ? $latestResult->category : \App\Enums\ResultCategory::tryFrom($latestResult->category);
@@ -113,7 +113,7 @@
                                     };
                                     $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                 @endphp
-                                <div class="mt-2 fw-semibold {{ $textColor }}" {!! $style !!}>
+                                <div class="mt-2 fw-bold fs-4 {{ $textColor }}" {!! $style !!}>
                                     {{ $catEnum ? $catEnum->label() : ($latestResult->category ?? '-') }}
                                 </div>
                             </div>
@@ -150,43 +150,23 @@
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('profileAssessmentChart').getContext('2d');
         
-        @php
-            $posName = strtolower($employee->position?->name ?? '');
-            $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
-        @endphp
+        const labels = {!! $aspectAverages->pluck('name')->toJson() !!};
+        const data = {!! $aspectAverages->pluck('average_score')->map(fn($v) => round((float)$v, 2))->toJson() !!};
+        
+        // Array of predefined colors for the 7 aspects
+        const baseColors = [
+            { bg: 'rgba(30, 58, 95, 0.85)', border: '#1E3A5F' },
+            { bg: 'rgba(13, 110, 253, 0.75)', border: '#0d6efd' },
+            { bg: 'rgba(25, 135, 84, 0.75)', border: '#198754' },
+            { bg: 'rgba(220, 53, 69, 0.75)', border: '#dc3545' },
+            { bg: 'rgba(253, 126, 20, 0.75)', border: '#fd7e14' },
+            { bg: 'rgba(13, 202, 240, 0.75)', border: '#0dcaf0' },
+            { bg: 'rgba(111, 66, 193, 0.75)', border: '#6f42c1' }
+        ];
 
-        @if($isKabid)
-            const labels = ['Skor Atasan (50%)', 'Skor Sejawat (30%)', 'Skor Bawahan (20%)'];
-            const data = [
-                {{ number_format($latestResult->subordinate_average ?? 0, 2) }},
-                {{ number_format($latestResult->peer_average ?? 0, 2) }},
-                {{ number_format($latestResult->superior_average ?? 0, 2) }}
-            ];
-            const bgColors = [
-                'rgba(30, 58, 95, 0.85)',
-                'rgba(13, 110, 253, 0.75)',
-                'rgba(108, 117, 125, 0.75)'
-            ];
-            const borderColors = [
-                '#1E3A5F',
-                '#0d6efd',
-                '#6c757d'
-            ];
-        @else
-            const labels = ['Skor Atasan (50%)', 'Skor Sejawat (50%)'];
-            const data = [
-                {{ number_format($latestResult->subordinate_average ?? 0, 2) }},
-                {{ number_format($latestResult->peer_average ?? 0, 2) }}
-            ];
-            const bgColors = [
-                'rgba(30, 58, 95, 0.85)',
-                'rgba(13, 110, 253, 0.75)'
-            ];
-            const borderColors = [
-                '#1E3A5F',
-                '#0d6efd'
-            ];
-        @endif
+        // Generate colors dynamically based on the number of aspects
+        const bgColors = labels.map((_, i) => baseColors[i % baseColors.length].bg);
+        const borderColors = labels.map((_, i) => baseColors[i % baseColors.length].border);
 
         new Chart(ctx, {
             type: 'bar',
@@ -229,6 +209,9 @@
                     },
                     x: {
                         grid: {
+                            display: false
+                        },
+                        ticks: {
                             display: false
                         }
                     }
