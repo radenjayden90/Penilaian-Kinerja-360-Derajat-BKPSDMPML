@@ -53,16 +53,33 @@ class AssessmentController extends Controller
         }
 
         // Get Peers (Cross-department, including Kabid, with COMPLETED / FULL / PENDING status)
-        $peers = $this->repository->getEligiblePeers($employee, $activePeriod);
+        $allPeers = $this->repository->getEligiblePeers($employee, $activePeriod);
+        $peersPage = request()->input('peers_page', 1);
+        $peers = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allPeers->forPage($peersPage, 9),
+            $allPeers->count(),
+            9,
+            $peersPage,
+            ['path' => request()->url(), 'pageName' => 'peers_page']
+        );
 
         // Get Subordinates (For Kabid: all employees in the same department/bidang)
-        $subordinates = $this->repository->getSubordinates($employee);
-        $subordinates->map(function ($subordinate) use ($activePeriod, $employee) {
+        $allSubordinates = $this->repository->getSubordinates($employee);
+        $allSubordinates->map(function ($subordinate) use ($activePeriod, $employee) {
             $subordinate->load(['department', 'position']);
             $subAssessment = $this->repository->getAssessmentStatus($activePeriod->id, $employee->id, $subordinate->id, AssessmentType::SUBORDINATE->value);
             $subordinate->assessment_status = ($subAssessment && ($subAssessment->status?->value === 'SUBMITTED' || $subAssessment->status === 'SUBMITTED')) ? 'COMPLETED' : 'PENDING';
             return $subordinate;
         });
+
+        $subsPage = request()->input('subs_page', 1);
+        $subordinates = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allSubordinates->forPage($subsPage, 9),
+            $allSubordinates->count(),
+            9,
+            $subsPage,
+            ['path' => request()->url(), 'pageName' => 'subs_page']
+        );
 
         return view('transaction.assessments.dashboard', compact('activePeriod', 'superior', 'peers', 'subordinates', 'employee'));
     }

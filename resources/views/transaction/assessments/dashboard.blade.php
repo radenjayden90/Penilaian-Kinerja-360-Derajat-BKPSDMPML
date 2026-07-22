@@ -61,18 +61,20 @@
                                         {{ strtoupper(substr($superior->name, 0, 1)) }}
                                     </div>
                                     <div class="flex-grow-1 min-w-0">
-                                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ $superior->name }}">{{ $superior->name }}</h6>
-                                        <small class="text-muted d-block text-truncate">NIP. {{ $superior->nip }}</small>
+                                        <h6 class="fw-bold text-dark mb-1 lh-sm" title="{{ $superior->name }}">{{ $superior->name }}</h6>
+                                        <small class="text-muted d-block">NIP. {{ $superior->nip }}</small>
                                     </div>
                                 </div>
                                 <div class="bg-light p-2.5 rounded-2 mb-3 fs-7">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span class="text-muted"><i class="bi bi-briefcase me-1"></i>Jabatan:</span>
-                                        <span class="fw-semibold text-dark text-end ms-2">{{ $superior->position->name ?? '-' }}</span>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                        <div class="text-muted px-1">:</div>
+                                        <div class="fw-semibold text-dark lh-sm">{{ $superior->position->name ?? '-' }}</div>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted"><i class="bi bi-building me-1"></i>Divisi:</span>
-                                        <span class="fw-semibold text-dark text-end ms-2">{{ $superior->department->name ?? '-' }}</span>
+                                    <div class="d-flex align-items-start">
+                                        <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                        <div class="text-muted px-1">:</div>
+                                        <div class="fw-semibold text-dark lh-sm">{{ $superior->department->name ?? '-' }}</div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between pt-1 border-top">
@@ -108,14 +110,14 @@
 
     <!-- Section 2: Rekan Sejawat -->
     @if(!$hidePeers)
-    <div class="card border-0 shadow-sm mb-4">
+    <div id="section-peers" class="card border-0 shadow-sm mb-4" style="scroll-margin-top: 100px;">
         <div class="card-header bg-white py-3 border-bottom">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <span class="fw-bold text-primary fs-6"><i class="bi bi-people me-2"></i>2. Evaluasi Rekan Sejawat (Peers)</span>
                     <small class="text-muted d-block ms-4">Daftar rekan kerja (termasuk lintas divisi/bidang). Kuota maksimal 3 penilai per pegawai.</small>
                 </div>
-                <span class="badge bg-primary bg-opacity-10 text-primary">{{ $peers->count() }} Orang Rekan</span>
+                <span class="badge bg-primary bg-opacity-10 text-primary">{{ $peers->total() }} Orang Rekan</span>
             </div>
         </div>
         <div class="card-body p-3">
@@ -131,18 +133,20 @@
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-secondary mb-1 text-truncate" title="{{ $peer->name }}">{{ $peer->name }}</h6>
-                                            <small class="text-muted d-block text-truncate">NIP. {{ $peer->nip }}</small>
+                                            <h6 class="fw-bold text-secondary mb-1 lh-sm" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                            <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
                                     <div class="bg-body-secondary p-2.5 rounded-2 mb-3 fs-7">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span class="text-muted"><i class="bi bi-briefcase me-1"></i>Jabatan:</span>
-                                            <span class="fw-semibold text-secondary text-end ms-2">{{ $peer->position->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-secondary lh-sm">{{ $peer->position->name ?? '-' }}</div>
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span class="text-muted"><i class="bi bi-building me-1"></i>Divisi:</span>
-                                            <span class="fw-semibold text-secondary text-end ms-2">{{ $peer->department->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-secondary lh-sm">{{ $peer->department->name ?? '-' }}</div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between pt-1 border-top border-secondary-subtle">
@@ -173,18 +177,20 @@
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ $peer->name }}">{{ $peer->name }}</h6>
-                                            <small class="text-muted d-block text-truncate">NIP. {{ $peer->nip }}</small>
+                                            <h6 class="fw-bold text-dark mb-1 lh-sm" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                            <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
                                     <div class="bg-light p-2.5 rounded-2 mb-3 fs-7">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span class="text-muted"><i class="bi bi-briefcase me-1"></i>Jabatan:</span>
-                                            <span class="fw-semibold text-dark text-end ms-2">{{ $peer->position->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-dark lh-sm">{{ $peer->position->name ?? '-' }}</div>
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span class="text-muted"><i class="bi bi-building me-1"></i>Divisi:</span>
-                                            <span class="fw-semibold text-dark text-end ms-2">{{ $peer->department->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-dark lh-sm">{{ $peer->department->name ?? '-' }}</div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between pt-1 border-top">
@@ -219,17 +225,22 @@
                     </div>
                 @endforelse
             </div>
+            @if($peers->hasPages())
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $peers->appends(['subs_page' => request('subs_page')])->fragment('section-peers')->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
     @endif
 
     <!-- Section 3: Bawahan (Jika Ada) -->
-    @if($subordinates->count() > 0)
-        <div class="card border-0 shadow-sm mb-4">
+    @if($subordinates->total() > 0)
+        <div id="section-subordinates" class="card border-0 shadow-sm mb-4" style="scroll-margin-top: 100px;">
             <div class="card-header bg-white py-3 border-bottom">
                 <div class="d-flex align-items-center justify-content-between">
                     <span class="fw-bold text-primary fs-6"><i class="bi bi-person-down me-2"></i>3. Evaluasi Bawahan Langsung</span>
-                    <span class="badge bg-light text-secondary">{{ $subordinates->count() }} Bawahan</span>
+                    <span class="badge bg-light text-secondary">{{ $subordinates->total() }} Bawahan</span>
                 </div>
             </div>
             <div class="card-body p-3">
@@ -243,18 +254,20 @@
                                             {{ strtoupper(substr($sub->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ $sub->name }}">{{ $sub->name }}</h6>
-                                            <small class="text-muted d-block text-truncate">NIP. {{ $sub->nip }}</small>
+                                            <h6 class="fw-bold text-dark mb-1 lh-sm" title="{{ $sub->name }}">{{ $sub->name }}</h6>
+                                            <small class="text-muted d-block">NIP. {{ $sub->nip }}</small>
                                         </div>
                                     </div>
                                     <div class="bg-light p-2.5 rounded-2 mb-3 fs-7">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span class="text-muted"><i class="bi bi-briefcase me-1"></i>Jabatan:</span>
-                                            <span class="fw-semibold text-dark text-end ms-2">{{ $sub->position->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-dark lh-sm">{{ $sub->position->name ?? '-' }}</div>
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span class="text-muted"><i class="bi bi-building me-1"></i>Divisi:</span>
-                                            <span class="fw-semibold text-dark text-end ms-2">{{ $sub->department->name ?? '-' }}</span>
+                                        <div class="d-flex align-items-start">
+                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                            <div class="text-muted px-1">:</div>
+                                            <div class="fw-semibold text-dark lh-sm">{{ $sub->department->name ?? '-' }}</div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between pt-1 border-top">
@@ -279,6 +292,11 @@
                         </div>
                     @endforeach
                 </div>
+                @if($subordinates->hasPages())
+                    <div class="mt-4 d-flex justify-content-center">
+                        {{ $subordinates->appends(['peers_page' => request('peers_page')])->fragment('section-subordinates')->links('pagination::bootstrap-5') }}
+                    </div>
+                @endif
             </div>
         </div>
     @endif
