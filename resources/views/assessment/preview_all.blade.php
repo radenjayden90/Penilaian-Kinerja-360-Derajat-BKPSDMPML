@@ -53,7 +53,7 @@
             padding: 1.2cm 2.5cm 2.5cm 2.5cm;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-radius: 4px;
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Calibri', Arial, Helvetica, sans-serif;
             font-size: 11pt;
             line-height: 1.3;
             box-sizing: border-box;
