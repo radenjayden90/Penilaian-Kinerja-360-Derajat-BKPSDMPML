@@ -4,6 +4,17 @@
 @section('header', 'Pendaftaran Pegawai ASN Baru')
 @section('subtitle', 'Form isian data identitas, jabatan, dan akun login pegawai')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    .ts-control {
+        border-color: #e2e8f0;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+    }
+</style>
+@endpush
+
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item"><a href="{{ route('master.employees.index') }}">Pegawai</a></li>
@@ -143,7 +154,7 @@
                             <label for="department_id" class="form-label fw-semibold text-slate-700" style="font-size: 13px;">Unit Kerja / Bidang <span class="text-rose-500">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-slate-50 border-slate-200 text-slate-400"><i class="bi bi-building"></i></span>
-                                <select name="department_id" id="department_id" class="form-select border-slate-200 bg-white @error('department_id') is-invalid @enderror" required>
+                                <select name="department_id" id="department_id" class="form-select border-slate-200 bg-white @error('department_id') is-invalid @enderror" required style="text-overflow: ellipsis; padding-right: 2.5rem;">
                                     <option value="">-- Pilih Unit Kerja --</option>
                                     @foreach($departments as $dept)
                                         <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
@@ -158,7 +169,7 @@
                             <label for="position_id" class="form-label fw-semibold text-slate-700" style="font-size: 13px;">Jabatan <span class="text-rose-500">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-slate-50 border-slate-200 text-slate-400"><i class="bi bi-person-badge"></i></span>
-                                <select name="position_id" id="position_id" class="form-select border-slate-200 bg-white @error('position_id') is-invalid @enderror" required>
+                                <select name="position_id" id="position_id" class="form-select border-slate-200 bg-white @error('position_id') is-invalid @enderror" required style="text-overflow: ellipsis; padding-right: 2.5rem;">
                                     <option value="">-- Pilih Jabatan --</option>
                                     @foreach($positions as $pos)
                                         <option value="{{ $pos->id }}" {{ old('position_id') == $pos->id ? 'selected' : '' }}>{{ $pos->name }}</option>
@@ -173,10 +184,10 @@
                             <label for="supervisor_id" class="form-label fw-semibold text-slate-700" style="font-size: 13px;">Atasan Langsung</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-slate-50 border-slate-200 text-slate-400"><i class="bi bi-person-up"></i></span>
-                                <select name="supervisor_id" id="supervisor_id" class="form-select border-slate-200 bg-white @error('supervisor_id') is-invalid @enderror">
+                                <select name="supervisor_id" id="supervisor_id" class="form-select border-slate-200 bg-white @error('supervisor_id') is-invalid @enderror" style="text-overflow: ellipsis; padding-right: 2.5rem;">
                                     <option value="">-- Tanpa Atasan (Kepala Instansi) --</option>
                                     @foreach($supervisors as $sup)
-                                        <option value="{{ $sup->id }}" {{ old('supervisor_id') == $sup->id ? 'selected' : '' }}>{{ $sup->name }} (NIP. {{ $sup->nip }})</option>
+                                        <option value="{{ $sup->id }}" data-department="{{ $sup->department_id }}" data-role="{{ $sup->role?->name }}" data-position="{{ $sup->position?->name }}" {{ old('supervisor_id') == $sup->id ? 'selected' : '' }}>{{ $sup->name }} (NIP. {{ $sup->nip }})</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -188,10 +199,10 @@
                             <label for="role_id" class="form-label fw-semibold text-slate-700" style="font-size: 13px;">Role Akses Sistem <span class="text-rose-500">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-slate-50 border-slate-200 text-slate-400"><i class="bi bi-shield-check"></i></span>
-                                <select name="role_id" id="role_id" class="form-select border-slate-200 bg-white @error('role_id') is-invalid @enderror" required>
+                                <select name="role_id" id="role_id" class="form-select border-slate-200 bg-white @error('role_id') is-invalid @enderror" required style="text-overflow: ellipsis; padding-right: 2.5rem;">
                                     <option value="">-- Pilih Role --</option>
                                     @foreach($roles as $role)
-                                        <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>{{ $role->name }} - {{ $role->description }}</option>
+                                        <option value="{{ $role->id }}" data-code="{{ $role->name }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>{{ $role->name }} - {{ $role->description }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -229,4 +240,109 @@
 
     </div>
 </div>
+
+<script>
+function updateSupervisorAndRole() {
+    const departmentSelect = document.getElementById('department_id');
+    const positionSelect = document.getElementById('position_id');
+    const roleSelect = document.getElementById('role_id');
+    const supervisorSelect = document.getElementById('supervisor_id');
+
+    if (!positionSelect || !roleSelect || !supervisorSelect) return;
+
+    const selectedPositionOption = positionSelect.options[positionSelect.selectedIndex];
+    const positionText = (selectedPositionOption && selectedPositionOption.value) ? selectedPositionOption.text.toLowerCase() : '';
+    const selectedDeptId = departmentSelect ? departmentSelect.value : '';
+
+    // 1. Role Logic
+    let targetRoleCode = 'EMPLOYEE';
+    if (positionText.includes('kepala bidang') || positionText.includes('kepala bkpsdm') || positionText.includes('sekretaris')) {
+        targetRoleCode = 'HEAD';
+    }
+
+    Array.from(roleSelect.options).forEach(option => {
+        if (option.getAttribute('data-code') === targetRoleCode) {
+            roleSelect.value = option.value;
+        }
+    });
+
+    // 2. Supervisor Logic
+    if (positionText.includes('kepala bkpsdm')) {
+        if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
+        else supervisorSelect.value = ""; // Tanpa atasan
+    } else if (positionText.includes('kepala bidang') || positionText.includes('sekretaris')) {
+        let kepalaBkpsdmId = null;
+        Array.from(supervisorSelect.options).forEach(option => {
+            const pos = (option.getAttribute('data-position') || '').toLowerCase();
+            if (pos.includes('kepala bkpsdm')) {
+                kepalaBkpsdmId = option.value;
+            }
+        });
+        if (kepalaBkpsdmId) {
+            if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue(kepalaBkpsdmId);
+            else supervisorSelect.value = kepalaBkpsdmId;
+        }
+    } else {
+        // Pegawai Biasa -> Sesuaikan dengan unit kerjanya
+        if (!selectedDeptId) {
+            if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
+            else supervisorSelect.value = "";
+        } else {
+            let headId = null;
+            Array.from(supervisorSelect.options).forEach(option => {
+                const dept = option.getAttribute('data-department');
+                const role = option.getAttribute('data-role');
+                if (dept === selectedDeptId && role === 'HEAD') {
+                    headId = option.value;
+                }
+            });
+            if (headId) {
+                if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue(headId);
+                else supervisorSelect.value = headId;
+            } else {
+                if (supervisorSelect.tomselect) supervisorSelect.tomselect.setValue("");
+                else supervisorSelect.value = "";
+            }
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('department_id');
+    const positionSelect = document.getElementById('position_id');
+
+    if (departmentSelect) {
+        departmentSelect.addEventListener('change', updateSupervisorAndRole);
+    }
+    if (positionSelect) {
+        positionSelect.addEventListener('change', updateSupervisorAndRole);
+    }
+});
+</script>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('department_id')) {
+        new TomSelect('#department_id', {
+            create: false,
+            sortField: { field: "text", direction: "asc" }
+        });
+    }
+    if (document.getElementById('position_id')) {
+        new TomSelect('#position_id', {
+            create: false,
+            sortField: { field: "text", direction: "asc" }
+        });
+    }
+    if (document.getElementById('supervisor_id')) {
+        new TomSelect('#supervisor_id', {
+            create: false,
+            sortField: { field: "text", direction: "asc" }
+        });
+    }
+});
+</script>
+@endpush
 @endsection

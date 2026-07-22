@@ -86,10 +86,7 @@
             <i class="bi bi-file-earmark-text"></i>
             <span class="nav-link-text">Laporan</span>
         </a>
-        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-            <i class="bi bi-person-gear"></i>
-            <span class="nav-link-text">Profil</span>
-        </a>
+
     </nav>
 
     <div class="sidebar-footer">

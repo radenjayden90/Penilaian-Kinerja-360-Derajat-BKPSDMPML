@@ -239,20 +239,7 @@
     </div>
 @endif
 
-<!-- 3. Incoming Assessment Notification Banner -->
-@if(isset($receivedAssessmentsCount) && $receivedAssessmentsCount > 0)
-    <div class="glass-alert-success shadow-sm d-flex align-items-center gap-3 p-3 mb-4">
-        <div class="bg-success text-white rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
-            <i class="bi bi-bell-fill fs-5"></i>
-        </div>
-        <div>
-            <div class="fw-bold text-success" style="font-size: 15px;">Notifikasi Penilaian Kinerja Masuk</div>
-            <div class="text-secondary small mt-1">
-                Sudah ada <strong class="text-dark">{{ $receivedAssessmentsCount }}</strong> rekan pegawai yang telah memberikan penilaian kepada Anda untuk periode ini.
-            </div>
-        </div>
-    </div>
-@endif
+
 
 <!-- 4. Evaluation Task Cards (4 Executive Cards Grid) -->
 <div class="row g-3 mb-4">

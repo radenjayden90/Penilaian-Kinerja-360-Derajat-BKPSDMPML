@@ -92,11 +92,13 @@
                     <div class="fw-semibold text-dark">{{ Auth::user()->name ?? 'Pengguna' }}</div>
                     <div class="text-muted small">Role: <span class="badge badge-role ms-1">{{ Auth::user()->role->name ?? 'Pegawai' }}</span></div>
                 </li>
+                @if(Auth::user()->role?->name !== 'ADMIN')
                 <li>
                     <a class="dropdown-item py-2" href="{{ route('profile.edit') }}">
                         <i class="bi bi-person me-2 text-primary"></i> Profil Saya
                     </a>
                 </li>
+                @endif
                 <li><hr class="dropdown-divider my-1"></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">

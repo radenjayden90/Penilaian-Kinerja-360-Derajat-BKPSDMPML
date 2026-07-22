@@ -84,7 +84,7 @@ class ReportExporter
         $department = $this->department;
 
         // 1. Header Banner (Height ~68pt / 90px)
-        $sheet->mergeCells('A1:K1');
+        $sheet->mergeCells('A1:J1');
         $sheet->setCellValue('A1', "    REKAPITULASI HISTORI HASIL PENILAIAN KINERJA ASN 360°\n    Badan Kepegawaian dan Pengembangan Sumber Daya Manusia - Kabupaten Pemalang");
         $sheet->getStyle('A1')->applyFromArray([
             'font' => ['bold' => true, 'size' => 15, 'color' => ['rgb' => 'FFFFFF']],
@@ -116,7 +116,7 @@ class ReportExporter
         }
 
         // Header info card
-        $sheet->mergeCells('A2:K2');
+        $sheet->mergeCells('A2:J2');
         $sheet->setCellValue('A2', 'PERIODE: ' . strtoupper($period->name ?? 'SEMUA PERIODE') . ' | UNIT KERJA: ' . strtoupper($department->name ?? 'SEMUA OPD') . ' | TANGGAL CETAK: ' . date('d/m/Y') . ' | JAM EXPORT: ' . date('H.i') . ' WIB');
         $sheet->getStyle('A2')->applyFromArray([
             'font' => ['bold' => true, 'size' => 9, 'color' => ['rgb' => '1E40AF']],
@@ -141,7 +141,7 @@ class ReportExporter
 
             $sheet->setCellValue('F' . $row, $info[2]);
             $sheet->setCellValue('G' . $row, $info[3]);
-            $sheet->mergeCells('G' . $row . ':K' . $row);
+            $sheet->mergeCells('G' . $row . ':J' . $row);
 
             $sheet->getStyle('A' . $row)->applyFromArray([
                 'font' => ['bold' => true, 'color' => ['rgb' => '0F172A']],
@@ -156,7 +156,7 @@ class ReportExporter
             $row++;
         }
 
-        $sheet->getStyle('A4:K5')->applyFromArray([
+        $sheet->getStyle('A4:J5')->applyFromArray([
             'borders' => [
                 'outline' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E2E8F0']],
                 'inside' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'F1F5F9']],
@@ -176,24 +176,24 @@ class ReportExporter
         $sheet->mergeCells('D7:F7'); $sheet->setCellValue('D7', 'RATA-RATA NILAI AKHIR');
         $sheet->mergeCells('D8:F8'); $sheet->setCellValue('D8', $avgScore);
 
-        $sheet->mergeCells('G7:I7'); $sheet->setCellValue('G7', 'NILAI TERTINGGI');
-        $sheet->mergeCells('G8:I8'); $sheet->setCellValue('G8', $maxScore);
+        $sheet->mergeCells('G7:H7'); $sheet->setCellValue('G7', 'NILAI TERTINGGI');
+        $sheet->mergeCells('G8:H8'); $sheet->setCellValue('G8', $maxScore);
 
-        $sheet->mergeCells('J7:K7'); $sheet->setCellValue('J7', 'NILAI TERENDAH');
-        $sheet->mergeCells('J8:K8'); $sheet->setCellValue('J8', $minScore);
+        $sheet->mergeCells('I7:J7'); $sheet->setCellValue('I7', 'NILAI TERENDAH');
+        $sheet->mergeCells('I8:J8'); $sheet->setCellValue('I8', $minScore);
 
-        $sheet->getStyle('A7:K7')->applyFromArray([
+        $sheet->getStyle('A7:J7')->applyFromArray([
             'font' => ['bold' => true, 'size' => 9, 'color' => ['rgb' => '1E40AF']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'DBEAFE']],
         ]);
-        $sheet->getStyle('A8:K8')->applyFromArray([
+        $sheet->getStyle('A8:J8')->applyFromArray([
             'font' => ['bold' => true, 'size' => 14, 'color' => ['rgb' => '1E3A8A']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'EFF6FF']],
         ]);
 
-        $sheet->getStyle('A7:K8')->applyFromArray([
+        $sheet->getStyle('A7:J8')->applyFromArray([
             'borders' => [
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'BFDBFE']],
             ]
@@ -204,13 +204,13 @@ class ReportExporter
         $sheet->getRowDimension(9)->setRowHeight(14);
 
         // 4. Main Table Headers (Row 10)
-        $headers = ['No', 'NIP', 'Nama Pegawai', 'Unit Kerja', 'Jabatan', 'Skor Atasan', 'Skor Sejawat', 'Skor Bawahan', 'Skor Diri', 'Nilai Akhir 360°', 'Kategori Predikat'];
+        $headers = ['No', 'NIP', 'Nama Pegawai', 'Unit Kerja', 'Jabatan', 'Nilai Atasan', 'Nilai Rekan', 'Nilai Bawahan', 'Nilai Akhir 360°', 'Kategori Predikat'];
         foreach ($headers as $colIdx => $h) {
             $colLetter = chr(65 + $colIdx);
             $sheet->setCellValue($colLetter . '10', $h);
         }
 
-        $sheet->getStyle('A10:K10')->applyFromArray([
+        $sheet->getStyle('A10:J10')->applyFromArray([
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '2563EB']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
@@ -231,36 +231,49 @@ class ReportExporter
             $sheet->setCellValue('B' . $row, $res->employee->nip ?? '-');
             $sheet->setCellValue('C' . $row, $res->employee->name ?? '-');
             $sheet->setCellValue('D' . $row, $res->employee->department->name ?? '-');
-            $sheet->setCellValue('E' . $row, $res->employee->position->name ?? '-');
-            $sheet->setCellValue('F' . $row, $res->subordinate_average ?? $res->superior_score ?? 0);
-            $sheet->setCellValue('G' . $row, $res->peer_average ?? $res->peer_score ?? 0);
-            $sheet->setCellValue('H' . $row, $res->superior_average ?? $res->subordinate_score ?? 0);
-            $sheet->setCellValue('I' . $row, $res->self_score ?? 0);
-            $sheet->setCellValue('J' . $row, $res->final_score ?? 0);
-            $sheet->setCellValue('K' . $row, $catLabel);
+            $posName = $res->employee->position->name ?? '-';
+            if (stripos($posName, 'kepala bidang') !== false) {
+                $posName = 'Kepala Bidang';
+            }
+            $sheet->setCellValue('E' . $row, $posName);
+            
+            $subAvg = number_format($res->subordinate_average ?? 0, 2);
+            $subWeight = ($res->subordinate_weight ?? 0) * 100;
+            $sheet->setCellValue('F' . $row, "{$subAvg} ({$subWeight}%)");
 
-            $sheet->getStyle('A' . $row . ':K' . $row)->applyFromArray([
+            $peerAvg = number_format($res->peer_average ?? 0, 2);
+            $peerWeight = ($res->peer_weight ?? 0) * 100;
+            $sheet->setCellValue('G' . $row, "{$peerAvg} ({$peerWeight}%)");
+
+            if (($res->superior_weight ?? 0) > 0) {
+                $supAvg = number_format($res->superior_average ?? 0, 2);
+                $supWeight = ($res->superior_weight ?? 0) * 100;
+                $sheet->setCellValue('H' . $row, "{$supAvg} ({$supWeight}%)");
+            } else {
+                $sheet->setCellValue('H' . $row, '-');
+            }
+
+            $sheet->setCellValue('I' . $row, $res->final_score ?? 0);
+            $sheet->setCellValue('J' . $row, $catLabel);
+
+            $sheet->getStyle('A' . $row . ':J' . $row)->applyFromArray([
                 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => $bgColor]],
                 'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
             ]);
 
             $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('B' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('F' . $row . ':J' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('F' . $row . ':I' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-            $sheet->getStyle('F' . $row)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
-            $sheet->getStyle('G' . $row)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
-            $sheet->getStyle('H' . $row)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
             $sheet->getStyle('I' . $row)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
-            $sheet->getStyle('J' . $row)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
-            AssessmentResultExporter::applyPredicateStyle($sheet, 'K' . $row, $catLabel);
+            AssessmentResultExporter::applyPredicateStyle($sheet, 'J' . $row, $catLabel);
 
             $sheet->getRowDimension($row)->setRowHeight(24);
             $row++;
         }
 
-        $sheet->getStyle('A10:K' . ($row - 1))->applyFromArray([
+        $sheet->getStyle('A10:J' . ($row - 1))->applyFromArray([
             'borders' => [
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E2E8F0']],
                 'outline' => ['borderStyle' => Border::BORDER_MEDIUM, 'color' => ['rgb' => '2563EB']],
@@ -269,7 +282,7 @@ class ReportExporter
 
         // 5. Score Scale Clarification Footnote
         $noteRow = $row;
-        $sheet->mergeCells('A' . $noteRow . ':K' . $noteRow);
+        $sheet->mergeCells('A' . $noteRow . ':J' . $noteRow);
         $sheet->setCellValue('A' . $noteRow, '* Catatan: Skor Atasan, Sejawat, Bawahan, dan Diri ditampilkan dalam skala 1–10, sedangkan Nilai Akhir 360° merupakan hasil konversi bobot ke skala 100.');
         $sheet->getStyle('A' . $noteRow)->applyFromArray([
             'font' => ['size' => 9, 'italic' => true, 'color' => ['rgb' => '64748B']],
@@ -281,14 +294,14 @@ class ReportExporter
         $footerStart = $noteRow + 3;
         $footerEnd = $footerStart + 4;
 
-        $sheet->mergeCells('A' . $footerStart . ':K' . $footerEnd);
+        $sheet->mergeCells('A' . $footerStart . ':J' . $footerEnd);
         $sheet->setCellValue('A' . $footerStart, 
             "DOKUMEN RESMI PELAPORAN PENILAIAN KINERJA ASN 360° - BKPSDM KABUPATEN PEMALANG\n" .
             "Diekspor Oleh : " . (Auth::user()->name ?? 'Administrator') . "  |  Tanggal Export : " . date('d F Y') . "  |  Jam Export : " . date('H.i') . " WIB\n" .
             "Sistem Informasi SIKINERJA 360°  |  Versi System : v1.0  |  Status Operasional : Validated & Authenticated"
         );
 
-        $sheet->getStyle('A' . $footerStart . ':K' . $footerEnd)->applyFromArray([
+        $sheet->getStyle('A' . $footerStart . ':J' . $footerEnd)->applyFromArray([
             'font' => ['size' => 9, 'italic' => true, 'color' => ['rgb' => '475569']],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -301,7 +314,7 @@ class ReportExporter
             ],
         ]);
 
-        foreach (range('A', 'K') as $col) {
+        foreach (range('A', 'J') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 

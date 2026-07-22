@@ -109,10 +109,9 @@
                 <th>NAMA PEGAWAI</th>
                 <th>UNIT KERJA / BIDANG</th>
                 <th>JABATAN</th>
-                <th style="width: 60px;">ATASAN (40%)</th>
-                <th style="width: 60px;">SEJAWAT (30%)</th>
-                <th style="width: 60px;">BAWAHAN (20%)</th>
-                <th style="width: 60px;">DIRI (10%)</th>
+                <th style="width: 70px;">NILAI ATASAN</th>
+                <th style="width: 70px;">NILAI REKAN</th>
+                <th style="width: 70px;">NILAI BAWAHAN</th>
                 <th style="width: 70px;">NILAI AKHIR</th>
                 <th style="width: 90px;">PREDIKAT</th>
             </tr>
@@ -127,17 +126,35 @@
                     <td>{{ $res->employee->nip ?? '-' }}</td>
                     <td><strong>{{ $res->employee->name ?? '-' }}</strong></td>
                     <td>{{ $res->employee->department->name ?? '-' }}</td>
-                    <td>{{ $res->employee->position->name ?? '-' }}</td>
-                    <td class="text-center">{{ number_format($res->superior_score ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format($res->peer_score ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format($res->subordinate_score ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format($res->self_score ?? 0, 2) }}</td>
+                    @php
+                        $posName = $res->employee->position->name ?? '-';
+                        if (stripos($posName, 'kepala bidang') !== false) {
+                            $posName = 'Kepala Bidang';
+                        }
+                    @endphp
+                    <td>{{ $posName }}</td>
+                    <td class="text-center">
+                        {{ number_format($res->subordinate_average ?? 0, 2) }}
+                        <br><span style="font-size: 9px; color: #666;">({{ ($res->subordinate_weight ?? 0) * 100 }}%)</span>
+                    </td>
+                    <td class="text-center">
+                        {{ number_format($res->peer_average ?? 0, 2) }}
+                        <br><span style="font-size: 9px; color: #666;">({{ ($res->peer_weight ?? 0) * 100 }}%)</span>
+                    </td>
+                    <td class="text-center">
+                        @if(($res->superior_weight ?? 0) > 0)
+                            {{ number_format($res->superior_average ?? 0, 2) }}
+                            <br><span style="font-size: 9px; color: #666;">({{ ($res->superior_weight ?? 0) * 100 }}%)</span>
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td class="text-center font-weight-bold"><strong>{{ number_format($res->final_score ?? 0, 2) }}</strong></td>
                     <td class="text-center"><strong>{{ str_replace('_', ' ', $catVal ?? '-') }}</strong></td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="11" class="text-center py-3">Tidak ada data hasil penilaian kinerja untuk periode ini.</td>
+                    <td colspan="10" class="text-center py-3">Tidak ada data hasil penilaian kinerja untuk periode ini.</td>
                 </tr>
             @endforelse
         </tbody>

@@ -31,10 +31,7 @@ class UserSeeder extends Seeder
         
         // Eselon 3 (Sekretaris & Kabid)
         $posSekretaris = Position::firstOrCreate(['name' => 'Sekretaris', 'department_id' => $deptSekretariat->id], ['level' => '2', 'is_active' => true]);
-        $posKabidPPIK = Position::firstOrCreate(['name' => 'Kepala Bidang PPIK', 'department_id' => $deptPPIK->id], ['level' => '2', 'is_active' => true]);
-        $posKabidMutasi = Position::firstOrCreate(['name' => 'Kepala Bidang Mutasi dan Promosi', 'department_id' => $deptMutasi->id], ['level' => '2', 'is_active' => true]);
-        $posKabidPEKA = Position::firstOrCreate(['name' => 'Kepala Bidang PEKA', 'department_id' => $deptPEKA->id], ['level' => '2', 'is_active' => true]);
-        $posKabidPSDM = Position::firstOrCreate(['name' => 'Kepala Bidang PSDM', 'department_id' => $deptPSDM->id], ['level' => '2', 'is_active' => true]);
+        $posKabid = Position::firstOrCreate(['name' => 'Kepala Bidang', 'department_id' => $deptPPIK->id], ['level' => '2', 'is_active' => true]);
         
         // Eselon 4 (Kasubbag / Pejabat Pengawas)
         $posKasubbagUmum = Position::firstOrCreate(['name' => 'Kasubbag Umum dan Kepegawaian', 'department_id' => $deptSekretariat->id], ['level' => '3', 'is_active' => true]);
@@ -114,7 +111,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('197508201999031002'),
             'gender' => 'L',
             'department_id' => $deptMutasi->id,
-            'position_id' => $posKabidMutasi->id,
+            'position_id' => $posKabid->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => $kepala->id,
             'is_active' => true,
@@ -144,7 +141,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('197803152002122006'),
             'gender' => 'P',
             'department_id' => $deptPEKA->id,
-            'position_id' => $posKabidPEKA->id,
+            'position_id' => $posKabid->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => $kepala->id,
             'is_active' => true,
@@ -165,8 +162,7 @@ class UserSeeder extends Seeder
             'is_active' => true,
         ]);
         
-        // --- BIDANG PPIK ---
-        $posKabidPPIKReal = Position::updateOrCreate(['name' => 'Kepala Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian', 'department_id' => $deptPPIK->id], ['level' => '2', 'is_active' => true]);
+
         $posPrakomPertama = Position::firstOrCreate(['name' => 'Pranata Komputer Ahli Pertama', 'department_id' => $deptPPIK->id], ['level' => '3', 'is_active' => true]);
         $posPengadministrasi = Position::firstOrCreate(['name' => 'Pengadministrasi Perkantoran', 'department_id' => $deptPPIK->id], ['level' => '4', 'is_active' => true]);
         $posPenelaah = Position::firstOrCreate(['name' => 'Penelaah Teknis Kebijakan', 'department_id' => $deptPPIK->id], ['level' => '4', 'is_active' => true]);
@@ -183,7 +179,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('197903072005011006'),
             'gender' => 'L',
             'department_id' => $deptPPIK->id,
-            'position_id' => $posKabidPPIKReal->id,
+            'position_id' => $posKabid->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => $kepala->id,
             'is_active' => true,
@@ -318,7 +314,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('198205102008011010'),
             'gender' => 'L',
             'department_id' => $deptPSDM->id,
-            'position_id' => $posKabidPSDM->id,
+            'position_id' => $posKabid->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => $kepala->id,
             'is_active' => true,

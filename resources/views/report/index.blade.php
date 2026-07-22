@@ -64,10 +64,9 @@
                         <th class="ps-3" style="width: 50px;">No</th>
                         <th>NIP & Nama Pegawai</th>
                         <th>Unit Kerja & Jabatan</th>
-                        <th class="text-center">Atasan (40%)</th>
-                        <th class="text-center">Sejawat (30%)</th>
-                        <th class="text-center">Bawahan (20%)</th>
-                        <th class="text-center">Diri (10%)</th>
+                        <th class="text-center">Nilai Atasan</th>
+                        <th class="text-center">Nilai Rekan</th>
+                        <th class="text-center">Nilai Bawahan</th>
                         <th class="text-center">Nilai Akhir 360°</th>
                         <th class="text-center">Predikat</th>
                     </tr>
@@ -82,12 +81,30 @@
                             </td>
                             <td>
                                 <div class="small fw-medium text-dark">{{ $res->employee->department->name ?? '-' }}</div>
-                                <small class="text-muted">{{ $res->employee->position->name ?? '-' }}</small>
+                                @php
+                                    $posName = $res->employee->position->name ?? '-';
+                                    if (stripos($posName, 'kepala bidang') !== false) {
+                                        $posName = 'Kepala Bidang';
+                                    }
+                                @endphp
+                                <small class="text-muted">{{ $posName }}</small>
                             </td>
-                            <td class="text-center">{{ number_format($res->superior_score ?? 0, 2) }}</td>
-                            <td class="text-center">{{ number_format($res->peer_score ?? 0, 2) }}</td>
-                            <td class="text-center">{{ number_format($res->subordinate_score ?? 0, 2) }}</td>
-                            <td class="text-center">{{ number_format($res->self_score ?? 0, 2) }}</td>
+                            <td class="text-center">
+                                {{ number_format($res->subordinate_average ?? 0, 2) }}
+                                <div class="small text-muted">{{ ($res->subordinate_weight ?? 0) * 100 }}%</div>
+                            </td>
+                            <td class="text-center">
+                                {{ number_format($res->peer_average ?? 0, 2) }}
+                                <div class="small text-muted">{{ ($res->peer_weight ?? 0) * 100 }}%</div>
+                            </td>
+                            <td class="text-center">
+                                @if(($res->superior_weight ?? 0) > 0)
+                                    {{ number_format($res->superior_average ?? 0, 2) }}
+                                    <div class="small text-muted">{{ ($res->superior_weight ?? 0) * 100 }}%</div>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 <span class="fw-semibold text-dark">
                                     {{ number_format($res->final_score ?? 0, 2) }}
@@ -116,7 +133,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4">
+                            <td colspan="8" class="text-center text-muted py-4">
                                 <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
                                 Belum ada data laporan hasil penilaian untuk filter yang dipilih.
                             </td>
