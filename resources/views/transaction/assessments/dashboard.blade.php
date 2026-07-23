@@ -66,9 +66,17 @@
 
     .target-card-muted {
         background: #F8FAFC;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #CBD5E1;
         border-radius: 16px;
-        opacity: 0.82;
+        transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .details-bg-muted {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 13px;
     }
 
     .kpi-stat-card {
@@ -324,11 +332,11 @@
                                 </div>
                                 <div>
                                     @if($superior->assessment_status === 'COMPLETED')
-                                        <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
-                                            <i class="bi bi-check-lg me-1"></i>Sudah Dinilai
+                                        <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; cursor: default;" disabled>
+                                            <i class="bi bi-check-circle-fill me-1"></i>Sudah Dinilai
                                         </button>
                                     @elseif(isset($isLimitReached) && $isLimitReached)
-                                        <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
+                                        <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; cursor: not-allowed;" disabled>
                                             <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                         </button>
                                     @else
@@ -377,51 +385,51 @@
                     <div class="col">
                         @if($peer->assessment_status === 'FULL' || $peer->assessment_status === 'LIMIT_REACHED')
                             {{-- Greyed-out / Muted Card --}}
-                            <div class="target-card-muted h-100 p-3 d-flex flex-column justify-content-between">
+                            <div class="target-card-muted h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
                                 <div>
                                     <div class="d-flex align-items-start gap-3 mb-3">
-                                        <div class="avatar-initial bg-secondary bg-opacity-20 text-secondary">
+                                        <div class="avatar-initial rounded-3" style="background-color: #E2E8F0; color: #475569; font-weight: 700;">
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-secondary mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
-                                            <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
+                                            <h6 class="fw-bold mb-1 lh-sm" style="font-size: 14.5px; color: #0F172A;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                            <small class="d-block" style="color: #64748B;">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
-                                    <div class="details-bg mb-3">
+                                    <div class="details-bg-muted mb-3">
                                         <div class="d-flex align-items-start mb-2">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-secondary lh-sm">{{ $peer->position->name ?? '-' }}</div>
+                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-briefcase me-1 text-slate-400"></i>Jabatan</div>
+                                            <div class="px-1" style="color: #94A3B8;">:</div>
+                                            <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->position->name ?? '-' }}</div>
                                         </div>
                                         <div class="d-flex align-items-start">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-secondary lh-sm">{{ $peer->department->name ?? '-' }}</div>
+                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-building me-1 text-slate-400"></i>Divisi</div>
+                                            <div class="px-1" style="color: #94A3B8;">:</div>
+                                            <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->department->name ?? '-' }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="d-flex align-items-center justify-content-between pt-2 mb-3 border-top border-secondary-subtle">
-                                        <small class="text-muted">
-                                            <i class="bi bi-people me-1"></i>Penilai: <strong>{{ $peer->received_assessments_count ?? 0 }}</strong>
+                                    <div class="d-flex align-items-center justify-content-between pt-2 mb-3 border-top" style="border-color: #E2E8F0 !important;">
+                                        <small style="color: #64748B;">
+                                            <i class="bi bi-people me-1"></i>Penilai: <strong style="color: #0F172A;">{{ $peer->received_assessments_count ?? 0 }}</strong>
                                         </small>
                                         @if($peer->assessment_status === 'FULL')
-                                            <span class="badge-pill-custom bg-secondary bg-opacity-20 text-secondary">
+                                            <span class="badge-pill-custom" style="background-color: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5;">
                                                 <i class="bi bi-lock-fill"></i> Kuota Penuh
                                             </span>
                                         @else
-                                            <span class="badge-pill-custom bg-secondary bg-opacity-20 text-secondary">
+                                            <span class="badge-pill-custom" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
                                                 <i class="bi bi-lock-fill"></i> Batas Terpenuhi
                                             </span>
                                         @endif
                                     </div>
                                     <div>
-                                        <button class="btn btn-sm btn-secondary w-100 rounded-3 py-2 fw-semibold opacity-75" disabled>
+                                        <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #E2E8F0; color: #475569; border: 1px solid #CBD5E1; cursor: not-allowed;" disabled>
                                             @if($peer->assessment_status === 'FULL')
-                                                <i class="bi bi-lock me-1"></i>Kuota Terpenuhi
+                                                <i class="bi bi-lock-fill me-1"></i>Kuota Terpenuhi
                                             @else
-                                                <i class="bi bi-lock me-1"></i>Batas 3 Rekan Terpenuhi
+                                                <i class="bi bi-lock-fill me-1"></i>Batas 3 Rekan Terpenuhi
                                             @endif
                                         </button>
                                     </div>
@@ -470,11 +478,11 @@
                                     </div>
                                     <div>
                                         @if($peer->assessment_status === 'COMPLETED')
-                                            <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
-                                                <i class="bi bi-check-lg me-1"></i>Sudah Dinilai
+                                            <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; cursor: default;" disabled>
+                                                <i class="bi bi-check-circle-fill me-1"></i>Sudah Dinilai
                                             </button>
                                         @elseif(isset($isLimitReached) && $isLimitReached)
-                                            <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
+                                            <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; cursor: not-allowed;" disabled>
                                                 <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                             </button>
                                         @else
@@ -568,11 +576,11 @@
                                     </div>
                                     <div>
                                         @if($sub->assessment_status === 'COMPLETED')
-                                            <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
-                                                <i class="bi bi-check-lg me-1"></i>Sudah Dinilai
+                                            <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; cursor: default;" disabled>
+                                                <i class="bi bi-check-circle-fill me-1"></i>Sudah Dinilai
                                             </button>
                                         @elseif(isset($isLimitReached) && $isLimitReached)
-                                            <button class="btn btn-sm btn-outline-secondary w-100 rounded-3 py-2 fw-semibold" disabled>
+                                            <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; cursor: not-allowed;" disabled>
                                                 <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                             </button>
                                         @else
