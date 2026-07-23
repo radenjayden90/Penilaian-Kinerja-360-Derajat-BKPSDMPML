@@ -26,11 +26,6 @@
     <div class="card-header bg-white p-2">
         <ul class="nav nav-pills card-header-pills fw-semibold gap-1">
             <li class="nav-item">
-                <a class="nav-link {{ $activeTab === 'summary' ? 'active bg-primary' : 'text-dark' }}" href="{{ route('report.index', ['tab' => 'summary', 'period_id' => $selectedPeriodId]) }}">
-                    <i class="bi bi-building-check me-1.5"></i> Ringkasan Kinerja Instansi
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {{ $activeTab === 'department' ? 'active bg-primary' : 'text-dark' }}" href="{{ route('report.index', ['tab' => 'department', 'period_id' => $selectedPeriodId]) }}">
                     <i class="bi bi-diagram-3 me-1.5"></i> Laporan Per Bidang
                 </a>
@@ -208,15 +203,13 @@
 
 @endif
 
-@if($activeTab === 'summary' || $activeTab === 'employee' || $activeTab === 'analytics')
-    <!-- TAB: TABLE REPORT GENERAL / EMPLOYEE / SUMMARY -->
+@if($activeTab === 'employee' || $activeTab === 'analytics')
+    <!-- TAB: TABLE REPORT GENERAL / EMPLOYEE -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-3 px-4 fw-bold text-dark d-flex align-items-center justify-content-between">
             <span>
                 <i class="bi bi-table text-primary me-2"></i>
-                @if($activeTab === 'summary')
-                    Ringkasan Kinerja Instansi BKPSDM Pemalang
-                @elseif($activeTab === 'employee')
+                @if($activeTab === 'employee')
                     Laporan Rinci Individu Pegawai ASN
                 @else
                     Tabel Evaluasi Kinerja 360°

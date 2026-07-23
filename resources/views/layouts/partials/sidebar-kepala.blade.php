@@ -27,7 +27,7 @@
         <div class="nav-label">Eksekutif</div>
         @php
             $isReportActive = request()->routeIs('report.*');
-            $currentTab = request()->input('tab', 'summary');
+            $currentTab = request()->input('tab', 'department');
         @endphp
         <a href="#laporanSubmenu" class="nav-link nav-link-dropdown {{ $isReportActive ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ $isReportActive ? 'true' : 'false' }}" title="Laporan">
             <i class="bi bi-file-earmark-bar-graph nav-main-icon"></i>
@@ -36,12 +36,6 @@
         </a>
         <div class="collapse {{ $isReportActive ? 'show' : '' }}" id="laporanSubmenu">
             <ul class="submenu">
-                <li>
-                    <a href="{{ route('report.index', ['tab' => 'summary']) }}" class="nav-link {{ $isReportActive && $currentTab === 'summary' ? 'active' : '' }}" title="Ringkasan Kinerja Instansi">
-                        <i class="bi bi-building-check"></i>
-                        <span class="nav-link-text">Ringkasan kinerja instansi</span>
-                    </a>
-                </li>
                 <li>
                     <a href="{{ route('report.index', ['tab' => 'department']) }}" class="nav-link {{ $isReportActive && $currentTab === 'department' ? 'active' : '' }}" title="Laporan Per Bidang">
                         <i class="bi bi-diagram-3"></i>
