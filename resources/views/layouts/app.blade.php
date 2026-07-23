@@ -19,7 +19,9 @@
 <body>
     <div class="app-wrapper">
         <!-- Sidebar -->
-        @if (Auth::user() && Auth::user()->isAdmin())
+        @if (Auth::user() && Auth::user()->isKepalaBkpsdm())
+            @include('layouts.partials.sidebar-kepala')
+        @elseif (Auth::user() && Auth::user()->isAdmin())
             @include('layouts.partials.sidebar-admin')
         @else
             @include('layouts.partials.sidebar-pegawai')

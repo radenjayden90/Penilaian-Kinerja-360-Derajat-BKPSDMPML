@@ -34,4 +34,9 @@ class AssessmentResult extends Model
 
     public function employee() { return $this->belongsTo(Employee::class); }
     public function period() { return $this->belongsTo(Period::class); }
+
+    public function getCategoryLabelAttribute(): string
+    {
+        return ResultCategory::formatLabel($this->category);
+    }
 }

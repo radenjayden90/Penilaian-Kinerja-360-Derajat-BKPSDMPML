@@ -145,6 +145,7 @@
                 </span>
             </div>
             <div class="card-body px-4 pb-4 pt-0">
+<<<<<<< HEAD
                 <div class="row g-3">
                     <!-- Sangat Baik -->
                     <div class="col-12 col-sm-6 col-xl-3">
@@ -199,6 +200,43 @@
                             </div>
                             <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['kurang'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
                             <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Perlu pembinaan khusus</div>
+=======
+                <div class="row text-center g-3">
+                    <div class="col-6 col-md-3">
+                        <div class="p-3.5 rounded-4 bg-emerald-50 border border-emerald-200">
+                            <div class="d-flex align-items-center justify-content-center mb-1 text-emerald-700 fw-bold" style="font-size: 12px; text-transform: uppercase;">
+                                <i class="bi bi-stars me-2 fs-6"></i> Sangat Baik
+                            </div>
+                            <h3 class="fw-extrabold text-emerald-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['sangat_baik'] ?? 0 }}</h3>
+                            <small class="text-emerald-600 opacity-75 d-block mt-0.5" style="font-size: 11px;">ASN Terbanyak</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3.5 rounded-4 bg-blue-50 border border-blue-200">
+                            <div class="d-flex align-items-center justify-content-center mb-1 text-blue-700 fw-bold" style="font-size: 12px; text-transform: uppercase;">
+                                <i class="bi bi-hand-thumbs-up-fill me-2 fs-6"></i> Baik
+                            </div>
+                            <h3 class="fw-extrabold text-blue-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['baik'] ?? 0 }}</h3>
+                            <small class="text-blue-600 opacity-75 d-block mt-0.5" style="font-size: 11px;">Sesuai Ekspektasi</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3.5 rounded-4 bg-amber-50 border border-amber-200">
+                            <div class="d-flex align-items-center justify-content-center mb-1 text-amber-700 fw-bold" style="font-size: 12px; text-transform: uppercase;">
+                                <i class="bi bi-exclamation-circle-fill me-2 fs-6"></i> Cukup
+                            </div>
+                            <h3 class="fw-extrabold text-amber-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['cukup'] ?? 0 }}</h3>
+                            <small class="text-amber-600 opacity-75 d-block mt-0.5" style="font-size: 11px;">Butuh Peningkatan</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3.5 rounded-4 bg-rose-50 border border-rose-200">
+                            <div class="d-flex align-items-center justify-content-center mb-1 text-rose-700 fw-bold" style="font-size: 12px; text-transform: uppercase;">
+                                <i class="bi bi-shield-x me-2 fs-6"></i> Kurang
+                            </div>
+                            <h3 class="fw-extrabold text-rose-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['kurang'] ?? 0 }}</h3>
+                            <small class="text-rose-600 opacity-75 d-block mt-0.5" style="font-size: 11px;">Perlu Pembinaan</small>
+>>>>>>> 2924dbec52fc53cd83008afe4458c285212c265c
                         </div>
                     </div>
                 </div>

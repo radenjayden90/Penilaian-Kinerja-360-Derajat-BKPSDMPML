@@ -88,6 +88,20 @@ class Employee extends Authenticatable
     public function results() { return $this->hasMany(AssessmentResult::class, "employee_id"); }
     public function assessmentResult() { return $this->hasOne(AssessmentResult::class, "employee_id")->latest('created_at'); }
 
+    public function isKepalaBkpsdm(): bool
+    {
+        if ($this->nip === '196803231990031012') {
+            return true;
+        }
+
+        $posName = mb_strtolower($this->position->name ?? '', 'UTF-8');
+        if (str_contains($posName, 'kepala bkpsdm') || str_contains($posName, 'kepala badan kepegawaian')) {
+            return true;
+        }
+
+        return $this->isHead() && !str_contains($posName, 'kepala bidang') && !str_contains($posName, 'kabid') && !str_contains($posName, 'kepala sub');
+    }
+
     public function isAdmin(): bool
     {
         $roleName = $this->role->name ?? '';

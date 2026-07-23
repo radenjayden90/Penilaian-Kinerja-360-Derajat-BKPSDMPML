@@ -384,11 +384,25 @@
                 @forelse($peers as $peer)
                     <div class="col">
                         @if($peer->assessment_status === 'FULL' || $peer->assessment_status === 'LIMIT_REACHED')
-                            {{-- Greyed-out / Muted Card --}}
-                            <div class="target-card-muted h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
+                            @php
+                                $isFull = $peer->assessment_status === 'FULL';
+                                $cardBorderColor = $isFull ? '#FCA5A5' : '#FCD34D';
+                                $cardBgColor = $isFull ? '#FFF5F5' : '#FFFDF5';
+                                $accentColor = $isFull ? '#E11D48' : '#D97706';
+                                $avatarBg = $isFull ? '#FEE2E2' : '#FEF3C7';
+                                $avatarText = $isFull ? '#991B1B' : '#B45309';
+                                $badgeBg = $isFull ? '#FEF2F2' : '#FEF3C7';
+                                $badgeText = $isFull ? '#991B1B' : '#92400E';
+                                $badgeBorder = $isFull ? '#FCA5A5' : '#FCD34D';
+                                $btnBg = $isFull ? '#FEE2E2' : '#FEF3C7';
+                                $btnText = $isFull ? '#991B1B' : '#92400E';
+                                $btnBorder = $isFull ? '#FCA5A5' : '#FCD34D';
+                            @endphp
+                            {{-- Distinct Colored Disabled Card --}}
+                            <div class="target-card-muted h-100 p-3 d-flex flex-column justify-content-between shadow-sm" style="border-left: 4px solid {{ $accentColor }}; border-top: 1px solid {{ $cardBorderColor }}; border-right: 1px solid {{ $cardBorderColor }}; border-bottom: 1px solid {{ $cardBorderColor }}; background-color: {{ $cardBgColor }};">
                                 <div>
                                     <div class="d-flex align-items-start gap-3 mb-3">
-                                        <div class="avatar-initial rounded-3" style="background-color: #E2E8F0; color: #475569; font-weight: 700;">
+                                        <div class="avatar-initial rounded-3" style="background-color: {{ $avatarBg }}; color: {{ $avatarText }}; font-weight: 700;">
                                             {{ strtoupper(substr($peer->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
@@ -396,41 +410,31 @@
                                             <small class="d-block" style="color: #64748B;">NIP. {{ $peer->nip }}</small>
                                         </div>
                                     </div>
-                                    <div class="details-bg-muted mb-3">
+                                    <div class="details-bg-muted mb-3" style="background-color: #FFFFFF; border: 1px solid {{ $cardBorderColor }};">
                                         <div class="d-flex align-items-start mb-2">
-                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-briefcase me-1 text-slate-400"></i>Jabatan</div>
+                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-briefcase me-1" style="color: {{ $accentColor }};"></i>Jabatan</div>
                                             <div class="px-1" style="color: #94A3B8;">:</div>
                                             <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->position->name ?? '-' }}</div>
                                         </div>
                                         <div class="d-flex align-items-start">
-                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-building me-1 text-slate-400"></i>Divisi</div>
+                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-building me-1" style="color: {{ $accentColor }};"></i>Divisi</div>
                                             <div class="px-1" style="color: #94A3B8;">:</div>
                                             <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->department->name ?? '-' }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="d-flex align-items-center justify-content-between pt-2 mb-3 border-top" style="border-color: #E2E8F0 !important;">
+                                    <div class="d-flex align-items-center justify-content-between pt-2 mb-3 border-top" style="border-color: {{ $cardBorderColor }} !important;">
                                         <small style="color: #64748B;">
                                             <i class="bi bi-people me-1"></i>Penilai: <strong style="color: #0F172A;">{{ $peer->received_assessments_count ?? 0 }}</strong>
                                         </small>
-                                        @if($peer->assessment_status === 'FULL')
-                                            <span class="badge-pill-custom" style="background-color: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5;">
-                                                <i class="bi bi-lock-fill"></i> Kuota Penuh
-                                            </span>
-                                        @else
-                                            <span class="badge-pill-custom" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
-                                                <i class="bi bi-lock-fill"></i> Batas Terpenuhi
-                                            </span>
-                                        @endif
+                                        <span class="badge-pill-custom" style="background-color: {{ $badgeBg }}; color: {{ $badgeText }}; border: 1px solid {{ $badgeBorder }};">
+                                            <i class="bi bi-lock-fill me-1"></i> {{ $isFull ? 'Kuota Penuh' : 'Batas Terpenuhi' }}
+                                        </span>
                                     </div>
                                     <div>
-                                        <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: #E2E8F0; color: #475569; border: 1px solid #CBD5E1; cursor: not-allowed;" disabled>
-                                            @if($peer->assessment_status === 'FULL')
-                                                <i class="bi bi-lock-fill me-1"></i>Kuota Terpenuhi
-                                            @else
-                                                <i class="bi bi-lock-fill me-1"></i>Batas 3 Rekan Terpenuhi
-                                            @endif
+                                        <button class="btn btn-sm w-100 rounded-3 py-2 fw-semibold" style="background-color: {{ $btnBg }}; color: {{ $btnText }}; border: 1px solid {{ $btnBorder }}; cursor: not-allowed;" disabled>
+                                            <i class="bi bi-lock-fill me-1"></i> {{ $isFull ? 'Kuota Terpenuhi (3/3)' : 'Batas 3 Rekan Terpenuhi' }}
                                         </button>
                                     </div>
                                 </div>
@@ -525,8 +529,20 @@
                         <i class="bi bi-person-down"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold text-dark mb-0">3. Evaluasi Bawahan Langsung</h6>
-                        <small class="text-muted">Daftar staf/bawahan yang berada di bawah kepemimpinan Anda</small>
+                        <h6 class="fw-bold text-dark mb-0">
+                            @if(Auth::user() && Auth::user()->isKepalaBkpsdm())
+                                Evaluasi Kepala Bidang & Sekretaris (Bawahan Langsung)
+                            @else
+                                Evaluasi Bawahan Langsung
+                            @endif
+                        </h6>
+                        <small class="text-muted">
+                            @if(Auth::user() && Auth::user()->isKepalaBkpsdm())
+                                Daftar Para Kepala Bidang & Sekretaris yang berada di bawah pengawasan langsung Anda
+                            @else
+                                Daftar staf/bawahan yang berada di bawah kepemimpinan Anda
+                            @endif
+                        </small>
                     </div>
                 </div>
                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-1 rounded-pill fw-semibold">
