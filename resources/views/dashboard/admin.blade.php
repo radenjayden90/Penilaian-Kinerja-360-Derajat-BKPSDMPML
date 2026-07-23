@@ -145,41 +145,60 @@
                 </span>
             </div>
             <div class="card-body px-4 pb-4 pt-0">
-                <div class="row text-center g-3">
-                    <div class="col-6 col-md-3">
-                        <div class="p-3.5 rounded-4 bg-emerald-50 border border-emerald-200">
-                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-emerald-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
-                                <i class="bi bi-stars"></i> Sangat Baik
+                <div class="row g-3">
+                    <!-- Sangat Baik -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #A7F3D0 !important; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.05);">
+                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
+                                <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                                    <i class="bi bi-stars fs-6"></i>
+                                </div>
+                                <span class="fw-bold text-success" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Sangat Baik</span>
                             </div>
-                            <h3 class="fw-extrabold text-emerald-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['sangat_baik'] ?? 0 }}</h3>
-                            <small class="text-emerald-600 opacity-75" style="font-size: 11px;">ASN Terbanyak</small>
+                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['sangat_baik'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
+                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Performa melampaui target</div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3.5 rounded-4 bg-blue-50 border border-blue-200">
-                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-blue-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
-                                <i class="bi bi-hand-thumbs-up-fill"></i> Baik
+                    
+                    <!-- Baik -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #BFDBFE !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);">
+                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                                    <i class="bi bi-hand-thumbs-up-fill fs-6"></i>
+                                </div>
+                                <span class="fw-bold text-primary" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Baik</span>
                             </div>
-                            <h3 class="fw-extrabold text-blue-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['baik'] ?? 0 }}</h3>
-                            <small class="text-blue-600 opacity-75" style="font-size: 11px;">Sesuai Ekspektasi</small>
+                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['baik'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
+                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Sesuai dengan ekspektasi</div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3.5 rounded-4 bg-amber-50 border border-amber-200">
-                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-amber-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
-                                <i class="bi bi-exclamation-circle-fill"></i> Cukup
+
+                    <!-- Cukup -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #FDE68A !important; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.05);">
+                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
+                                <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px; color: #D97706 !important;">
+                                    <i class="bi bi-exclamation-circle-fill fs-6"></i>
+                                </div>
+                                <span class="fw-bold text-warning" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #D97706 !important;">Cukup</span>
                             </div>
-                            <h3 class="fw-extrabold text-amber-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['cukup'] ?? 0 }}</h3>
-                            <small class="text-amber-600 opacity-75" style="font-size: 11px;">Butuh Peningkatan</small>
+                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['cukup'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
+                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Butuh peningkatan kapasitas</div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3.5 rounded-4 bg-rose-50 border border-rose-200">
-                            <div class="d-flex align-items-center justify-content-center gap-1.5 mb-1 text-rose-700 fw-bold" style="font-size: 11px; text-transform: uppercase;">
-                                <i class="bi bi-shield-x"></i> Kurang
+
+                    <!-- Kurang -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #FECDD3 !important; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05);">
+                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                                    <i class="bi bi-shield-x fs-6"></i>
+                                </div>
+                                <span class="fw-bold text-danger" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Kurang</span>
                             </div>
-                            <h3 class="fw-extrabold text-rose-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['kurang'] ?? 0 }}</h3>
-                            <small class="text-rose-600 opacity-75" style="font-size: 11px;">Perlu Pembinaan</small>
+                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['kurang'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
+                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Perlu pembinaan khusus</div>
                         </div>
                     </div>
                 </div>
@@ -196,45 +215,45 @@
                 <span><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Aksi Cepat Admin</span>
                 <span class="badge bg-amber-100 text-amber-800 rounded-pill px-2.5 py-1" style="font-size: 10px;">Shortcut</span>
             </div>
-            <div class="card-body p-3">
-                <div class="d-flex flex-column gap-2">
-                    <a href="{{ route('master.employees.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-primary text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;">
-                            <i class="bi bi-person-plus-fill fs-5"></i>
+            <div class="card-body p-3 d-flex flex-column">
+                <div class="d-flex flex-column gap-2 h-100 justify-content-between">
+                    <a href="{{ route('master.employees.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-primary text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;">
+                            <i class="bi bi-person-plus-fill" style="font-size: 1.1rem;"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Kelola Data Pegawai</div>
-                            <small class="text-muted" style="font-size: 12px;">Tambah, edit & atur ASN Pemalang</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 13px;">Kelola Data Pegawai</div>
+                            <small class="text-muted" style="font-size: 11px;">Tambah, edit & atur ASN Pemalang</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('master.periods.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-success text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;">
-                            <i class="bi bi-plus-circle-fill fs-5"></i>
+                    <a href="{{ route('master.periods.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-success text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;">
+                            <i class="bi bi-plus-circle-fill" style="font-size: 1.1rem;"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Buka Periode Penilaian</div>
-                            <small class="text-muted" style="font-size: 12px;">Atur jadwal penilaian semester/tahunan</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 13px;">Buka Periode Penilaian</div>
+                            <small class="text-muted" style="font-size: 11px;">Atur jadwal penilaian</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('master.assessment-indicators.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-info text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%) !important;">
-                            <i class="bi bi-card-checklist fs-5"></i>
+                    <a href="{{ route('master.assessment-indicators.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-info text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%) !important;">
+                            <i class="bi bi-card-checklist" style="font-size: 1.1rem;"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Indikator Penilaian 360°</div>
-                            <small class="text-muted" style="font-size: 12px;">Atur instrumen & indikator kuesioner</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 13px;">Indikator Penilaian 360°</div>
+                            <small class="text-muted" style="font-size: 11px;">Atur instrumen & indikator kuesioner</small>
                         </div>
                     </a>
 
-                    <a href="{{ route('transaction.calculations.index') }}" class="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none action-shortcut-item">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center bg-warning text-dark" style="width: 42px; height: 42px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important; color: #FFF !important;">
-                            <i class="bi bi-calculator-fill fs-5"></i>
+                    <a href="{{ route('transaction.calculations.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-warning text-dark" style="width: 36px; height: 36px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important; color: #FFF !important;">
+                            <i class="bi bi-calculator-fill" style="font-size: 1.1rem;"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-dark mb-0" style="font-size: 14px;">Hitung Hasil Penilaian</div>
-                            <small class="text-muted" style="font-size: 12px;">Kalkulasi skor akhir 360 derajat</small>
+                            <div class="fw-bold text-dark mb-0" style="font-size: 13px;">Hitung Hasil Penilaian</div>
+                            <small class="text-muted" style="font-size: 11px;">Kalkulasi skor akhir 360 derajat</small>
                         </div>
                     </a>
                 </div>
@@ -258,10 +277,11 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-slate-50 text-slate-600" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
                             <tr>
-                                <th class="ps-4 py-3">Peringkat & Pegawai</th>
-                                <th class="py-3">Unit Kerja</th>
-                                <th class="py-3">Jabatan</th>
-                                <th class="text-center pe-4 py-3">Skor 360°</th>
+                                <th class="ps-4 py-3 text-center" style="width: 70px;">Peringkat</th>
+                                <th class="py-3 text-center" style="min-width: 220px;">Nama Pegawai</th>
+                                <th class="py-3 text-center" style="min-width: 150px;">NIP</th>
+                                <th class="py-3 text-center" style="min-width: 280px;">Unit Kerja</th>
+                                <th class="text-center pe-4 py-3" style="width: 100px;">Skor 360°</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -269,28 +289,25 @@
                                 @php $emp = $res->employee; @endphp
                                 @if($emp)
                                     <tr>
-                                        <td class="ps-4 py-3">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <span class="fw-bold fs-6" style="width: 24px;">
-                                                    @if($index === 0) 🥇
-                                                    @elseif($index === 1) 🥈
-                                                    @elseif($index === 2) 🥉
-                                                    @else <span class="badge bg-slate-100 text-slate-600 rounded-circle p-1.5" style="font-size: 11px;">{{ $index + 1 }}</span>
-                                                    @endif
-                                                </span>
-                                                <div>
-                                                    <div class="fw-bold text-dark" style="font-size: 14px;">{{ $emp->name }}</div>
-                                                    <small class="text-muted" style="font-size: 12px;">NIP. {{ $emp->nip }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="badge bg-slate-100 text-slate-700 fw-medium px-2.5 py-1 rounded-2" style="font-size: 12px;">
-                                                {{ $emp->department->name ?? '-' }}
+                                        <td class="ps-4 py-3 text-center">
+                                            <span class="fw-bold fs-6">
+                                                @if($index === 0) 🥇
+                                                @elseif($index === 1) 🥈
+                                                @elseif($index === 2) 🥉
+                                                @else <span class="badge bg-slate-100 text-slate-600 rounded-circle p-1.5" style="font-size: 11px;">{{ $index + 1 }}</span>
+                                                @endif
                                             </span>
                                         </td>
-                                        <td class="py-3 text-secondary" style="font-size: 13px;">
-                                            {{ $emp->position->name ?? '-' }}
+                                        <td class="py-3 text-center" style="max-width: 0;">
+                                            <div class="fw-bold text-dark text-wrap text-break mx-auto" style="font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="{{ $emp->name }}">{{ $emp->name }}</div>
+                                        </td>
+                                        <td class="py-3 text-secondary text-center" style="font-size: 13px;">
+                                            {{ $emp->nip }}
+                                        </td>
+                                        <td class="py-3 text-center">
+                                            <span class="badge bg-slate-100 text-slate-700 fw-medium px-2.5 py-1 rounded-2 text-wrap text-center" style="font-size: 11px; line-height: 1.4;">
+                                                {{ $emp->department->name ?? '-' }}
+                                            </span>
                                         </td>
                                         <td class="text-center pe-4 py-3">
                                             <span class="badge bg-blue-50 text-blue-700 border border-blue-200 fw-extrabold px-3 py-1.5 rounded-pill" style="font-size: 13px;">
@@ -301,7 +318,7 @@
                                 @endif
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-5">
+                                    <td colspan="5" class="text-center text-muted py-5">
                                         <i class="bi bi-inbox text-slate-300 display-6 d-block mb-2"></i>
                                         Belum ada data kalkulasi nilai pegawai pada periode ini.
                                     </td>

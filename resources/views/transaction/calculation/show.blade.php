@@ -532,7 +532,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('livewire:navigated', function () {
         const canvas = document.getElementById('berakhlakBarChart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');

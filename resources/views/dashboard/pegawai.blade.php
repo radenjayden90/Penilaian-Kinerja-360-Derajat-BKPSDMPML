@@ -337,7 +337,7 @@
 @if(count($chartLabels) > 0)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('livewire:navigated', function() {
     const ctx = document.getElementById('historicalChart').getContext('2d');
     
     // Create gradient for the line chart fill

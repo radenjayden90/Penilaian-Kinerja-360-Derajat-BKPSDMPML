@@ -34,9 +34,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="name" class="form-label fw-semibold">Butir Pertanyaan / Indikator <span class="text-danger">*</span></label>
-                        <textarea name="name" id="name" rows="3" class="form-control @error('name') is-invalid @enderror" required>{{ old('name', $assessment_indicator->name ?? $assessment_indicator->question) }}</textarea>
-                        @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        <label for="indicator" class="form-label fw-semibold">Butir Pertanyaan / Indikator <span class="text-danger">*</span></label>
+                        <textarea name="indicator" id="indicator" rows="3" class="form-control @error('indicator') is-invalid @enderror" required>{{ old('indicator', $assessment_indicator->indicator) }}</textarea>
+                        @error('indicator') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="mb-3">
@@ -46,12 +46,6 @@
                     </div>
 
                     <div class="row g-3 mb-4">
-                        <div class="col-12 col-sm-6">
-                            <label for="weight" class="form-label fw-semibold">Bobot (%)</label>
-                            <input type="number" step="0.1" name="weight" id="weight" class="form-control @error('weight') is-invalid @enderror" value="{{ old('weight', $assessment_indicator->weight) }}">
-                            @error('weight') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-
                         <div class="col-12 col-sm-6">
                             <label for="display_order" class="form-label fw-semibold">Urutan Tampilan</label>
                             <input type="number" name="display_order" id="display_order" class="form-control @error('display_order') is-invalid @enderror" value="{{ old('display_order', $assessment_indicator->display_order) }}">

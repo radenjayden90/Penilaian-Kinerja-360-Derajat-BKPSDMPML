@@ -649,9 +649,7 @@
                             <td class="text-center">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                     <button class="btn-action-soft btn-action-detail" type="button" 
-                                            data-bs-toggle="collapse" 
-                                            data-bs-target="#drawer-{{ $res->id }}" 
-                                            aria-expanded="false" 
+                                            onclick="document.getElementById('drawer-{{ $res->id }}').classList.toggle('d-none')" 
                                             title="Buka Detail Component Rapor">
                                         <i class="bi bi-chevron-down"></i>
                                     </button>
@@ -665,10 +663,10 @@
                             </td>
                         </tr>
                         <!-- Inline Expandable Detail Drawer -->
-                        <tr class="collapse" id="drawer-{{ $res->id }}">
+                        <tr id="drawer-{{ $res->id }}" class="d-none">
                             <td colspan="{{ $isKabid ? 8 : 7 }}" class="p-0 border-0">
                                 <div class="detail-drawer">
-                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
                                         <h6 class="fw-bold text-dark mb-0">
                                             <i class="bi bi-list-check me-2 text-primary"></i>Rincian Komponen Evaluasi: {{ $res->period->name }}
                                         </h6>

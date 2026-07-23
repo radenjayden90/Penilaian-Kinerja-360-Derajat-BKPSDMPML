@@ -337,7 +337,7 @@
 <div class="row g-4 mb-4">
     <!-- Left Column: Bar Chart -->
     <div class="col-12 col-xl-7">
-        <div class="executive-card p-4 h-100 shadow-sm border-0 rounded-4 bg-white">
+        <div class="executive-card p-4 h-100 shadow-sm border-0 rounded-4 bg-white d-flex flex-column">
             <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
                 <div>
                     <h5 class="fw-bold text-dark mb-1">
@@ -353,26 +353,9 @@
             </div>
 
             @if($latestResult)
-                <div style="position: relative; height: 180px; width: 100%;">
+                <div class="flex-grow-1" style="position: relative; width: 100%; min-height: 250px;">
                     <canvas id="profileBerakhlakBarChart"></canvas>
                 </div>
-                @if(isset($aspectAverages) && count($aspectAverages) > 0)
-                    <div class="row g-2 mt-3 pt-3 border-top">
-                        @foreach($aspectAverages as $asp)
-                            @php
-                                $rawScore = (float)$asp->average_score;
-                                $scoreVal = round($rawScore <= 10 ? $rawScore * 10 : $rawScore, 1);
-                                $badgeStyle = $scoreVal >= 85 ? 'background-color: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;' : ($scoreVal >= 70 ? 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;' : ($scoreVal >= 60 ? 'background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;' : 'background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;'));
-                            @endphp
-                            <div class="col-6 col-sm-4 col-md-3 col-lg">
-                                <div class="p-2 rounded-3 text-center" style="{{ $badgeStyle }}">
-                                    <div class="text-truncate mb-0.5" style="font-size: 10px; font-weight: 700;" title="{{ $asp->name }}">{{ $asp->name }}</div>
-                                    <div class="fw-extrabold fs-6" style="line-height: 1.1;">{{ number_format($scoreVal, 1) }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
             @else
                 <div class="text-center py-5 text-muted">
                     <i class="bi bi-bar-chart-line fs-1 d-block mb-3 text-secondary"></i>
@@ -448,7 +431,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @if($latestResult)
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('livewire:navigated', function () {
         const canvas = document.getElementById('profileBerakhlakBarChart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');

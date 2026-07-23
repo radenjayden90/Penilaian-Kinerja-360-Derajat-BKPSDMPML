@@ -61,7 +61,6 @@
                         <th class="ps-3" style="width: 50px;">Urutan</th>
                         <th>Aspek Kategori</th>
                         <th>Pertanyaan / Indikator Penilaian</th>
-                        <th>Bobot</th>
                         <th>Status</th>
                         <th class="text-end pe-3" style="width: 140px;">Aksi</th>
                     </tr>
@@ -76,12 +75,11 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="fw-medium text-dark">{{ $ind->name ?? $ind->question }}</div>
+                                <div class="fw-medium text-dark">{{ $ind->indicator }}</div>
                                 @if($ind->description)
                                     <small class="text-muted d-block">{{ $ind->description }}</small>
                                 @endif
                             </td>
-                            <td><span class="badge bg-light text-dark border">{{ $ind->weight ?? 1 }}%</span></td>
                             <td>
                                 @if($ind->is_active)
                                     <span class="badge bg-success bg-opacity-10 text-success">Aktif</span>

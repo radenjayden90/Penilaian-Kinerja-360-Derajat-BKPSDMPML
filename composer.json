@@ -10,6 +10,7 @@
         "barryvdh/laravel-dompdf": "*",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
+        "livewire/livewire": "^4.3",
         "phpoffice/phpspreadsheet": "^5.9",
         "thecodingmachine/safe": "^3.4"
     },

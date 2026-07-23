@@ -74,7 +74,7 @@
             z-index: 3;
             background-image: url('{{ asset('images/building-bkpsdm.jpeg') }}');
             background-size: cover;
-            background-position: left 40%;
+            background-position: center center;
             background-repeat: no-repeat;
             will-change: transform, opacity;
             transform: translate3d(0, 0, 0);
@@ -717,10 +717,10 @@
         // ================= 1. GSAP STAGGERED ENTRANCE TIMELINE =================
         const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
-        // Gedung BKPSDM: translateY(120px) -> 0, duration 2.2s, power4.out (no bounce)
+        // Gedung BKPSDM: Fade in (tanpa pergerakan)
         tl.fromTo('#layerBuilding', 
-            { y: 120, opacity: 0 }, 
-            { y: 0, opacity: 1, duration: 2.2 }
+            { opacity: 0 }, 
+            { opacity: 1, duration: 2.2 }
         );
 
         // Logo BKPSDM (top-left): translateY(-30px) -> 0, duration 0.8s
@@ -812,8 +812,7 @@
             const fogQuickX = gsap.quickTo('#layerFog', 'x', { duration: 0.8, ease: 'power2.out' });
             const fogQuickY = gsap.quickTo('#layerFog', 'y', { duration: 0.8, ease: 'power2.out' });
 
-            const bldgQuickX = gsap.quickTo('#layerBuilding', 'x', { duration: 0.7, ease: 'power2.out' });
-            const bldgQuickY = gsap.quickTo('#layerBuilding', 'y', { duration: 0.7, ease: 'power2.out' });
+            // (Animasi parallax mouse untuk gedung ditiadakan sesuai permintaan)
 
             window.addEventListener('mousemove', (e) => {
                 const { innerWidth, innerHeight } = window;
@@ -832,9 +831,7 @@
                 fogQuickX(mouseX * 8);
                 fogQuickY(mouseY * 8);
 
-                // Gedung: 4px
-                bldgQuickX(mouseX * 4);
-                bldgQuickY(mouseY * 4);
+                // Gedung: (tidak ada pergerakan)
             });
         }
 
@@ -848,8 +845,8 @@
                 onUpdate: (self) => {
                     const progress = self.progress;
 
-                    // Scene 1: Gedung bergerak ~25% lebih lambat
-                    gsap.set('#layerBuilding', { y: progress * -55 });
+                    // Scene 1: Gedung statis (tidak bergerak saat scroll)
+                    // gsap.set('#layerBuilding', { y: progress * -55 });
 
                     // Scene 2: Card login sedikit bergerak ke atas (~20px)
                     gsap.set('#rightSide', { y: progress * -20 });

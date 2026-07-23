@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/app-custom.css') }}">
 
     @stack('styles')
+    @livewireStyles
 </head>
 <body>
     <div class="app-wrapper">
@@ -69,7 +70,7 @@
 
     <!-- Sidebar Toggle Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('livewire:navigated', function () {
             const toggleBtn = document.getElementById('sidebarToggleBtn');
             const body = document.body;
 
@@ -126,5 +127,6 @@
     </script>
 
     @stack('scripts')
+    @livewireScripts
 </body>
 </html>

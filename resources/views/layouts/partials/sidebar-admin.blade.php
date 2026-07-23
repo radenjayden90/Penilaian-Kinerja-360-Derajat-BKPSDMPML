@@ -1,6 +1,6 @@
 <aside class="app-sidebar">
     <div class="sidebar-header">
-        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+        <a wire:navigate href="{{ route('dashboard') }}" class="sidebar-brand">
             <div class="sidebar-logo-box">
                 <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="sidebar-logo-img">
             </div>
@@ -13,41 +13,41 @@
 
     <nav class="sidebar-menu">
         <div class="nav-label">Utama</div>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Dashboard">
+        <a wire:navigate href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Dashboard">
             <i class="bi bi-speedometer2 nav-main-icon"></i>
             <span class="nav-link-text">Dashboard</span>
         </a>
 
         <div class="nav-label">Master Data</div>
-        <a href="{{ route('master.employees.index') }}" class="nav-link {{ request()->routeIs('master.employees.*') ? 'active' : '' }}" title="Pegawai">
+        <a wire:navigate href="{{ route('master.employees.index') }}" class="nav-link {{ request()->routeIs('master.employees.*') ? 'active' : '' }}" title="Pegawai">
             <i class="bi bi-people nav-main-icon"></i>
             <span class="nav-link-text">Pegawai</span>
         </a>
-        <a href="{{ route('master.positions.index') }}" class="nav-link {{ request()->routeIs('master.positions.*') ? 'active' : '' }}" title="Jabatan">
+        <a wire:navigate href="{{ route('master.positions.index') }}" class="nav-link {{ request()->routeIs('master.positions.*') ? 'active' : '' }}" title="Jabatan">
             <i class="bi bi-person-badge nav-main-icon"></i>
             <span class="nav-link-text">Jabatan</span>
         </a>
-        <a href="{{ route('master.departments.index') }}" class="nav-link {{ request()->routeIs('master.departments.*') ? 'active' : '' }}" title="Unit Kerja">
+        <a wire:navigate href="{{ route('master.departments.index') }}" class="nav-link {{ request()->routeIs('master.departments.*') ? 'active' : '' }}" title="Unit Kerja">
             <i class="bi bi-building nav-main-icon"></i>
             <span class="nav-link-text">Unit Kerja</span>
         </a>
 
         <div class="nav-label">Penilaian</div>
-        <a href="{{ route('master.periods.index') }}" class="nav-link {{ request()->routeIs('master.periods.*') ? 'active' : '' }}" title="Periode Penilaian">
+        <a wire:navigate href="{{ route('master.periods.index') }}" class="nav-link {{ request()->routeIs('master.periods.*') ? 'active' : '' }}" title="Periode Penilaian">
             <i class="bi bi-calendar-range nav-main-icon"></i>
             <span class="nav-link-text">Periode Penilaian</span>
         </a>
-        <a href="{{ route('master.assessment-indicators.index') }}" class="nav-link {{ request()->routeIs('master.assessment-indicators.*') ? 'active' : '' }}" title="Pertanyaan">
+        <a wire:navigate href="{{ route('master.assessment-indicators.index') }}" class="nav-link {{ request()->routeIs('master.assessment-indicators.*') ? 'active' : '' }}" title="Pertanyaan">
             <i class="bi bi-question-circle nav-main-icon"></i>
             <span class="nav-link-text">Pertanyaan</span>
         </a>
-        <a href="{{ route('transaction.calculations.index') }}" class="nav-link {{ request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" title="Hasil Penilaian">
+        <a wire:navigate href="{{ route('transaction.calculations.index') }}" class="nav-link {{ request()->routeIs('transaction.calculations.*') ? 'active' : '' }}" title="Hasil Penilaian">
             <i class="bi bi-bar-chart-line nav-main-icon"></i>
             <span class="nav-link-text">Hasil Penilaian</span>
         </a>
 
         <div class="nav-label">Laporan & Pengaturan</div>
-        <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}" title="Laporan">
+        <a wire:navigate href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}" title="Laporan">
             <i class="bi bi-file-earmark-text nav-main-icon"></i>
             <span class="nav-link-text">Laporan</span>
         </a>

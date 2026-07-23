@@ -167,6 +167,7 @@
             -webkit-text-fill-color: transparent;
         }
     </style>
+    @livewireStyles
 </head>
 <body class="antialiased mesh-bg">
     <div class="noise-overlay"></div>
@@ -192,7 +193,7 @@
                 </div>
 
                 <div>
-                    <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-dark text-white text-sm font-medium rounded-full hover:bg-primary transition-colors shadow-lg shadow-blue-500/30 hover-lift">
+                    <a wire:navigate href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-dark text-white text-sm font-medium rounded-full hover:bg-primary transition-colors shadow-lg shadow-blue-500/30 hover-lift">
                         <i data-lucide="log-in" class="w-4 h-4"></i>
                         Masuk
                     </a>
@@ -221,7 +222,7 @@
                     </p>
                     
                     <div class="flex flex-wrap gap-4 mb-10">
-                        <a href="{{ route('login') }}" class="px-8 py-3.5 bg-primary text-white font-medium rounded-full hover:bg-secondary transition-all shadow-lg shadow-blue-500/40 hover-lift inline-flex items-center gap-2">
+                        <a wire:navigate href="{{ route('login') }}" class="px-8 py-3.5 bg-primary text-white font-medium rounded-full hover:bg-secondary transition-all shadow-lg shadow-blue-500/40 hover-lift inline-flex items-center gap-2">
                             Masuk ke Aplikasi
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
@@ -683,7 +684,7 @@
                 <p class="text-blue-100 mb-10 max-w-2xl mx-auto relative z-10 text-lg">Masuk ke sistem sekarang menggunakan NIP Anda dan mulai berikan evaluasi yang objektif untuk rekan kerja di lingkungan BKPSDM Kabupaten Pemalang.</p>
                 
                 <div class="flex flex-wrap justify-center gap-4 relative z-10">
-                    <a href="{{ route('login') }}" class="px-8 py-3.5 bg-white text-primary font-bold rounded-full hover:bg-blue-50 transition-colors shadow-lg hover-lift">
+                    <a wire:navigate href="{{ route('login') }}" class="px-8 py-3.5 bg-white text-primary font-bold rounded-full hover:bg-blue-50 transition-colors shadow-lg hover-lift">
                         Masuk ke Aplikasi
                     </a>
                     <a href="#" class="px-8 py-3.5 bg-white/10 text-white font-medium rounded-full hover:bg-white/20 transition-colors border border-white/20 hover-lift">
@@ -814,5 +815,6 @@
             }
         }
     </script>
+    @livewireScripts
 </body>
 </html>

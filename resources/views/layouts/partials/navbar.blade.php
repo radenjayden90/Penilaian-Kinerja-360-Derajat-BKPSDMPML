@@ -94,7 +94,7 @@
                 </li>
                 @if(Auth::user()->role?->name !== 'ADMIN')
                 <li>
-                    <a class="dropdown-item py-2" href="{{ route('profile.edit') }}">
+                    <a wire:navigate class="dropdown-item py-2" href="{{ route('profile.edit') }}">
                         <i class="bi bi-person me-2 text-primary"></i> Profil Saya
                     </a>
                 </li>
@@ -114,7 +114,7 @@
 </header>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('livewire:navigated', function() {
         const authUserId = "{{ Auth::id() }}";
         const storageKey = 'seenAssessmentCount_' + authUserId;
         let currentAssessmentCount = {{ $assessmentCount }};

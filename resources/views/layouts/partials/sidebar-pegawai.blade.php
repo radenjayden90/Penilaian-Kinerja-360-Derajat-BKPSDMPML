@@ -1,6 +1,6 @@
 <aside class="app-sidebar">
     <div class="sidebar-header">
-        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+        <a wire:navigate href="{{ route('dashboard') }}" class="sidebar-brand">
             <div class="sidebar-logo-box">
                 <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="sidebar-logo-img">
             </div>
@@ -13,12 +13,12 @@
 
     <nav class="sidebar-menu">
         <div class="nav-label">Menu Pegawai</div>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <a wire:navigate href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <i class="bi bi-speedometer2"></i>
             <span class="nav-link-text">Dashboard</span>
         </a>
 
-        <a href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}">
+        <a wire:navigate href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}">
             <i class="bi bi-pencil-square"></i>
             <span class="nav-link-text">Penilaian Saya</span>
         </a>
@@ -28,14 +28,14 @@
             $isKepalaBkpsdm = (Auth::user()->position?->level == '1' || str_contains($posName, 'kepala bkpsdm'));
         @endphp
         @if(!$isKepalaBkpsdm)
-        <a href="{{ route('assessment.index') }}" class="nav-link {{ request()->routeIs('assessment.*') ? 'active' : '' }}">
+        <a wire:navigate href="{{ route('assessment.index') }}" class="nav-link {{ request()->routeIs('assessment.*') ? 'active' : '' }}">
             <i class="bi bi-clock-history"></i>
             <span class="nav-link-text">Riwayat Penilaian</span>
         </a>
         @endif
 
         <div class="nav-label">Pengaturan</div>
-        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+        <a wire:navigate href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <i class="bi bi-person-gear"></i>
             <span class="nav-link-text">Profil</span>
         </a>

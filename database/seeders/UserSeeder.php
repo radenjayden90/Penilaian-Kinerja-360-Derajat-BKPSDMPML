@@ -28,13 +28,8 @@ class UserSeeder extends Seeder
         $deptPSDM = Department::where('code', 'PSDM')->first() ?? Department::firstOrCreate(['code' => 'PSDM'], ['name' => 'Bidang Pengembangan Sumber Daya Manusia', 'is_active' => true]);
 
         // 3. Positions
-<<<<<<< HEAD
-        $posAdministrator = Position::firstOrCreate(['name' => 'Administrator', 'department_id' => null], ['level' => '0', 'is_active' => true]);
-        $posKepalaBkpsdm = Position::firstOrCreate(['name' => 'Kepala BKPSDM Kabupaten Pemalang', 'department_id' => $deptSekretariat->id], ['level' => '1', 'is_active' => true]);
-=======
         $posKepalaBkpsdm = Position::updateOrCreate(['name' => 'Kepala BKPSDM Kabupaten Pemalang'], ['department_id' => $deptBkpsdm->id, 'level' => '1', 'is_active' => true]);
->>>>>>> 90951489684a7661b2f24f1df8dafc3fe3bb3b9d
-        
+
         // Eselon 3 (Sekretaris & Kabid)
         $posSekretaris = Position::firstOrCreate(['name' => 'Sekretaris', 'department_id' => $deptSekretariat->id], ['level' => '2', 'is_active' => true]);
         $posKabid = Position::firstOrCreate(['name' => 'Kepala Bidang', 'department_id' => $deptPPIK->id], ['level' => '2', 'is_active' => true]);

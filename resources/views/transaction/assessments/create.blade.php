@@ -559,7 +559,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('livewire:navigated', function() {
     const totalCategories = {{ count($categories) }};
     const totalQuestions = document.querySelectorAll('.form-score-input').length;
     let currentTabIndex = 0;
@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         tabs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Switch Tab Logic with strict category completion check
@@ -836,6 +836,9 @@ document.addEventListener('DOMContentLoaded', function() {
         this.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Tersimpan Lokal';
         this.classList.remove('tw-bg-amber-100', 'tw-text-amber-800');
         this.classList.add('tw-bg-green-100', 'tw-text-green-800');
+        
+        // Redirect to dashboard/index
+        window.location.href = "{{ route('transaction.assessments.index') }}";
     });
 
     // Textarea input listener to revert button
@@ -859,6 +862,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (item !== "") syncUI(id, item);
             }
         }
+    }
+
+    // Set default value to 1 for unanswered inputs
+    inputs.forEach(input => {
+        if (input.dataset.answered !== "true") {
+            syncUI(input.id, '1');
+        }
+    });
+
+    // Auto-navigate to the first incomplete category
+    let firstIncompleteTab = 0;
+    for (let i = 0; i < totalCategories; i++) {
+        if (!isCategoryComplete(i)) {
+            firstIncompleteTab = i;
+            break;
+        }
+    }
+    if (firstIncompleteTab > 0) {
+        switchTabDirectly(firstIncompleteTab);
     }
     
     // --- Modal Logic ---

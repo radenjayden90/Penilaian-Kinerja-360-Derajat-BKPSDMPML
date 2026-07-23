@@ -16,8 +16,8 @@ class UpdateAssessmentIndicatorRequest extends FormRequest
 
     public function rules(): array {
         return [
-            'assessment_category_id' => 'required|exists:assessment_categories,id',
-            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:assessment_categories,id',
+            'indicator' => 'required|string|max:255',
             'description' => 'nullable|string',
             'display_order' => 'required|integer|min:0',
             'is_active' => 'boolean',
