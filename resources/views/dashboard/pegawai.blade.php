@@ -178,7 +178,8 @@
                 NIP. {{ $user->nip ?? '-' }} &bull; {{ $user->position->name ?? 'Jabatan Belum Diatur' }}
             </p>
             @php
-                $deptName = ucwords(strtolower($user->department->name ?? 'Unit Kerja Belum Diatur'));
+                $rawDept = $user->department->name ?? 'Unit Kerja Belum Diatur';
+                $deptName = str_ireplace('bkpsdm', 'BKPSDM', ucwords(strtolower($rawDept)));
                 $roleRaw = $user->role->name ?? 'Pegawai';
                 $roleFormatted = ucwords(strtolower(str_replace('_', ' ', $roleRaw)));
                 if (strtolower($roleFormatted) === 'employee') {

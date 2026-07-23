@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
         $employeeRole = Role::where('name', EmployeeRole::EMPLOYEE->value)->first();
 
         // 2. Departments
+        $deptBkpsdm = Department::where('code', 'BKPSDM')->first() ?? Department::firstOrCreate(['code' => 'BKPSDM'], ['name' => 'BKPSDM Kabupaten Pemalang', 'is_active' => true]);
         $deptSekretariat = Department::where('code', 'SEKRETARIAT')->first() ?? Department::firstOrCreate(['code' => 'SEKRETARIAT'], ['name' => 'Sekretariat', 'is_active' => true]);
         $deptPPIK = Department::where('code', 'PPIK')->first() ?? Department::firstOrCreate(['code' => 'PPIK'], ['name' => 'Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian', 'is_active' => true]);
         $deptMutasi = Department::where('code', 'MUTASI')->first() ?? Department::firstOrCreate(['code' => 'MUTASI'], ['name' => 'Bidang Mutasi dan Promosi', 'is_active' => true]);
@@ -27,7 +28,7 @@ class UserSeeder extends Seeder
         $deptPSDM = Department::where('code', 'PSDM')->first() ?? Department::firstOrCreate(['code' => 'PSDM'], ['name' => 'Bidang Pengembangan Sumber Daya Manusia', 'is_active' => true]);
 
         // 3. Positions
-        $posKepalaBkpsdm = Position::firstOrCreate(['name' => 'Kepala BKPSDM Kabupaten Pemalang', 'department_id' => $deptSekretariat->id], ['level' => '1', 'is_active' => true]);
+        $posKepalaBkpsdm = Position::updateOrCreate(['name' => 'Kepala BKPSDM Kabupaten Pemalang'], ['department_id' => $deptBkpsdm->id, 'level' => '1', 'is_active' => true]);
         
         // Eselon 3 (Sekretaris & Kabid)
         $posSekretaris = Position::firstOrCreate(['name' => 'Sekretaris', 'department_id' => $deptSekretariat->id], ['level' => '2', 'is_active' => true]);
@@ -60,7 +61,7 @@ class UserSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // B. Kepala BKPSDM (Pimpinan Utama - Tidak masuk ke bidang manapun)
+        // B. Kepala BKPSDM (Pimpinan Utama)
         $kepala = Employee::updateOrCreate([
             'nip' => '196803231990031012'
         ], [
@@ -68,7 +69,7 @@ class UserSeeder extends Seeder
             'email' => 'kepala@pemalang.go.id',
             'password' => Hash::make('196803231990031012'),
             'gender' => 'L',
-            'department_id' => null,
+            'department_id' => $deptBkpsdm->id,
             'position_id' => $posKepalaBkpsdm->id,
             'role_id' => $headRole?->id,
             'supervisor_id' => null,

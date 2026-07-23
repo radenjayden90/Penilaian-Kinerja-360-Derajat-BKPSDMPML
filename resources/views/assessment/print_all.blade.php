@@ -331,8 +331,8 @@
 
     <!-- Footer -->
     <div class="footer-line">
-        <div style="float: left;">SIKINERJA 360° - BKPSDM Kabupaten Pemalang</div>
-        <div style="float: right;">Dicetak pada {{ date('d/m/Y H:i') }} WIB</div>
+        <div style="float: left;">360° Kinerja ASN - BKPSDM Kabupaten Pemalang</div>
+        <div style="float: right;">Dicetak pada {{ \Carbon\Carbon::now('Asia/Jakarta')->format('d/m/Y H:i') }} WIB</div>
         <div style="clear: both;"></div>
     </div>
 
