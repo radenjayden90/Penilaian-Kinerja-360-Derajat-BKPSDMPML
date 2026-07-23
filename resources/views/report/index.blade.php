@@ -11,8 +11,8 @@
 
 @section('action_buttons')
     <div class="d-flex gap-2">
-        <a href="{{ route('report.print', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" target="_blank" class="btn btn-outline-primary">
-            <i class="bi bi-printer me-1"></i> Cetak / PDF
+        <a href="{{ route('report.print', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" target="_blank" class="btn btn-danger fw-semibold">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Ekspor PDF
         </a>
         <a href="{{ route('report.exportCsv', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" class="btn btn-success fw-semibold">
             <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Excel (.xlsx)
@@ -96,7 +96,9 @@
                             <td class="text-center">
                                 @if($res->category)
                                     @php
-                                        $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                                        $catVal = is_object($res->category) ? $res->category->value : (string)$res->category;
+                                        $catEnum = \App\Enums\ResultCategory::tryFrom($catVal) ?? \App\Enums\ResultCategory::tryFrom(strtoupper(str_replace(' ', '_', $catVal)));
+                                        $catLabel = \App\Enums\ResultCategory::formatLabel($res->category);
                                         $textColor = match($catEnum) {
                                             \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
                                             \App\Enums\ResultCategory::GOOD => 'text-primary',
@@ -107,7 +109,7 @@
                                         $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                     @endphp
                                     <span class="fw-semibold {{ $textColor }}" {!! $style !!}>
-                                        {{ $catEnum ? $catEnum->label() : $res->category }}
+                                        {{ $catLabel }}
                                     </span>
                                 @else
                                     <span class="text-muted small">-</span>

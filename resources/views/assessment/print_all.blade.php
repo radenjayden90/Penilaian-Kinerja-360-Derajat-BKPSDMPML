@@ -7,9 +7,9 @@
         @page {
             size: A4 portrait;
             margin-top: 1.2cm;
-            margin-bottom: 2.2cm;
-            margin-left: 2.5cm;
-            margin-right: 2.5cm;
+            margin-bottom: 1.2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
         }
 
         * {
@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Calibri', Arial, Helvetica, sans-serif;
-            font-size: 11pt;
+            font-size: 12pt;
             line-height: 1.3;
             color: #000000;
             background-color: #ffffff;
@@ -54,17 +54,19 @@
         }
 
         .kop-header-1 {
-            font-size: 14pt;
+            font-family: 'Calibri', Arial, sans-serif;
+            font-size: 12pt;
             font-weight: bold;
             text-transform: uppercase;
-            line-height: 1.2;
+            line-height: 1.25;
             margin: 0;
         }
 
         .kop-header-2 {
-            font-size: 10pt;
+            font-family: 'Calibri', Arial, sans-serif;
+            font-size: 9pt;
             font-weight: normal;
-            line-height: 1.2;
+            line-height: 1.3;
             margin-top: 2px;
         }
 
@@ -135,9 +137,9 @@
         .report-table th {
             background-color: #DBEAFE;
             color: #000000;
-            font-size: 9.5pt;
+            font-size: 9pt;
             font-weight: bold;
-            padding: 7px 6px;
+            padding: 6px 5px;
             border: 1px solid #000000;
             text-align: center;
             vertical-align: middle;
@@ -145,8 +147,8 @@
         }
 
         .report-table td {
-            padding: 6px;
-            font-size: 9.5pt;
+            padding: 5px;
+            font-size: 9pt;
             border: 1px solid #000000;
             vertical-align: middle;
             word-wrap: break-word;
@@ -184,7 +186,7 @@
         /* Footer */
         .footer-line {
             position: fixed;
-            bottom: -1.4cm;
+            bottom: -0.4cm;
             left: 0;
             right: 0;
             height: 25px;
@@ -214,8 +216,7 @@
                 </td>
                 <td class="kop-text-cell">
                     <div class="kop-header-1">PEMERINTAH KABUPATEN PEMALANG</div>
-                    <div class="kop-header-1">BADAN KEPEGAWAIAN DAN PENGEMBANGAN</div>
-                    <div class="kop-header-1">SUMBER DAYA MANUSIA</div>
+                    <div class="kop-header-1">BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA</div>
                     <div class="kop-header-2">Jalan Surohadikusumo Nomor 1, Pemalang, Jawa Tengah 52312</div>
                     <div class="kop-header-2">Telepon (0284) 321376 Fax (0284) 321502 Website: https://bkpsdm.pemalangkab.go.id</div>
                 </td>
@@ -278,8 +279,7 @@
         <tbody>
             @forelse($results as $index => $res)
                 @php
-                    $resCatEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category ?? '');
-                    $resCatLabel = $resCatEnum ? $resCatEnum->label() : ucwords(strtolower((string)($res->category ?? '-')));
+                    $resCatLabel = \App\Enums\ResultCategory::formatLabel($res->category);
                     
                     $mNum = (int)($res->period->month ?? date('m'));
                     $mName = \Carbon\Carbon::create()->month($mNum)->isoFormat('MMMM');
@@ -319,12 +319,12 @@
     <table class="ttd-table">
         <tr>
             <td style="width: 55%;"></td>
-            <td class="ttd-cell">
-                Pemalang, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}<br>
+            <td class="ttd-cell" style="font-size: 10pt; line-height: 1.25;">
+                Pemalang, {{ \Carbon\Carbon::now('Asia/Jakarta')->isoFormat('D MMMM Y') }}<br>
                 Kepala BKPSDM Kabupaten Pemalang,
-                <br><br><br><br><br>
+                <br><br><br><br><br><br>
                 <strong><u>Khaeron, S.H., M.M.</u></strong><br>
-                NIP. 196803231990031012
+                <span style="font-size: 9.5pt;">NIP. 196803231990031012</span>
             </td>
         </tr>
     </table>

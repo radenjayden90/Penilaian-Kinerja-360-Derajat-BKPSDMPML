@@ -81,7 +81,9 @@
                             <td class="text-center">
                                 @if($res && $res->category)
                                     @php
-                                        $catEnum = $res->category instanceof \App\Enums\ResultCategory ? $res->category : \App\Enums\ResultCategory::tryFrom($res->category);
+                                        $catVal = is_object($res->category) ? $res->category->value : (string)$res->category;
+                                        $catEnum = \App\Enums\ResultCategory::tryFrom($catVal) ?? \App\Enums\ResultCategory::tryFrom(strtoupper(str_replace(' ', '_', $catVal)));
+                                        $catLabel = \App\Enums\ResultCategory::formatLabel($res->category);
                                         $textColor = match($catEnum) {
                                             \App\Enums\ResultCategory::VERY_GOOD => 'text-success',
                                             \App\Enums\ResultCategory::GOOD => 'text-primary',
@@ -92,7 +94,7 @@
                                         $style = $catEnum === \App\Enums\ResultCategory::FAIR ? 'style="color: #b58900 !important;"' : '';
                                     @endphp
                                     <span class="fw-semibold {{ $textColor }}" {!! $style !!}>
-                                        {{ $catEnum ? $catEnum->label() : $res->category }}
+                                        {{ $catLabel }}
                                     </span>
                                 @else
                                     <span class="text-muted small">Belum Dihitung</span>

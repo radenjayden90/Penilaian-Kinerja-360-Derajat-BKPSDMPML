@@ -75,7 +75,12 @@ class ReportController extends Controller
             })
             ->get();
 
-        return view('report.print', compact('results', 'period', 'department'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('report.print', compact('results', 'period', 'department'))
+            ->setPaper('a4', 'landscape');
+
+        $fileName = 'Laporan_Rekapitulasi_Penilaian_360_' . date('Ymd_His') . '.pdf';
+
+        return $pdf->stream($fileName);
     }
 
     public function exportCsv(Request $request)

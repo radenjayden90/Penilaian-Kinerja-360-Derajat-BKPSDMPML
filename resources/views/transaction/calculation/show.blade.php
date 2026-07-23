@@ -162,8 +162,8 @@
 @section('content')
 
 @php
-    $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom($result->category ?? '');
-    $catLabel = $catEnum ? $catEnum->label() : strtoupper((string)($result->category ?? '-'));
+    $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom((string)($result->category ?? ''));
+    $catLabel = \App\Enums\ResultCategory::formatLabel($result->category);
     
     $badgeStyle = match($catEnum) {
         \App\Enums\ResultCategory::VERY_GOOD => 'background-color: #DCFCE7; color: #15803D; border-color: #86EFAC;',

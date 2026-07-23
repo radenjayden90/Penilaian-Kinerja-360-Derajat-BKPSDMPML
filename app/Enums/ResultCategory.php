@@ -19,6 +19,33 @@ enum ResultCategory: string
         };
     }
 
+    public static function formatLabel($value): string
+    {
+        if (empty($value)) {
+            return '-';
+        }
+
+        if ($value instanceof self) {
+            return $value->label();
+        }
+
+        $str = (string)$value;
+        $enum = self::tryFrom($str);
+        if ($enum) {
+            return $enum->label();
+        }
+
+        $normalized = strtoupper(trim(str_replace(['_', '-'], ' ', $str)));
+
+        return match($normalized) {
+            'VERY GOOD', 'VERYGOOD', 'SANGAT BAIK' => 'Sangat Baik',
+            'GOOD', 'BAIK' => 'Baik',
+            'FAIR', 'CUKUP' => 'Cukup',
+            'NEEDS IMPROVEMENT', 'NEEDSIMPROVEMENT', 'BUTUH PERBAIKAN', 'KURANG', 'PERLU PEMBINAAN' => 'Perlu Pembinaan',
+            default => ucwords(strtolower($normalized)),
+        };
+    }
+
     public function badgeColor(): string
     {
         return match($this) {
