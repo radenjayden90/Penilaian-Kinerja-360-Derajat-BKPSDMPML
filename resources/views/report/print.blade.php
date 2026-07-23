@@ -198,12 +198,10 @@
 
     <div class="title-block">
         <div class="doc-title">LAPORAN REKAPITULASI HASIL PENILAIAN KINERJA 360 DERAJAT ASN</div>
-        <div class="doc-subtitle">
-            PERIODE: {{ strtoupper($period->name ?? 'SEMUA PERIODE') }}
-            @if($department)
-                | UNIT KERJA: {{ strtoupper($department->name) }}
-            @endif
-        </div>
+        <div class="doc-subtitle">PERIODE: {{ strtoupper($period->name ?? 'SEMUA PERIODE') }}</div>
+        @if($department)
+            <div class="doc-subtitle" style="margin-top: 2px;">UNIT KERJA: {{ strtoupper($department->name) }}</div>
+        @endif
     </div>
 
     <!-- Print Table -->

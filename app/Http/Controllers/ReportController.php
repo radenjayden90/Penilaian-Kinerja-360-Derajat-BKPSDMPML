@@ -51,9 +51,58 @@ class ReportController extends Controller
                 });
             });
 
-        $results = $resultsQuery->paginate($request->input('per_page', 15));
+        $activeTab = $request->input('tab', 'summary');
 
-        return view('report.index', compact('results', 'periods', 'departments', 'selectedPeriodId', 'selectedDepartmentId', 'search', 'activePeriod'));
+        $results = $resultsQuery->paginate($request->input('per_page', 15))->withQueryString();
+
+        // Department breakdown stats
+        $departmentStats = Department::withCount('employees')
+            ->orderBy('name')
+            ->get()
+            ->map(function($dept) use ($selectedPeriodId) {
+                $query = AssessmentResult::whereHas('employee', function($q) use ($dept) {
+                    $q->where('department_id', $dept->id);
+                });
+
+                if ($selectedPeriodId) {
+                    $query->where('period_id', $selectedPeriodId);
+                }
+
+                $results = $query->get();
+                $avgScore = $results->count() > 0 ? round($results->avg('final_score'), 2) : 0;
+                $highestScore = $results->count() > 0 ? round($results->max('final_score'), 2) : 0;
+
+                return [
+                    'department' => $dept,
+                    'total_evaluated' => $results->count(),
+                    'average_score' => $avgScore,
+                    'highest_score' => $highestScore,
+                    'very_good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'VERY_GOOD')->count(),
+                    'good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'GOOD')->count(),
+                    'fair' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'FAIR')->count(),
+                    'needs_improvement' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'NEEDS_IMPROVEMENT')->count(),
+                ];
+            });
+
+        // Analytics stats
+        $allPeriodResults = AssessmentResult::when($selectedPeriodId, function($q) use ($selectedPeriodId) {
+            return $q->where('period_id', $selectedPeriodId);
+        })->get();
+
+        $categoryDistribution = [
+            'VERY_GOOD' => $allPeriodResults->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'VERY_GOOD')->count(),
+            'GOOD' => $allPeriodResults->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'GOOD')->count(),
+            'FAIR' => $allPeriodResults->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'FAIR')->count(),
+            'NEEDS_IMPROVEMENT' => $allPeriodResults->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'NEEDS_IMPROVEMENT')->count(),
+        ];
+
+        $overallAverage = $allPeriodResults->count() > 0 ? round($allPeriodResults->avg('final_score'), 2) : 0;
+
+        return view('report.index', compact(
+            'results', 'periods', 'departments', 'selectedPeriodId', 
+            'selectedDepartmentId', 'search', 'activePeriod', 'activeTab', 
+            'departmentStats', 'categoryDistribution', 'overallAverage', 'allPeriodResults'
+        ));
     }
 
     public function print(Request $request)

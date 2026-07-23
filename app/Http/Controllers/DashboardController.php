@@ -18,11 +18,101 @@ class DashboardController extends Controller
         /** @var \App\Models\Employee $user */
         $user = Auth::user();
 
+        if ($user && $user->isKepalaBkpsdm()) {
+            return $this->kepalaDashboard($user);
+        }
+
         if ($user && $user->isAdmin()) {
             return $this->adminDashboard();
         }
 
         return $this->pegawaiDashboard($user);
+    }
+
+    private function kepalaDashboard($user)
+    {
+        $activePeriod = Period::where('is_active', true)->orWhere('status', 'OPEN')->first();
+
+        $totalAsnActive = Employee::where('is_active', true)
+            ->whereDoesntHave('role', fn($q) => $q->whereIn('name', ['ADMIN', 'SUPER_ADMIN']))
+            ->count();
+
+        $activePeriodResults = \App\Models\AssessmentResult::with(['employee.department', 'employee.position', 'period'])
+            ->when($activePeriod, fn($q) => $q->where('period_id', $activePeriod->id))
+            ->whereHas('employee', function($q) {
+                $q->whereHas('role', fn($r) => $r->whereNotIn('name', ['ADMIN', 'SUPER_ADMIN']));
+            })
+            ->get();
+
+        $evaluatedEmployeesCount = $activePeriodResults->pluck('employee_id')->unique()->count();
+        $averageScore = $activePeriodResults->count() > 0 ? round($activePeriodResults->avg('final_score'), 2) : 0;
+
+        // Total assessments progress
+        $totalAssessmentsCount = Assessment::when($activePeriod, fn($q) => $q->where('period_id', $activePeriod->id))->count();
+        $completedAssessmentsCount = Assessment::when($activePeriod, fn($q) => $q->where('period_id', $activePeriod->id))
+            ->whereIn('status', ['COMPLETED', 'SUBMITTED'])
+            ->count();
+        $assessmentProgressPct = $totalAssessmentsCount > 0 ? round(($completedAssessmentsCount / $totalAssessmentsCount) * 100, 1) : 0;
+
+        // 1. Distribusi Predikat (Sangat Baik: 90-100, Baik: 76-89, Cukup: 61-75, Perlu Pembinaan: <60)
+        $totalEval = max($activePeriodResults->count(), 1);
+
+        $countSangatBaik = $activePeriodResults->filter(fn($r) => $r->final_score >= 90)->count();
+        $countBaik = $activePeriodResults->filter(fn($r) => $r->final_score >= 76 && $r->final_score < 90)->count();
+        $countCukup = $activePeriodResults->filter(fn($r) => $r->final_score >= 61 && $r->final_score < 76)->count();
+        $countKurang = $activePeriodResults->filter(fn($r) => $r->final_score < 61)->count();
+
+        $distribusiStats = [
+            'sangat_baik' => ['count' => $countSangatBaik, 'pct' => round(($countSangatBaik / $totalEval) * 100, 1)],
+            'baik' => ['count' => $countBaik, 'pct' => round(($countBaik / $totalEval) * 100, 1)],
+            'cukup' => ['count' => $countCukup, 'pct' => round(($countCukup / $totalEval) * 100, 1)],
+            'kurang' => ['count' => $countKurang, 'pct' => round(($countKurang / $totalEval) * 100, 1)],
+        ];
+
+        // 2. Rata-Rata Nilai per Bidang
+        $departments = Department::orderBy('name')->get();
+        $departmentAverages = $departments->map(function($dept) use ($activePeriodResults) {
+            $deptResults = $activePeriodResults->filter(fn($r) => $r->employee?->department_id === $dept->id);
+            $avg = $deptResults->count() > 0 ? round($deptResults->avg('final_score'), 2) : 0;
+            return [
+                'id' => $dept->id,
+                'name' => $dept->name,
+                'avg' => $avg,
+                'count' => $deptResults->count(),
+                'category_label' => \App\Enums\ResultCategory::formatLabel($avg >= 90 ? 'VERY_GOOD' : ($avg >= 76 ? 'GOOD' : ($avg >= 61 ? 'FAIR' : 'NEEDS_IMPROVEMENT'))),
+            ];
+        });
+
+        // 3. Trend Nilai Rata-Rata Instansi per Periode
+        $pastPeriods = Period::orderBy('year', 'asc')->orderBy('month', 'asc')->take(12)->get();
+        $periodTrends = $pastPeriods->map(function($p) {
+            $pResults = \App\Models\AssessmentResult::where('period_id', $p->id)->get();
+            return [
+                'period_name' => $p->name ?? ($p->year . ' M' . $p->month),
+                'avg_score' => $pResults->count() > 0 ? round($pResults->avg('final_score'), 2) : 0,
+            ];
+        });
+
+        // 4. Nilai Tertinggi per Bidang & Perlu Perhatian
+        $validDeptAverages = $departmentAverages->filter(fn($d) => $d['count'] > 0)->sortByDesc('avg');
+        $topDepartment = $validDeptAverages->first();
+        $lowestDepartment = $validDeptAverages->last();
+
+        // 5. Top 5 Pegawai Nilai Tertinggi
+        $topEmployees = $activePeriodResults->sortByDesc('final_score')->take(5);
+
+        // 6. Pegawai Memerlukan Pembinaan (Bottom / Score < 61)
+        $needImprovementEmployees = $activePeriodResults->filter(fn($r) => $r->final_score < 61)->sortBy('final_score')->take(5);
+        if ($needImprovementEmployees->isEmpty()) {
+            $needImprovementEmployees = $activePeriodResults->sortBy('final_score')->take(5);
+        }
+
+        return view('dashboard.kepala', compact(
+            'activePeriod', 'totalAsnActive', 'evaluatedEmployeesCount',
+            'averageScore', 'assessmentProgressPct', 'distribusiStats',
+            'departmentAverages', 'periodTrends', 'topDepartment',
+            'lowestDepartment', 'topEmployees', 'needImprovementEmployees'
+        ));
     }
 
     private function adminDashboard()

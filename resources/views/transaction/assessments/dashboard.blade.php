@@ -529,8 +529,20 @@
                         <i class="bi bi-person-down"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold text-dark mb-0">3. Evaluasi Bawahan Langsung</h6>
-                        <small class="text-muted">Daftar staf/bawahan yang berada di bawah kepemimpinan Anda</small>
+                        <h6 class="fw-bold text-dark mb-0">
+                            @if(Auth::user() && Auth::user()->isKepalaBkpsdm())
+                                Evaluasi Kepala Bidang & Sekretaris (Bawahan Langsung)
+                            @else
+                                Evaluasi Bawahan Langsung
+                            @endif
+                        </h6>
+                        <small class="text-muted">
+                            @if(Auth::user() && Auth::user()->isKepalaBkpsdm())
+                                Daftar Para Kepala Bidang & Sekretaris yang berada di bawah pengawasan langsung Anda
+                            @else
+                                Daftar staf/bawahan yang berada di bawah kepemimpinan Anda
+                            @endif
+                        </small>
                     </div>
                 </div>
                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-1 rounded-pill fw-semibold">

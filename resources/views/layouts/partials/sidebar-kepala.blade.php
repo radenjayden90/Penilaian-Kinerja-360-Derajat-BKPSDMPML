@@ -1,0 +1,85 @@
+<aside class="app-sidebar">
+    <div class="sidebar-header">
+        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+            <div class="sidebar-logo-box">
+                <img src="{{ asset('images/logo-pemalang.png') }}" alt="Logo Pemalang" class="sidebar-logo-img">
+            </div>
+            <div class="sidebar-brand-text">
+                <h1 class="sidebar-brand-title">360° Kinerja</h1>
+                <span class="sidebar-brand-subtitle">BKPSDM Kabupaten Pemalang</span>
+            </div>
+        </a>
+    </div>
+
+    <nav class="sidebar-menu">
+        <div class="nav-label">Utama</div>
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Beranda">
+            <i class="bi bi-house-door nav-main-icon"></i>
+            <span class="nav-link-text">Beranda</span>
+        </a>
+
+        <div class="nav-label">Evaluasi Kinerja</div>
+        <a href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}" title="Penilaian Kepala Bidang">
+            <i class="bi bi-pencil-square nav-main-icon"></i>
+            <span class="nav-link-text">Penilaian Kepala Bidang</span>
+        </a>
+
+        <div class="nav-label">Eksekutif</div>
+        @php
+            $isReportActive = request()->routeIs('report.*');
+            $currentTab = request()->input('tab', 'summary');
+        @endphp
+        <a href="#laporanSubmenu" class="nav-link nav-link-dropdown {{ $isReportActive ? 'active' : '' }}" data-bs-toggle="collapse" role="button" aria-expanded="{{ $isReportActive ? 'true' : 'false' }}" title="Laporan">
+            <i class="bi bi-file-earmark-bar-graph nav-main-icon"></i>
+            <span class="nav-link-text">Laporan</span>
+            <i class="bi bi-chevron-down dropdown-arrow small ms-auto"></i>
+        </a>
+        <div class="collapse {{ $isReportActive ? 'show' : '' }}" id="laporanSubmenu">
+            <ul class="submenu">
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'summary']) }}" class="nav-link {{ $isReportActive && $currentTab === 'summary' ? 'active' : '' }}" title="Ringkasan Kinerja Instansi">
+                        <i class="bi bi-building-check"></i>
+                        <span class="nav-link-text">Ringkasan kinerja instansi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'department']) }}" class="nav-link {{ $isReportActive && $currentTab === 'department' ? 'active' : '' }}" title="Laporan Per Bidang">
+                        <i class="bi bi-diagram-3"></i>
+                        <span class="nav-link-text">Laporan per bidang</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawainya">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span class="nav-link-text">Laporan individu pegawainya</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'analytics']) }}" class="nav-link {{ $isReportActive && $currentTab === 'analytics' ? 'active' : '' }}" title="Statistik & Tren Kinerja">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span class="nav-link-text">Statistik & tren kinerja</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-label">Akun</div>
+        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil">
+            <i class="bi bi-person-gear"></i>
+            <span class="nav-link-text">Profil</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-version-info">
+            Versi Sistem v1.0.0
+        </div>
+        <form method="POST" action="{{ route('logout') }}" id="logout-form-kepala">
+            @csrf
+            <button type="submit" class="btn btn-logout" title="Keluar Aplikasi">
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="nav-link-text">Logout</span>
+            </button>
+        </form>
+    </div>
+</aside>
