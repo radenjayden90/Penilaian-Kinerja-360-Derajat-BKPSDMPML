@@ -51,16 +51,23 @@ class ReportController extends Controller
                 });
             });
 
-        $activeTab = $request->input('tab', 'summary');
+        $activeTab = $request->input('tab', 'department');
 
         $results = $resultsQuery->paginate($request->input('per_page', 15))->withQueryString();
 
+<<<<<<< HEAD
         // Department breakdown stats
         $departmentStats = Department::withCount('employees')
             ->when($search, function($q) use ($search) {
                 $term = mb_strtolower($search, 'UTF-8');
                 return $q->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%');
             })
+=======
+        // Department breakdown stats (hanya bidang/unit kerja, bukan instansi utama BKPSDM)
+        $departmentStats = Department::where('code', '!=', 'BKPSDM')
+            ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%bkpsdm kabupaten%')
+            ->withCount('employees')
+>>>>>>> 6521e8159f9cdd2536b23f055866ef58065c1942
             ->orderBy('name')
             ->get()
             ->map(function($dept) use ($selectedPeriodId) {

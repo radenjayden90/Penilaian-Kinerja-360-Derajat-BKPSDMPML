@@ -69,8 +69,11 @@ class DashboardController extends Controller
             'kurang' => ['count' => $countKurang, 'pct' => round(($countKurang / $totalEval) * 100, 1)],
         ];
 
-        // 2. Rata-Rata Nilai per Bidang
-        $departments = Department::orderBy('name')->get();
+        // 2. Rata-Rata Nilai per Bidang (hanya bidang/unit kerja bawahan, bukan instansi utama BKPSDM)
+        $departments = Department::where('code', '!=', 'BKPSDM')
+            ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%bkpsdm kabupaten%')
+            ->orderBy('name')
+            ->get();
         $departmentAverages = $departments->map(function($dept) use ($activePeriodResults) {
             $deptResults = $activePeriodResults->filter(fn($r) => $r->employee?->department_id === $dept->id);
             $avg = $deptResults->count() > 0 ? round($deptResults->avg('final_score'), 2) : 0;

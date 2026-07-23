@@ -27,7 +27,7 @@
         <div class="nav-label">Laporan Eksekutif</div>
         @php
             $isReportActive = request()->routeIs('report.*');
-            $currentTab = request()->input('tab', 'summary');
+            $currentTab = request()->input('tab', 'department');
         @endphp
         <a href="{{ route('report.index', ['tab' => 'summary']) }}" class="nav-link {{ $isReportActive && $currentTab === 'summary' ? 'active' : '' }}" title="Ringkasan Kinerja Instansi" wire:navigate>
             <i class="bi bi-building-check nav-main-icon"></i>
@@ -45,6 +45,31 @@
             <i class="bi bi-graph-up-arrow nav-main-icon"></i>
             <span class="nav-link-text">Statistik & Tren Kinerja</span>
         </a>
+<<<<<<< HEAD
+=======
+        <div class="collapse {{ $isReportActive ? 'show' : '' }}" id="laporanSubmenu">
+            <ul class="submenu">
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'department']) }}" class="nav-link {{ $isReportActive && $currentTab === 'department' ? 'active' : '' }}" title="Laporan Per Bidang">
+                        <i class="bi bi-diagram-3"></i>
+                        <span class="nav-link-text">Laporan per bidang</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawainya">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span class="nav-link-text">Laporan individu pegawainya</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('report.index', ['tab' => 'analytics']) }}" class="nav-link {{ $isReportActive && $currentTab === 'analytics' ? 'active' : '' }}" title="Statistik & Tren Kinerja">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span class="nav-link-text">Statistik & tren kinerja</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+>>>>>>> 6521e8159f9cdd2536b23f055866ef58065c1942
 
         <div class="nav-label">Akun</div>
         <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil" wire:navigate>
