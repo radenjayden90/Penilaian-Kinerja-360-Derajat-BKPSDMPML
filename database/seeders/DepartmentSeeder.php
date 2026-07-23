@@ -10,6 +10,7 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $departments = [
+            ["name" => "BKPSDM Kabupaten Pemalang", "code" => "BKPSDM"],
             ["name" => "Sekretariat", "code" => "SEKRETARIAT"],
             ["name" => "Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian", "code" => "PPIK"],
             ["name" => "Bidang Mutasi dan Promosi", "code" => "MUTASI"],
