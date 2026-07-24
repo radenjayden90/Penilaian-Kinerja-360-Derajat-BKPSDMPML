@@ -256,8 +256,8 @@
 
             <!-- Mini Profile Details Grid -->
             <div class="row g-3">
-                <div class="col-12 col-sm-6">
-                    <div class="info-mini-card d-flex align-items-center gap-3">
+                <div class="col-12 col-sm-6 d-flex">
+                    <div class="info-mini-card d-flex align-items-center gap-3 w-100 h-100">
                         <div class="info-icon-wrapper bg-primary bg-opacity-10 text-primary">
                             <i class="bi bi-briefcase"></i>
                         </div>
@@ -268,8 +268,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6">
-                    <div class="info-mini-card d-flex align-items-center gap-3">
+                <div class="col-12 col-sm-6 d-flex">
+                    <div class="info-mini-card d-flex align-items-center gap-3 w-100 h-100">
                         <div class="info-icon-wrapper bg-warning bg-opacity-10 text-warning">
                             <i class="bi bi-building"></i>
                         </div>
@@ -280,8 +280,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6">
-                    <div class="info-mini-card d-flex align-items-center gap-3">
+                <div class="col-12 col-sm-6 d-flex">
+                    <div class="info-mini-card d-flex align-items-center gap-3 w-100 h-100">
                         <div class="info-icon-wrapper bg-info bg-opacity-10 text-info">
                             <i class="bi bi-calendar3"></i>
                         </div>
@@ -292,8 +292,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6">
-                    <div class="info-mini-card d-flex align-items-center gap-3">
+                <div class="col-12 col-sm-6 d-flex">
+                    <div class="info-mini-card d-flex align-items-center gap-3 w-100 h-100">
                         <div class="info-icon-wrapper bg-success bg-opacity-10 text-success">
                             <i class="bi bi-shield-check"></i>
                         </div>
