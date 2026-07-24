@@ -13,13 +13,13 @@
 
     <nav class="sidebar-menu">
         <div class="nav-label">Utama</div>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Beranda" wire:navigate>
+        <a wire:navigate href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Beranda" wire:navigate>
             <i class="bi bi-house-door nav-main-icon"></i>
             <span class="nav-link-text">Beranda</span>
         </a>
 
         <div class="nav-label">Evaluasi Kinerja</div>
-        <a href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}" title="Penilaian Kepala Bidang" wire:navigate>
+        <a wire:navigate href="{{ route('transaction.assessments.index') }}" class="nav-link {{ request()->routeIs('transaction.assessments.*') ? 'active' : '' }}" title="Penilaian Kepala Bidang" wire:navigate>
             <i class="bi bi-pencil-square nav-main-icon"></i>
             <span class="nav-link-text">Penilaian Kepala Bidang</span>
         </a>
@@ -30,21 +30,21 @@
             $currentTab = request()->input('tab', 'department');
         @endphp
 
-        <a href="{{ route('report.index', ['tab' => 'department']) }}" class="nav-link {{ $isReportActive && $currentTab === 'department' ? 'active' : '' }}" title="Laporan Per Bidang" wire:navigate>
+        <a wire:navigate href="{{ route('report.index', ['tab' => 'department']) }}" class="nav-link {{ $isReportActive && $currentTab === 'department' ? 'active' : '' }}" title="Laporan Per Bidang" wire:navigate>
             <i class="bi bi-diagram-3 nav-main-icon"></i>
             <span class="nav-link-text">Laporan Per Bidang</span>
         </a>
-        <a href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawainya" wire:navigate>
+        <a wire:navigate href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawai" wire:navigate>
             <i class="bi bi-person-lines-fill nav-main-icon"></i>
-            <span class="nav-link-text">Laporan Individu Pegawainya</span>
+            <span class="nav-link-text">Laporan Individu Pegawai</span>
         </a>
-        <a href="{{ route('report.index', ['tab' => 'analytics']) }}" class="nav-link {{ $isReportActive && $currentTab === 'analytics' ? 'active' : '' }}" title="Statistik & Tren Kinerja" wire:navigate>
+        <a wire:navigate href="{{ route('report.index', ['tab' => 'analytics']) }}" class="nav-link {{ $isReportActive && $currentTab === 'analytics' ? 'active' : '' }}" title="Statistik & Tren Kinerja" wire:navigate>
             <i class="bi bi-graph-up-arrow nav-main-icon"></i>
             <span class="nav-link-text">Statistik & Tren Kinerja</span>
         </a>
 
         <div class="nav-label">Akun</div>
-        <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil" wire:navigate>
+        <a wire:navigate href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil" wire:navigate>
             <i class="bi bi-person-gear"></i>
             <span class="nav-link-text">Profil</span>
         </a>

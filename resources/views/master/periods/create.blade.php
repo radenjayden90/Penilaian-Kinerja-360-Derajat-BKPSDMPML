@@ -5,8 +5,8 @@
 @section('subtitle', 'Form pengaturan jadwal dan periode evaluasi kinerja ASN')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('master.periods.index') }}">Periode Penilaian</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.periods.index') }}">Periode Penilaian</a></li>
     <li class="breadcrumb-item active" aria-current="page">Tambah</li>
 @endsection
 
@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 border-top pt-3">
-                        <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary">Batal</a>
+                        <a wire:navigate href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary">Batal</a>
                         <button type="submit" class="btn btn-primary" id="btn-submit"><i class="bi bi-save me-1"></i> Simpan & Aktifkan Periode</button>
                     </div>
                 </form>

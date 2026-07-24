@@ -5,8 +5,8 @@
 @section('subtitle', 'Pembaruan data aspek kompetensi penilaian')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('master.assessment-categories.index') }}">Kategori Aspek</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.assessment-categories.index') }}">Kategori Aspek</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
 @endsection
 
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 border-top pt-3">
-                        <a href="{{ route('master.assessment-categories.index') }}" class="btn btn-outline-secondary">Batal</a>
+                        <a wire:navigate href="{{ route('master.assessment-categories.index') }}" class="btn btn-outline-secondary">Batal</a>
                         <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Perbarui Kategori</button>
                     </div>
                 </form>

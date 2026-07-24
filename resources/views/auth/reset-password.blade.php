@@ -504,7 +504,7 @@
                         <span>Reset Password</span>
                     </button>
 
-                    <a href="{{ route('login') }}" class="back-link">
+                    <a wire:navigate href="{{ route('login') }}" class="back-link">
                         <i class="bi bi-arrow-left"></i>
                         <span>Kembali ke Halaman Login</span>
                     </a>

@@ -5,7 +5,7 @@
 @section('subtitle', 'Rincian bobot, evaluasi 7 dimensi BerAKHLAK, dan skor agregat kinerja individu pegawai')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('transaction.calculations.index') }}">Perhitungan Nilai</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('transaction.calculations.index') }}">Perhitungan Nilai</a></li>
     <li class="breadcrumb-item active" aria-current="page">Rapor Individu</li>
 @endsection
 
@@ -238,7 +238,7 @@
         </div>
         <div class="col-12 col-lg-4 text-lg-end">
             <div class="d-flex flex-wrap justify-content-lg-end gap-2">
-                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-light text-primary fw-semibold px-3 py-2 rounded-3 shadow-sm">
+                <a wire:navigate href="{{ route('transaction.calculations.index') }}" class="btn btn-light text-primary fw-semibold px-3 py-2 rounded-3 shadow-sm">
                     <i class="bi bi-arrow-left me-1"></i> Kembali
                 </a>
                 <a href="{{ route('assessment.exportPdf', $result->id) }}" target="_blank" class="btn btn-danger fw-semibold px-3 py-2 rounded-3 shadow-sm">

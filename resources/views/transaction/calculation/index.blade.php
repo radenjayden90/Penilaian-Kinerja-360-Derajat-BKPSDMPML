@@ -15,7 +15,7 @@
 @section('content')
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('transaction.calculations.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('transaction.calculations.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -23,13 +23,13 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 d-flex gap-2">
-                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 2.5rem;">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.requestSubmit()" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 2.5rem;">
                     <option value="">-- Semua Unit Kerja --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
                     @endforeach
                 </select>
-                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" title="Reset Filter">
+                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" title="Reset Filter" wire:navigate>
                     <i class="bi bi-x-circle"></i>
                 </a>
             </div>
@@ -98,7 +98,7 @@
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
                                     @if($res)
-                                        <a href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Detail Penilaian">
+                                        <a wire:navigate href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Detail Penilaian">
                                             <i class="bi bi-eye me-1"></i> Lihat Detail Penilaian
                                         </a>
                                     @else

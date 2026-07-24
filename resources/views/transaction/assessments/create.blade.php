@@ -5,7 +5,7 @@
 @section('subtitle', 'Instrumen pengisian kuesioner penilaian kinerja 360 derajat ASN Kabupaten Pemalang')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
     <li class="breadcrumb-item active" aria-current="page">Pengisian Penilaian</li>
 @endsection
 
@@ -125,7 +125,6 @@
         padding: 12px 18px;
     }
 
-    /* Executive Question Card */
     .question-card {
         background: #FFFFFF;
         border: 1px solid var(--card-border);
@@ -134,6 +133,43 @@
         box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
         transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
         margin-bottom: 24px;
+    }
+
+    .name-title {
+        font-size: 26px;
+        letter-spacing: -0.5px;
+    }
+
+    @media (max-width: 768px) {
+        .hero-banner-target {
+            padding: 16px;
+            border-radius: 16px;
+        }
+        .question-card {
+            padding: 16px;
+            border-radius: 16px;
+        }
+        .badge-type-pill {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .target-info-pill {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .target-avatar-lg {
+            width: 44px;
+            height: 44px;
+            font-size: 1.15rem;
+            border-radius: 12px;
+        }
+        .name-title {
+            font-size: 18px;
+        }
+        .period-box-glass {
+            padding: 10px 12px;
+            width: 100%;
+        }
     }
 
     .question-card:hover {
@@ -245,10 +281,10 @@
 @endphp
 
 <!-- Executive Target Employee Header Banner -->
-<div class="hero-banner-target mb-4">
-    <div class="row align-items-center g-4">
+<div class="hero-banner-target mb-4 tw-overflow-hidden">
+    <div class="row m-0 align-items-center g-4">
         <div class="col-12 col-lg-8">
-            <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                 <span class="badge-type-pill">
                     <i class="bi bi-shield-check"></i> Evaluasi Kinerja 360°
                 </span>
@@ -261,7 +297,7 @@
                     {{ strtoupper(substr($target->name, 0, 1)) }}
                 </div>
                 <div>
-                    <h2 class="fw-bold text-white mb-1" style="font-size: 26px; letter-spacing: -0.5px;">
+                    <h2 class="fw-bold text-white mb-1 name-title tw-break-words tw-whitespace-normal">
                         {{ $target->name }}
                     </h2>
                     <div class="text-white text-opacity-90 small">
@@ -300,15 +336,15 @@
     <div class="tw-bg-white tw-rounded-2xl tw-shadow-xl tw-overflow-hidden tw-border tw-border-slate-200/80">
         
         <!-- Header Title Bar -->
-        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-6 md:tw-px-10 tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
+        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-5 sm:tw-px-6 md:tw-px-10 tw-py-4 sm:tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
             <div>
-                <h3 class="tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
+                <h3 class="tw-text-base md:tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
                     <i class="bi bi-pencil-square tw-text-blue-400"></i> Pengisian Kuesioner Evaluasi
                 </h3>
-                <p class="tw-text-slate-300 tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
+                <p class="tw-text-slate-300 tw-text-xs md:tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
             </div>
             <div>
-                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-4 tw-py-1.5 tw-rounded-full tw-text-xs tw-font-semibold">
+                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-3 md:tw-px-4 tw-py-1.5 tw-rounded-full tw-text-[10px] md:tw-text-xs tw-font-semibold">
                     <i class="bi bi-person-badge me-1"></i> Evaluator: {{ Auth::user()->name }}
                 </span>
             </div>
@@ -343,7 +379,7 @@
             </div>
 
             <!-- Content Area -->
-            <div class="tw-p-6 md:tw-p-10 tw-bg-slate-50/60">
+            <div class="tw-p-4 sm:tw-p-6 md:tw-p-10 tw-bg-slate-50/60">
                 
                 <div class="tw-mb-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
                     <div>
@@ -366,7 +402,7 @@
                                             {{ $loop->iteration }}
                                         </div>
                                         <div class="tw-pt-1">
-                                            <p class="tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-semibold tw-m-0">
+                                            <p class="tw-text-sm md:tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-semibold tw-m-0">
                                                 {{ $indicator->name ?? $indicator->question ?? $indicator->indicator }}
                                             </p>
                                         </div>
@@ -377,7 +413,7 @@
                                         <div class="tw-flex tw-justify-between tw-mb-4 tw-px-1">
                                             @for($i = 1; $i <= 10; $i++)
                                                 <button type="button" 
-                                                        class="rating-number tw-w-8 tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-700 tw-font-bold tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-100 hover:tw-text-blue-700 tw-border-0"
+                                                        class="rating-number tw-w-6 tw-h-6 sm:tw-w-8 sm:tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-700 tw-font-bold tw-text-xs sm:tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-100 hover:tw-text-blue-700 tw-border-0"
                                                         data-value="{{ $i }}"
                                                         data-input="score_{{ $indicator->id }}">
                                                     {{ $i }}
@@ -431,23 +467,23 @@
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-4 md:tw-justify-between tw-items-center">
+            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-3 sm:tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-nowrap tw-gap-2 sm:tw-gap-4 tw-justify-between tw-items-center tw-overflow-x-auto">
                 
-                <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors tw-w-full sm:tw-w-auto">
+                <div class="tw-flex tw-flex-nowrap tw-gap-2 sm:tw-gap-3 tw-shrink-0">
+                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-3 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
-                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors tw-w-full sm:tw-w-auto">
-                        <i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara
+                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-3 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
+                        <i class="bi bi-bookmark-fill me-1"></i> Simpan
                     </button>
                 </div>
 
-                <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all tw-w-full sm:tw-w-auto">
+                <div class="tw-flex tw-flex-nowrap tw-gap-2 sm:tw-gap-3 tw-ml-auto tw-justify-end tw-shrink-0">
+                    <button type="button" id="btnNext" class="tw-border-0 tw-px-4 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
                         Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
-                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all tw-w-full sm:tw-w-auto disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
-                        <i class="bi bi-check-circle-fill me-1"></i> Submit Penilaian
+                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-4 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                        <i class="bi bi-check-circle-fill me-1"></i> Submit
                     </button>
                 </div>
 
@@ -560,7 +596,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('livewire:navigated', function() {
+(function() {
     const totalCategories = {{ count($categories) }};
     const totalQuestions = document.querySelectorAll('.form-score-input').length;
     let currentTabIndex = 0;
@@ -1043,6 +1079,7 @@ document.addEventListener('livewire:navigated', function() {
     
     // Initialize Progress
     updateProgress();
-});
+    updateProgress();
+})();
 </script>
 @endpush

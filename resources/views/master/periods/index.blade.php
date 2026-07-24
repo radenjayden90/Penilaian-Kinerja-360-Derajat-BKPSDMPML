@@ -5,12 +5,12 @@
 @section('subtitle', 'Pengaturan jadwal pelaksanaan evaluasi kinerja ASN semester/tahunan')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Periode Penilaian</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.periods.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.periods.create') }}" class="btn btn-primary">
         <i class="bi bi-calendar-plus me-1"></i> Buka Periode Baru
     </a>
 @endsection
@@ -18,7 +18,7 @@
 @section('content')
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('master.periods.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('master.periods.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-5">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                <select name="year" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="year" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Tahun --</option>
                     @for($y = date('Y') + 1; $y >= 2024; $y--)
                         <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>Tahun {{ $y }}</option>
@@ -34,14 +34,14 @@
                 </select>
             </div>
             <div class="col-12 col-md-4 d-flex gap-2">
-                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="status" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Status --</option>
                     <option value="OPEN" {{ request('status') === 'OPEN' ? 'selected' : '' }}>Aktif / Terbuka</option>
                     <option value="CLOSED" {{ request('status') === 'CLOSED' ? 'selected' : '' }}>Selesai / Ditutup</option>
                     <option value="ARCHIVED" {{ request('status') === 'ARCHIVED' ? 'selected' : '' }}>Arsip</option>
                 </select>
                 @if(request('search') || request('year') || request('status'))
-                    <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
+                    <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                         <i class="bi bi-x-circle"></i>
                     </a>
                 @endif
@@ -95,7 +95,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.periods.edit', $period) }}" class="btn btn-outline-primary" title="Edit Periode">
+                                    <a wire:navigate href="{{ route('master.periods.edit', $period) }}" class="btn btn-outline-primary" title="Edit Periode">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.periods.destroy', $period) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus periode ini?')">

@@ -5,12 +5,12 @@
 @section('subtitle', 'Kelola struktur organisasi dan bidang kerja di instansi')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Unit Kerja</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.departments.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.departments.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Tambah Unit Kerja
     </a>
 @endsection
@@ -18,7 +18,7 @@
 @section('content')
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('master.departments.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('master.departments.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-7">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -26,13 +26,13 @@
                 </div>
             </div>
             <div class="col-12 col-md-5 d-flex gap-2">
-                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="status" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Status --</option>
                     <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
                 @if(request('search') || request('status') !== null)
-                    <a href="{{ route('master.departments.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
+                    <a href="{{ route('master.departments.index') }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                         <i class="bi bi-x-circle"></i>
                     </a>
                 @endif
@@ -71,7 +71,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.departments.edit', $dept) }}" class="btn btn-outline-primary" title="Edit Data">
+                                    <a wire:navigate href="{{ route('master.departments.edit', $dept) }}" class="btn btn-outline-primary" title="Edit Data">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.departments.destroy', $dept) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus unit kerja ini?')">

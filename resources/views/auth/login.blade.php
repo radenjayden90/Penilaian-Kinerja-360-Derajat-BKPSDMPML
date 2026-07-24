@@ -598,7 +598,8 @@
                 min-height: 100dvh;
                 max-height: none;
                 overflow: visible !important;
-                justify-content: flex-start;
+                justify-content: center;
+                gap: 32px;
             }
             .left-side {
                 padding: 28px 24px 12px 24px;

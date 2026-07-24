@@ -38,7 +38,7 @@
 <!-- Global Filter Header -->
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('report.index') }}" class="row g-2 align-items-center">
+        <form method="GET" action="{{ route('report.index') }}" class="row g-2 align-items-center" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <input type="hidden" name="tab" value="{{ $activeTab }}">
             @php
                 $colPeriod = $activeTab === 'department' ? 'col-md-4' : 'col-md-3';
@@ -47,7 +47,7 @@
             @endphp
             <div class="{{ $colPeriod }}">
                 <label class="form-label small fw-semibold text-muted mb-1">Periode Evaluation</label>
-                <select name="period_id" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="period_id" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Periode --</option>
                     @foreach($periods as $per)
                         <option value="{{ $per->id }}" {{ $selectedPeriodId == $per->id ? 'selected' : '' }}>
@@ -58,7 +58,7 @@
             </div>
             <div class="{{ $colDept }}">
                 <label class="form-label small fw-semibold text-muted mb-1">Unit Kerja / Bidang</label>
-                <select name="department_id" class="form-select bg-light text-truncate" onchange="this.form.submit()">
+                <select name="department_id" class="form-select bg-light text-truncate" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Unit Kerja / Bidang --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ $selectedDepartmentId == $dept->id ? 'selected' : '' }} title="{{ $dept->name }}">{{ $dept->name }}</option>
@@ -78,7 +78,7 @@
                 @if($selectedPeriodId || $selectedDepartmentId || request('search'))
                     <div>
                         <label class="form-label small mb-1 d-block">&nbsp;</label>
-                        <a href="{{ route('report.index', ['tab' => $activeTab]) }}" class="btn btn-outline-secondary" title="Reset Filter">
+                        <a wire:navigate href="{{ route('report.index', ['tab' => $activeTab]) }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                             <i class="bi bi-x-circle"></i>
                         </a>
                     </div>

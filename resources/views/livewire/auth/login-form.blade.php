@@ -45,7 +45,7 @@
                 Ingat sesi saya
             </label>
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
+                <a wire:navigate href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
             @endif
         </div>
 
