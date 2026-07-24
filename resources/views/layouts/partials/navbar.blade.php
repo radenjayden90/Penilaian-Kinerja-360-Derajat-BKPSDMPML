@@ -114,7 +114,7 @@
 </header>
 
 <script>
-    document.addEventListener('livewire:navigated', function() {
+    function initNavbarNotifications() {
         const authUserId = "{{ Auth::id() }}";
         const storageKey = 'seenAssessmentCount_' + authUserId;
         let currentAssessmentCount = {{ $assessmentCount }};
@@ -123,6 +123,8 @@
         const empty = document.getElementById('notificationEmpty');
         const textCount = document.getElementById('notificationTextCount');
         const notificationBtn = document.getElementById('notificationDropdown');
+
+        if (!badge || !hasData || !empty) return;
 
         function updateBadgeVisibility(count, lastUpdated) {
             const seenCount = parseInt(localStorage.getItem(storageKey)) || 0;
@@ -164,7 +166,7 @@
             if (count > 0) {
                 hasData.classList.remove('d-none');
                 empty.classList.add('d-none');
-                textCount.textContent = count + ' orang';
+                if (textCount) textCount.textContent = count + ' orang';
                 
                 if (lastUpdated) {
                     const timeContainer = document.getElementById('notificationTimeContainer');
@@ -185,33 +187,37 @@
         updateBadgeVisibility(currentAssessmentCount, "{{ $lastUpdated ?? '' }}");
 
         // Hide badge when button is clicked (mark as seen)
-        if (notificationBtn) {
+        if (notificationBtn && !notificationBtn.dataset.listenerBound) {
+            notificationBtn.dataset.listenerBound = 'true';
             notificationBtn.addEventListener('click', function() {
                 if (currentAssessmentCount > 0) {
                     localStorage.setItem(storageKey, currentAssessmentCount);
-                    badge.classList.add('d-none');
+                    if (badge) badge.classList.add('d-none');
                 }
             });
         }
 
         // Real-time polling
-        function fetchNotifications() {
-            fetch('{{ route('notifications.count') }}', {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.count !== undefined) {
-                    updateBadgeVisibility(data.count, data.last_updated);
-                }
-            })
-            .catch(error => console.error('Error fetching notifications:', error));
+        if (!window.notificationIntervalSet) {
+            window.notificationIntervalSet = true;
+            setInterval(function() {
+                fetch('{{ route('notifications.count') }}', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.count !== undefined) {
+                        updateBadgeVisibility(data.count, data.last_updated);
+                    }
+                })
+                .catch(error => console.error('Error fetching notifications:', error));
+            }, 15000);
         }
-        
-        // Polling interval (setiap 15 detik)
-        setInterval(fetchNotifications, 15000);
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', initNavbarNotifications);
+    document.addEventListener('livewire:navigated', initNavbarNotifications);
 </script>
