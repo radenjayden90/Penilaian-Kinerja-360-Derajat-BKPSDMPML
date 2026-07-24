@@ -377,7 +377,7 @@
                                             {{ $loop->iteration }}
                                         </div>
                                         <div class="tw-pt-1">
-                                            <p class="tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-semibold tw-m-0">
+                                            <p class="tw-text-sm md:tw-text-lg tw-text-slate-800 tw-leading-relaxed tw-font-semibold tw-m-0">
                                                 {{ $indicator->name ?? $indicator->question ?? $indicator->indicator }}
                                             </p>
                                         </div>
@@ -442,23 +442,23 @@
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-4 sm:tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-wrap tw-gap-3 sm:tw-gap-4 tw-justify-between tw-items-center">
+            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-3 sm:tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-nowrap tw-gap-2 sm:tw-gap-4 tw-justify-between tw-items-center tw-overflow-x-auto">
                 
-                <div class="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3">
-                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-4 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
+                <div class="tw-flex tw-flex-nowrap tw-gap-2 sm:tw-gap-3 tw-shrink-0">
+                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-3 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
-                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-4 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
-                        <i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara
+                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-3 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
+                        <i class="bi bi-bookmark-fill me-1"></i> Simpan
                     </button>
                 </div>
 
-                <div class="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3 tw-ml-auto tw-justify-end">
-                    <button type="button" id="btnNext" class="tw-border-0 tw-px-5 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
+                <div class="tw-flex tw-flex-nowrap tw-gap-2 sm:tw-gap-3 tw-ml-auto tw-justify-end tw-shrink-0">
+                    <button type="button" id="btnNext" class="tw-border-0 tw-px-4 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
                         Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
-                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-5 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
-                        <i class="bi bi-check-circle-fill me-1"></i> Submit Penilaian
+                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-4 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-[11px] sm:tw-text-sm tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                        <i class="bi bi-check-circle-fill me-1"></i> Submit
                     </button>
                 </div>
 
