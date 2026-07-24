@@ -89,6 +89,9 @@
             background-position: left 45% bottom;
             background-repeat: no-repeat;
             filter: brightness(1.15) contrast(1.02);
+            will-change: transform, opacity;
+            transform: translate3d(0, 140px, 0);
+            opacity: 0;
         }
 
         .container {
@@ -470,9 +473,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        gsap.fromTo('#layerBuilding', 
+            { y: 140, opacity: 0 }, 
+            { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' }
+        );
         gsap.fromTo('#loginCard', 
             { opacity: 0, y: 15 },
-            { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.2 }
         );
         gsap.to('.cloud-layer-1', { xPercent: -50, ease: 'none', duration: 90, repeat: -1 });
         gsap.to('.cloud-layer-2', { xPercent: -50, ease: 'none', duration: 70, repeat: -1 });

@@ -5,7 +5,6 @@
 @section('subtitle', 'Biodata lengkap pegawai dan analisis grafik radar kompetensi 360° BerAKHLAK.')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Profil Saya</li>
 @endsection
 

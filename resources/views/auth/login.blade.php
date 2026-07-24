@@ -105,7 +105,7 @@
             filter: brightness(1.14) contrast(1.2) drop-shadow(0 5px 18px rgba(10, 40, 90, 0.22));
         }
 
-        /* Layer 3: Building Layer (Gedung BKPSDM PNG Transparan - Original) */
+        /* Layer 3: Building Layer (Gedung BKPSDM PNG Transparan) */
         .layer-building {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 100%;
@@ -113,15 +113,11 @@
             pointer-events: none;
             background-image: url('{{ asset('images/building-cutout.png') }}');
             background-size: cover;
-<<<<<<< Updated upstream
-            background-position: center center;
-=======
             background-position: left 45% bottom;
->>>>>>> Stashed changes
             background-repeat: no-repeat;
             filter: brightness(1.15) contrast(1.02);
             will-change: transform, opacity;
-            transform: translate3d(0, 220px, 0);
+            transform: translate3d(0, 160px, 0);
             opacity: 0;
         }
 
@@ -938,7 +934,6 @@
     }
 </script>
 
-<!-- GSAP 3 & ScrollTrigger Engine & Lenis Smooth Scroll -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.min.js"></script>
@@ -969,25 +964,24 @@
             return;
         }
 
-        // ================= 1. OPENING ANIMATION TIMELINE (EXACT SEQUENTIAL ORDER) =================
-        // Urutan: Sky -> Building -> Logo -> Title -> Description -> Login Card -> Input -> Button
-        // Easing: power4.out
+        // ================= 1. OPENING ANIMATION TIMELINE =================
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-        // Gedung BKPSDM: Fade in (tanpa pergerakan)
+        // Gedung BKPSDM: Slide up dari bawah ke atas dengan efek fade in
         tl.fromTo('#layerBuilding', 
-            { opacity: 0 }, 
-            { opacity: 1, duration: 2.2 }
+            { y: 160, opacity: 0 }, 
+            { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' },
+            0.05
         );
 
-        // 3. Logo Intro (Pemalang brand logo top left)
+        // Logo Intro (Pemalang brand logo top left)
         tl.fromTo('.stagger-brand',
             { y: -20, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.5 },
             "-=0.7"
         );
 
-        // 4. Hero Title ("360° Kinerja ASN")
+        // Hero Title ("360° Kinerja ASN")
         tl.fromTo('.hero-title',
             { x: -50, opacity: 0, filter: 'blur(6px)' },
             { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6 },
@@ -1001,21 +995,21 @@
             "-=0.4"
         );
 
-        // 5. Description Intro (Staggered lines)
+        // Description Intro (Staggered lines)
         tl.fromTo('.hero-desc-line',
             { x: -30, opacity: 0, filter: 'blur(3px)' },
             { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.5, stagger: 0.1 },
             "-=0.3"
         );
 
-        // 6. Login Card Intro
+        // Login Card Intro
         tl.fromTo('#loginCard',
             { opacity: 0, y: 15 },
             { opacity: 1, y: 0, duration: 0.6 },
             0.15
         );
 
-        // 7. Inputs & Button Intro (Staggered items)
+        // Inputs & Button Intro (Staggered items)
         tl.fromTo('.stagger-item',
             { opacity: 0, y: 10 },
             { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 },
@@ -1023,7 +1017,6 @@
         );
 
         // ================= 2. IDLE FLOATING CARD ANIMATION =================
-        // Floating motion: naik turun 3-4px, duration 6s loop (sine.inOut)
         gsap.to('#loginCard', {
             y: -4,
             duration: 3,
@@ -1034,8 +1027,6 @@
         });
 
         // ================= 3. SEAMLESS NATURAL CLOUD ANIMATIONS =================
-        // Minimal 3 layer awan bergerak sangat lambat tanpa putus
-        // Cloud 1: 90s duration
         gsap.to('.cloud-layer-1', {
             xPercent: -50,
             ease: 'none',
@@ -1050,7 +1041,6 @@
             ease: 'sine.inOut'
         });
 
-        // Cloud 2: 70s duration
         gsap.to('.cloud-layer-2', {
             xPercent: -50,
             ease: 'none',
@@ -1065,7 +1055,6 @@
             ease: 'sine.inOut'
         });
 
-        // Cloud 3: 110s duration (smaller, different movement)
         gsap.to('.cloud-layer-3', {
             xPercent: -35,
             ease: 'none',
@@ -1081,7 +1070,6 @@
         });
 
         // ================= 4. AMBIENT FOG / SMOKE MOTION =================
-        // Kabut bergerak seperti asap (translateX, translateY, scale, opacity 10-18%, blur, duration 18-25s)
         gsap.to('.fog-cloud-1', {
             x: 40,
             y: -25,
@@ -1117,20 +1105,15 @@
             delay: 4
         });
 
-        // ================= 5. MOUSE PARALLAX DEPTH (CURSOR INTERACTION) =================
-        // Mouse displacement values: Sky: 1px, Cloud: 4px (Teks & Card Login diam saat kursor bergerak)
+        // ================= 5. MOUSE PARALLAX DEPTH =================
         const isMobile = window.innerWidth <= 768;
         const mFactor = isMobile ? 0.25 : 1.0;
 
         const skyMX = gsap.quickTo('#layerSky', 'x', { duration: 0.8, ease: 'power2.out' });
         const skyMY = gsap.quickTo('#layerSky', 'y', { duration: 0.8, ease: 'power2.out' });
 
-<<<<<<< Updated upstream
-            // (Animasi parallax mouse untuk gedung ditiadakan sesuai permintaan)
-=======
         const cloudMX = gsap.quickTo('#layerClouds', 'x', { duration: 0.7, ease: 'power2.out' });
         const cloudMY = gsap.quickTo('#layerClouds', 'y', { duration: 0.7, ease: 'power2.out' });
->>>>>>> Stashed changes
 
         window.addEventListener('mousemove', (e) => {
             const { innerWidth, innerHeight } = window;
@@ -1144,9 +1127,7 @@
             cloudMY(my * 4 * mFactor);
         });
 
-        // ================= 6. SCROLL PARALLAX (SPEED RATIOS) =================
-        // Sky: 20%, Cloud: 35%, Building: 55%, Content: 100%, Login Card: minimal
-        // Mobile parallax dikurangi menjadi ~25%
+        // ================= 6. SCROLL PARALLAX =================
         ScrollTrigger.create({
             trigger: '#pageWrapper',
             start: 'top top',
@@ -1156,34 +1137,6 @@
                 const progress = self.progress;
                 const pFactor = isMobile ? 0.25 : 1.0;
 
-<<<<<<< Updated upstream
-                // Gedung: (tidak ada pergerakan)
-            });
-        }
-
-        // ================= 5. SCROLL STORYTELLING PARALLAX =================
-        if (window.innerWidth > 768) {
-            ScrollTrigger.create({
-                trigger: '#pageWrapper',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1,
-                onUpdate: (self) => {
-                    const progress = self.progress;
-
-                    // Scene 1: Gedung statis (tidak bergerak saat scroll)
-                    // gsap.set('#layerBuilding', { y: progress * -55 });
-
-                    // Scene 2: Card login sedikit bergerak ke atas (~20px)
-                    gsap.set('#rightSide', { y: progress * -20 });
-
-                    // Scene 3: Title & text mengecil & fade halus
-                    gsap.set('#leftContent', { opacity: 1 - progress * 0.45, scale: 1 - progress * 0.03 });
-                }
-            });
-        }
-=======
-                // Move layers based on target ratios
                 gsap.set('#layerSky', { y: progress * -30 * pFactor });
                 gsap.set('#layerClouds', { y: progress * -52.5 * pFactor });
                 gsap.set('#layerBuilding', { y: progress * -82.5 * pFactor });
@@ -1191,7 +1144,6 @@
                 gsap.set('#rightSide', { y: progress * -20 * pFactor });
             }
         });
->>>>>>> Stashed changes
     });
 </script>
 

@@ -5,7 +5,6 @@
 @section('subtitle', 'Pantau kelengkapan partisipasi pengisian kuesioner oleh pegawai secara real-time')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Monitoring</li>
 @endsection
 
