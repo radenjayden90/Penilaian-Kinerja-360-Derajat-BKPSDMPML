@@ -297,19 +297,19 @@
                     </div>
                 @endif
                 <div class="flex-grow-1 min-w-0">
-                    <h2 class="fw-bold text-white mb-0.5 name-title tw-break-words tw-whitespace-normal">
+                    <h2 class="fw-bold text-white mb-1 name-title tw-break-words tw-whitespace-normal">
                         {{ $target->name }}
                     </h2>
-                    <div class="text-white text-opacity-90 small mb-1.5" style="font-size: 13px;">
-                        <i class="bi bi-card-text me-1"></i>NIP. {{ $target->nip }}
-                    </div>
-                    <div class="d-flex flex-wrap align-items-center gap-2">
-                        <span class="target-info-pill">
-                            <i class="bi bi-briefcase text-primary me-1"></i> {{ $target->position->name ?? 'Jabatan Belum Diatur' }}
-                        </span>
-                        <span class="target-info-pill">
-                            <i class="bi bi-building text-primary me-1"></i> {{ $target->department->name ?? 'Unit Kerja Belum Diatur' }}
-                        </span>
+                    <div class="d-flex flex-column gap-1 text-white text-opacity-90" style="font-size: 13.5px;">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-card-text me-2 opacity-75"></i>NIP. {{ $target->nip }}
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-briefcase me-2 opacity-75"></i>{{ $target->position->name ?? 'Jabatan Belum Diatur' }}
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-building me-2 opacity-75"></i>{{ $target->department->name ?? 'Unit Kerja Belum Diatur' }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -526,17 +526,17 @@
             
             <!-- Buttons -->
             <div class="tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-3 tw-mt-2">
-                <button type="button" id="btnModalCancel" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-full tw-bg-white tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-slate-700 tw-shadow-sm tw-ring-1 tw-ring-inset tw-ring-slate-300 hover:tw-bg-slate-50 tw-transition-colors focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-300">
-                    <svg class="tw-h-5 tw-w-5 tw-text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <button type="button" id="btnModalCancel" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-1.5 tw-rounded-full tw-bg-white tw-px-4 md:tw-px-5 tw-py-2.5 tw-text-sm tw-font-semibold tw-text-slate-700 tw-shadow-sm tw-ring-1 tw-ring-inset tw-ring-slate-300 hover:tw-bg-slate-50 tw-transition-colors focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-300">
+                    <svg class="tw-h-4 tw-w-4 tw-text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
                     Kembali
                 </button>
-                <button type="button" id="btnModalConfirm" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-full tw-bg-gradient-to-r tw-from-blue-600 tw-to-blue-500 tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-white tw-shadow-lg tw-shadow-blue-500/30 hover:tw-from-blue-700 hover:tw-to-blue-600 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-0">
-                    <svg class="tw-h-5 tw-w-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" id="iconConfirmCheck">
+                <button type="button" id="btnModalConfirm" class="tw-flex-1 tw-inline-flex tw-justify-center tw-items-center tw-gap-1.5 tw-rounded-full tw-bg-gradient-to-r tw-from-blue-600 tw-to-blue-500 tw-px-4 md:tw-px-5 tw-py-2.5 tw-text-sm tw-font-semibold tw-text-white tw-shadow-lg tw-shadow-blue-500/30 hover:tw-from-blue-700 hover:tw-to-blue-600 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-0">
+                    <svg class="tw-h-4 tw-w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" id="iconConfirmCheck">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
-                    <svg class="tw-h-5 tw-w-5 tw-animate-spin tw-hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="iconConfirmLoading">
+                    <svg class="tw-h-4 tw-w-4 tw-animate-spin tw-hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="iconConfirmLoading">
                         <circle class="tw-opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="tw-opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -562,8 +562,8 @@
             </p>
             
             <div class="tw-flex tw-justify-center">
-                <button type="button" id="btnModalSuccess" class="tw-w-full tw-inline-flex tw-justify-center tw-items-center tw-rounded-full tw-bg-slate-900 tw-px-6 tw-py-3.5 tw-text-base tw-font-semibold tw-text-white tw-shadow-lg hover:tw-bg-slate-800 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-900 focus:tw-ring-offset-2 tw-border-0">
-                    Kembali ke Dashboard
+                <button type="button" id="btnModalSuccess" class="tw-w-full md:tw-w-auto tw-min-w-[160px] tw-inline-flex tw-justify-center tw-items-center tw-rounded-full tw-bg-slate-900 tw-px-6 tw-py-2.5 tw-text-sm tw-font-semibold tw-text-white tw-shadow-lg hover:tw-bg-slate-800 tw-transition-all focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-slate-900 focus:tw-ring-offset-2 tw-border-0">
+                    Kembali
                 </button>
             </div>
         </div>

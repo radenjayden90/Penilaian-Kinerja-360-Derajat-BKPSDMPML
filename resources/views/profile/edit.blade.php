@@ -232,6 +232,14 @@
     }
 @endphp
 
+@if (session('status') === 'profile-updated')
+    <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4 shadow-sm" role="alert" style="background-color: #F0FDF4; border: 1px solid #BBF7D0; color: #166534;">
+        <i class="bi bi-check-circle-fill me-2 fs-5 align-middle"></i>
+        <strong>Berhasil!</strong> Foto profil dan data Anda telah berhasil diperbarui.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <!-- Senior-Friendly Profile & Biodata Card -->
 <div class="executive-card p-4 mb-4">
     <!-- Header Biodata Banner -->
@@ -239,7 +247,7 @@
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
             <div class="position-relative">
                 @if($user->avatar && file_exists(public_path('storage/' . $user->avatar)))
-                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $empName }}" class="rounded-3 object-fit-cover shadow-sm" style="width: 120px; height: 160px; min-width: 120px; aspect-ratio: 3 / 4; border: 3px solid #FFFFFF;">
+                    <img src="{{ asset('storage/' . $user->avatar) }}?v={{ time() }}" alt="{{ $empName }}" class="rounded-3 object-fit-cover shadow-sm" style="width: 120px; height: 160px; min-width: 120px; aspect-ratio: 3 / 4; border: 3px solid #FFFFFF;">
                 @else
                     <div class="avatar-prominent rounded-3" style="width: 120px; height: 160px; min-width: 120px; aspect-ratio: 3 / 4; font-size: 2.5rem;">
                         {{ strtoupper($initials) }}
