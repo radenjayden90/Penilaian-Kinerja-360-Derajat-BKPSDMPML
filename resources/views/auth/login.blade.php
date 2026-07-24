@@ -105,7 +105,7 @@
             filter: brightness(1.14) contrast(1.2) drop-shadow(0 5px 18px rgba(10, 40, 90, 0.22));
         }
 
-        /* Layer 3: Building Layer (Gedung BKPSDM PNG Transparan - Original) */
+        /* Layer 3: Building Layer (Gedung BKPSDM PNG Transparan) */
         .layer-building {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 100%;
@@ -113,16 +113,12 @@
             pointer-events: none;
             background-image: url('{{ asset('images/building-cutout.png') }}');
             background-size: cover;
-<<<<<<< Updated upstream
-            background-position: center center;
-=======
             background-position: left 45% bottom;
->>>>>>> Stashed changes
             background-repeat: no-repeat;
             filter: brightness(1.15) contrast(1.02);
             will-change: transform, opacity;
-            transform: translate3d(0, 220px, 0);
-            opacity: 0;
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
         }
 
         /* Layer 4: Original Minimal Overlay */
