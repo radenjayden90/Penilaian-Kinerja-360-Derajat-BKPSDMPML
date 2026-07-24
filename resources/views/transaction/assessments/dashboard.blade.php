@@ -170,6 +170,72 @@
         max-width: 650px;
         color: rgba(255, 255, 255, 0.9);
     }
+
+    /* 3x4 Aspect Ratio Profile Photo Styles */
+    .rect-profile-card {
+        width: 110px;
+        min-width: 110px;
+        height: 145px;
+        aspect-ratio: 3 / 4;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        align-self: stretch;
+    }
+
+    .rect-profile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 3 / 4;
+        border-radius: 14px;
+        border: 1px solid #CBD5E1;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .rect-profile-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    .rect-profile-placeholder-primary {
+        background: linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 100%);
+        border: 1px solid #BFDBFE;
+    }
+
+    .rect-profile-placeholder-info {
+        background: linear-gradient(180deg, #ECFEFF 0%, #CFFAFE 100%);
+        border: 1px solid #A5F3FC;
+    }
+
+    .rect-profile-placeholder-success {
+        background: linear-gradient(180deg, #F0FDF4 0%, #DCFCE7 100%);
+        border: 1px solid #BBF7D0;
+    }
+
+    .rect-avatar-badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
 </style>
 @endpush
 
@@ -294,25 +360,37 @@
                     <div class="col">
                         <div class="target-card h-100 p-3 d-flex flex-column justify-content-between">
                             <div>
-                                <div class="d-flex align-items-start gap-3 mb-3">
-                                    <div class="avatar-initial bg-primary bg-opacity-10 text-primary">
-                                        {{ strtoupper(substr($superior->name, 0, 1)) }}
+                                <div class="d-flex align-items-stretch gap-3 mb-3">
+                                    <div class="flex-shrink-0 rect-profile-card">
+                                        @if($superior->avatar && file_exists(public_path('storage/' . $superior->avatar)))
+                                            <img src="{{ asset('storage/' . $superior->avatar) }}" alt="{{ $superior->name }}" class="rect-profile-img">
+                                        @else
+                                            <div class="rect-profile-placeholder rect-profile-placeholder-primary">
+                                                <div class="rect-avatar-badge bg-primary text-white mb-2 shadow-sm">
+                                                    {{ strtoupper(substr($superior->name, 0, 1)) }}
+                                                </div>
+                                                <i class="bi bi-person-bounding-box text-primary fs-5 opacity-75 mb-1"></i>
+                                                <span class="text-primary fw-semibold" style="font-size: 9.5px; letter-spacing: 0.5px;">FOTO PROFIL</span>
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="flex-grow-1 min-w-0">
-                                        <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $superior->name }}">{{ $superior->name }}</h6>
-                                        <small class="text-muted d-block">NIP. {{ $superior->nip }}</small>
-                                    </div>
-                                </div>
-                                <div class="details-bg mb-3">
-                                    <div class="d-flex align-items-start mb-2">
-                                        <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
-                                        <div class="text-muted px-1">:</div>
-                                        <div class="fw-semibold text-dark lh-sm">{{ $superior->position->name ?? '-' }}</div>
-                                    </div>
-                                    <div class="d-flex align-items-start">
-                                        <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
-                                        <div class="text-muted px-1">:</div>
-                                        <div class="fw-semibold text-dark lh-sm">{{ $superior->department->name ?? '-' }}</div>
+                                    <div class="flex-grow-1 min-w-0 d-flex flex-column justify-content-center">
+                                        <div class="mb-2">
+                                            <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 15px;" title="{{ $superior->name }}">{{ $superior->name }}</h6>
+                                            <small class="text-muted d-block" style="font-size: 12px;">NIP. {{ $superior->nip }}</small>
+                                        </div>
+                                        <div class="details-bg">
+                                            <div class="d-flex align-items-start mb-1.5">
+                                                <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                                <div class="text-muted px-1">:</div>
+                                                <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $superior->position->name ?? '-' }}</div>
+                                            </div>
+                                            <div class="d-flex align-items-start">
+                                                <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                                <div class="text-muted px-1">:</div>
+                                                <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $superior->department->name ?? '-' }}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -400,25 +478,37 @@
                             {{-- Distinct Colored Disabled Card --}}
                             <div class="target-card-muted h-100 p-3 d-flex flex-column justify-content-between shadow-sm" style="border-left: 4px solid {{ $accentColor }}; border-top: 1px solid {{ $cardBorderColor }}; border-right: 1px solid {{ $cardBorderColor }}; border-bottom: 1px solid {{ $cardBorderColor }}; background-color: {{ $cardBgColor }};">
                                 <div>
-                                    <div class="d-flex align-items-start gap-3 mb-3">
-                                        <div class="avatar-initial rounded-3" style="background-color: {{ $avatarBg }}; color: {{ $avatarText }}; font-weight: 700;">
-                                            {{ strtoupper(substr($peer->name, 0, 1)) }}
+                                    <div class="d-flex align-items-stretch gap-3 mb-3">
+                                        <div class="flex-shrink-0 rect-profile-card">
+                                            @if($peer->avatar && file_exists(public_path('storage/' . $peer->avatar)))
+                                                <img src="{{ asset('storage/' . $peer->avatar) }}" alt="{{ $peer->name }}" class="rect-profile-img">
+                                            @else
+                                                <div class="rect-profile-placeholder" style="background-color: {{ $avatarBg }}; border: 1px solid {{ $cardBorderColor }};">
+                                                    <div class="rect-avatar-badge text-white mb-2 shadow-sm" style="background-color: {{ $accentColor }};">
+                                                        {{ strtoupper(substr($peer->name, 0, 1)) }}
+                                                    </div>
+                                                    <i class="bi bi-person-bounding-box fs-5 opacity-75 mb-1" style="color: {{ $accentColor }};"></i>
+                                                    <span class="fw-semibold" style="font-size: 9.5px; letter-spacing: 0.5px; color: {{ $accentColor }};">FOTO PROFIL</span>
+                                                </div>
+                                            @endif
                                         </div>
-                                        <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold mb-1 lh-sm" style="font-size: 14.5px; color: #0F172A;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
-                                            <small class="d-block" style="color: #64748B;">NIP. {{ $peer->nip }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="details-bg-muted mb-3" style="background-color: #FFFFFF; border: 1px solid {{ $cardBorderColor }};">
-                                        <div class="d-flex align-items-start mb-2">
-                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-briefcase me-1" style="color: {{ $accentColor }};"></i>Jabatan</div>
-                                            <div class="px-1" style="color: #94A3B8;">:</div>
-                                            <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->position->name ?? '-' }}</div>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-shrink-0" style="width: 75px; color: #64748B;"><i class="bi bi-building me-1" style="color: {{ $accentColor }};"></i>Divisi</div>
-                                            <div class="px-1" style="color: #94A3B8;">:</div>
-                                            <div class="fw-semibold lh-sm" style="color: #334155;">{{ $peer->department->name ?? '-' }}</div>
+                                        <div class="flex-grow-1 min-w-0 d-flex flex-column justify-content-center">
+                                            <div class="mb-2">
+                                                <h6 class="fw-bold mb-1 lh-sm" style="font-size: 15px; color: #0F172A;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                                <small class="d-block" style="color: #64748B; font-size: 12px;">NIP. {{ $peer->nip }}</small>
+                                            </div>
+                                            <div class="details-bg-muted" style="background-color: #FFFFFF; border: 1px solid {{ $cardBorderColor }}; padding: 10px 12px; border-radius: 12px;">
+                                                <div class="d-flex align-items-start mb-1.5">
+                                                    <div class="flex-shrink-0" style="width: 65px; color: #64748B; font-size: 12px;"><i class="bi bi-briefcase me-1" style="color: {{ $accentColor }};"></i>Jabatan</div>
+                                                    <div class="px-1" style="color: #94A3B8;">:</div>
+                                                    <div class="fw-semibold lh-sm" style="color: #334155; font-size: 12.5px;">{{ $peer->position->name ?? '-' }}</div>
+                                                </div>
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-shrink-0" style="width: 65px; color: #64748B; font-size: 12px;"><i class="bi bi-building me-1" style="color: {{ $accentColor }};"></i>Divisi</div>
+                                                    <div class="px-1" style="color: #94A3B8;">:</div>
+                                                    <div class="fw-semibold lh-sm" style="color: #334155; font-size: 12.5px;">{{ $peer->department->name ?? '-' }}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -442,25 +532,37 @@
                             {{-- Active / Completed Card --}}
                             <div class="target-card h-100 p-3 d-flex flex-column justify-content-between">
                                 <div>
-                                    <div class="d-flex align-items-start gap-3 mb-3">
-                                        <div class="avatar-initial bg-info bg-opacity-10 text-info">
-                                            {{ strtoupper(substr($peer->name, 0, 1)) }}
+                                    <div class="d-flex align-items-stretch gap-3 mb-3">
+                                        <div class="flex-shrink-0 rect-profile-card">
+                                            @if($peer->avatar && file_exists(public_path('storage/' . $peer->avatar)))
+                                                <img src="{{ asset('storage/' . $peer->avatar) }}" alt="{{ $peer->name }}" class="rect-profile-img">
+                                            @else
+                                                <div class="rect-profile-placeholder rect-profile-placeholder-info">
+                                                    <div class="rect-avatar-badge bg-info text-white mb-2 shadow-sm">
+                                                        {{ strtoupper(substr($peer->name, 0, 1)) }}
+                                                    </div>
+                                                    <i class="bi bi-person-bounding-box text-info fs-5 opacity-75 mb-1"></i>
+                                                    <span class="text-info fw-semibold" style="font-size: 9.5px; letter-spacing: 0.5px;">FOTO PROFIL</span>
+                                                </div>
+                                            @endif
                                         </div>
-                                        <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
-                                            <small class="text-muted d-block">NIP. {{ $peer->nip }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="details-bg mb-3">
-                                        <div class="d-flex align-items-start mb-2">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-dark lh-sm">{{ $peer->position->name ?? '-' }}</div>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-dark lh-sm">{{ $peer->department->name ?? '-' }}</div>
+                                        <div class="flex-grow-1 min-w-0 d-flex flex-column justify-content-center">
+                                            <div class="mb-2">
+                                                <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 15px;" title="{{ $peer->name }}">{{ $peer->name }}</h6>
+                                                <small class="text-muted d-block" style="font-size: 12px;">NIP. {{ $peer->nip }}</small>
+                                            </div>
+                                            <div class="details-bg">
+                                                <div class="d-flex align-items-start mb-1.5">
+                                                    <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                                    <div class="text-muted px-1">:</div>
+                                                    <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $peer->position->name ?? '-' }}</div>
+                                                </div>
+                                                <div class="d-flex align-items-start">
+                                                    <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                                    <div class="text-muted px-1">:</div>
+                                                    <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $peer->department->name ?? '-' }}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -554,25 +656,37 @@
                         <div class="col">
                             <div class="target-card h-100 p-3 d-flex flex-column justify-content-between">
                                 <div>
-                                    <div class="d-flex align-items-start gap-3 mb-3">
-                                        <div class="avatar-initial bg-success bg-opacity-10 text-success">
-                                            {{ strtoupper(substr($sub->name, 0, 1)) }}
+                                    <div class="d-flex align-items-stretch gap-3 mb-3">
+                                        <div class="flex-shrink-0 rect-profile-card">
+                                            @if($sub->avatar && file_exists(public_path('storage/' . $sub->avatar)))
+                                                <img src="{{ asset('storage/' . $sub->avatar) }}" alt="{{ $sub->name }}" class="rect-profile-img">
+                                            @else
+                                                <div class="rect-profile-placeholder rect-profile-placeholder-success">
+                                                    <div class="rect-avatar-badge bg-success text-white mb-2 shadow-sm">
+                                                        {{ strtoupper(substr($sub->name, 0, 1)) }}
+                                                    </div>
+                                                    <i class="bi bi-person-bounding-box text-success fs-5 opacity-75 mb-1"></i>
+                                                    <span class="text-success fw-semibold" style="font-size: 9.5px; letter-spacing: 0.5px;">FOTO PROFIL</span>
+                                                </div>
+                                            @endif
                                         </div>
-                                        <div class="flex-grow-1 min-w-0">
-                                            <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 14.5px;" title="{{ $sub->name }}">{{ $sub->name }}</h6>
-                                            <small class="text-muted d-block">NIP. {{ $sub->nip }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="details-bg mb-3">
-                                        <div class="d-flex align-items-start mb-2">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-dark lh-sm">{{ $sub->position->name ?? '-' }}</div>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <div class="text-muted flex-shrink-0" style="width: 75px;"><i class="bi bi-building me-1"></i>Divisi</div>
-                                            <div class="text-muted px-1">:</div>
-                                            <div class="fw-semibold text-dark lh-sm">{{ $sub->department->name ?? '-' }}</div>
+                                        <div class="flex-grow-1 min-w-0 d-flex flex-column justify-content-center">
+                                            <div class="mb-2">
+                                                <h6 class="fw-bold text-dark mb-1 lh-sm" style="font-size: 15px;" title="{{ $sub->name }}">{{ $sub->name }}</h6>
+                                                <small class="text-muted d-block" style="font-size: 12px;">NIP. {{ $sub->nip }}</small>
+                                            </div>
+                                            <div class="details-bg">
+                                                <div class="d-flex align-items-start mb-1.5">
+                                                    <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-briefcase me-1"></i>Jabatan</div>
+                                                    <div class="text-muted px-1">:</div>
+                                                    <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $sub->position->name ?? '-' }}</div>
+                                                </div>
+                                                <div class="d-flex align-items-start">
+                                                    <div class="text-muted flex-shrink-0" style="width: 65px; font-size: 12px;"><i class="bi bi-building me-1"></i>Divisi</div>
+                                                    <div class="text-muted px-1">:</div>
+                                                    <div class="fw-semibold text-dark lh-sm" style="font-size: 12.5px;">{{ $sub->department->name ?? '-' }}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -46,10 +46,10 @@
     /* Executive Target Banner */
     .hero-banner-target {
         background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 50%, #2563EB 100%);
-        border-radius: 24px;
+        border-radius: 18px;
         color: #FFFFFF;
-        padding: 28px 36px;
-        box-shadow: 0 10px 30px -5px rgba(30, 58, 95, 0.25);
+        padding: 18px 24px;
+        box-shadow: 0 8px 24px -4px rgba(30, 58, 95, 0.2);
         position: relative;
         overflow: hidden;
         animation: heroFadeIn 400ms ease-out forwards;
@@ -73,40 +73,42 @@
     }
 
     .target-avatar-lg {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
+        width: 84px;
+        height: 112px;
+        min-width: 84px;
+        aspect-ratio: 3 / 4;
+        border-radius: 12px;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(6px);
         border: 2px solid rgba(255, 255, 255, 0.4);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 800;
         color: #FFFFFF;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
     .target-info-pill {
         background: #FFFFFF;
         color: #0F172A;
-        font-size: 13px;
+        font-size: 12.5px;
         font-weight: 600;
-        padding: 6px 16px;
-        border-radius: 14px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 4px 12px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         display: inline-flex;
         align-items: center;
         gap: 6px;
         max-width: 100%;
-        line-height: 1.35;
+        line-height: 1.3;
     }
 
     .badge-type-pill {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
-        padding: 6px 14px;
+        padding: 4px 12px;
         border-radius: 9999px;
         background: rgba(255, 255, 255, 0.2);
         color: #FFFFFF;
@@ -114,15 +116,15 @@
         border: 1px solid rgba(255, 255, 255, 0.3);
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
     }
 
     .period-box-glass {
         background: rgba(255, 255, 255, 0.14);
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 16px;
-        padding: 12px 18px;
+        border-radius: 14px;
+        padding: 10px 14px;
     }
 
     .question-card {
@@ -136,38 +138,40 @@
     }
 
     .name-title {
-        font-size: 26px;
-        letter-spacing: -0.5px;
+        font-size: 22px;
+        letter-spacing: -0.3px;
     }
 
     @media (max-width: 768px) {
         .hero-banner-target {
-            padding: 16px;
-            border-radius: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
         }
         .question-card {
             padding: 16px;
-            border-radius: 16px;
+            border-radius: 14px;
         }
         .badge-type-pill {
-            padding: 4px 10px;
+            padding: 3px 10px;
             font-size: 11px;
         }
         .target-info-pill {
-            padding: 4px 10px;
-            font-size: 11px;
+            padding: 3px 10px;
+            font-size: 11.5px;
         }
         .target-avatar-lg {
-            width: 44px;
-            height: 44px;
-            font-size: 1.15rem;
-            border-radius: 12px;
+            width: 66px;
+            height: 88px;
+            min-width: 66px;
+            aspect-ratio: 3 / 4;
+            font-size: 1.6rem;
+            border-radius: 10px;
         }
         .name-title {
-            font-size: 18px;
+            font-size: 17px;
         }
         .period-box-glass {
-            padding: 10px 12px;
+            padding: 8px 12px;
             width: 100%;
         }
     }
@@ -282,36 +286,32 @@
 
 <!-- Executive Target Employee Header Banner -->
 <div class="hero-banner-target mb-4 tw-overflow-hidden">
-    <div class="row m-0 align-items-center g-4">
+    <div class="row m-0 align-items-center g-3">
         <div class="col-12 col-lg-8">
-            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                <span class="badge-type-pill">
-                    <i class="bi bi-shield-check"></i> Evaluasi Kinerja 360°
-                </span>
-                <span class="badge-type-pill" style="background: rgba(255,255,255,0.25);">
-                    <i class="bi {{ $typeIcon }}"></i> {{ $typeLabel }}
-                </span>
-            </div>
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="target-avatar-lg">
-                    {{ strtoupper(substr($target->name, 0, 1)) }}
-                </div>
-                <div>
-                    <h2 class="fw-bold text-white mb-1 name-title tw-break-words tw-whitespace-normal">
+            <div class="d-flex align-items-center gap-3">
+                @if($target->avatar && file_exists(public_path('storage/' . $target->avatar)))
+                    <img src="{{ asset('storage/' . $target->avatar) }}" alt="{{ $target->name }}" class="target-avatar-lg object-fit-cover p-0 flex-shrink-0" style="border: 2px solid rgba(255, 255, 255, 0.8);">
+                @else
+                    <div class="target-avatar-lg flex-shrink-0">
+                        {{ strtoupper(substr($target->name, 0, 1)) }}
+                    </div>
+                @endif
+                <div class="flex-grow-1 min-w-0">
+                    <h2 class="fw-bold text-white mb-0.5 name-title tw-break-words tw-whitespace-normal">
                         {{ $target->name }}
                     </h2>
-                    <div class="text-white text-opacity-90 small">
+                    <div class="text-white text-opacity-90 small mb-1.5" style="font-size: 13px;">
                         <i class="bi bi-card-text me-1"></i>NIP. {{ $target->nip }}
                     </div>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="target-info-pill">
+                            <i class="bi bi-briefcase text-primary me-1"></i> {{ $target->position->name ?? 'Jabatan Belum Diatur' }}
+                        </span>
+                        <span class="target-info-pill">
+                            <i class="bi bi-building text-primary me-1"></i> {{ $target->department->name ?? 'Unit Kerja Belum Diatur' }}
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex flex-wrap align-items-center gap-2">
-                <span class="target-info-pill">
-                    <i class="bi bi-briefcase text-primary me-1"></i> {{ $target->position->name ?? 'Jabatan Belum Diatur' }}
-                </span>
-                <span class="target-info-pill">
-                    <i class="bi bi-building text-primary me-1"></i> {{ $target->department->name ?? 'Unit Kerja Belum Diatur' }}
-                </span>
             </div>
         </div>
         <div class="col-12 col-lg-4 text-lg-end">
@@ -336,16 +336,16 @@
     <div class="tw-bg-white tw-rounded-2xl tw-shadow-xl tw-overflow-hidden tw-border tw-border-slate-200/80">
         
         <!-- Header Title Bar -->
-        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-5 sm:tw-px-6 md:tw-px-10 tw-py-4 sm:tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
+        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-5 sm:tw-px-6 md:tw-px-10 tw-py-4 sm:tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-gap-3">
             <div>
                 <h3 class="tw-text-base md:tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
                     <i class="bi bi-pencil-square tw-text-blue-400"></i> Pengisian Kuesioner Evaluasi
                 </h3>
                 <p class="tw-text-slate-300 tw-text-xs md:tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
             </div>
-            <div>
-                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-3 md:tw-px-4 tw-py-1.5 tw-rounded-full tw-text-[10px] md:tw-text-xs tw-font-semibold">
-                    <i class="bi bi-person-badge me-1"></i> Evaluator: {{ Auth::user()->name }}
+            <div class="tw-shrink-0">
+                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-3 md:tw-px-4 tw-py-2 tw-rounded-full tw-text-xs tw-font-semibold tw-whitespace-nowrap tw-inline-flex tw-items-center tw-gap-1.5">
+                    <i class="bi bi-person-badge"></i> Evaluator: {{ Auth::user()->name }}
                 </span>
             </div>
         </div>

@@ -237,15 +237,40 @@
     <!-- Header Biodata Banner -->
     <div class="p-4 rounded-4 mb-4" style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); border: 1px solid #DBEAFE;">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-            <div class="avatar-prominent" style="width: 50px; height: 50px; min-width: 50px; font-size: 1.5rem; border-radius: 16px;">
-                {{ strtoupper($initials) }}
+            <div class="position-relative">
+                @if($user->avatar && file_exists(public_path('storage/' . $user->avatar)))
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $empName }}" class="rounded-3 object-fit-cover shadow-sm" style="width: 120px; height: 160px; min-width: 120px; aspect-ratio: 3 / 4; border: 3px solid #FFFFFF;">
+                @else
+                    <div class="avatar-prominent rounded-3" style="width: 120px; height: 160px; min-width: 120px; aspect-ratio: 3 / 4; font-size: 2.5rem;">
+                        {{ strtoupper($initials) }}
+                    </div>
+                @endif
             </div>
             <div class="text-center text-md-start flex-grow-1">
-                <h2 class="fw-bold text-dark mb-1" style="font-size: 20px; color: #0F172A !important;">
-                    {{ $empName }}
-                </h2>
-                <div class="fw-bold text-primary mb-2" style="font-size: 14px; color: #2563EB !important;">
-                    NIP. {{ $empNip }}
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 mb-2">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1" style="font-size: 20px; color: #0F172A !important;">
+                            {{ $empName }}
+                        </h2>
+                        <div class="fw-bold text-primary" style="font-size: 14px; color: #2563EB !important;">
+                            NIP. {{ $empNip }}
+                        </div>
+                    </div>
+                    <div>
+                        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="name" value="{{ $empName }}">
+                            <input type="hidden" name="email" value="{{ $employee->email ?? $user->email }}">
+                            <label for="avatarInputUpload" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold shadow-sm mb-0" style="cursor: pointer;">
+                                <i class="bi bi-camera-fill me-1"></i> Ubah Foto Profil
+                            </label>
+                            <input type="file" id="avatarInputUpload" name="avatar" accept="image/*" class="d-none" onchange="this.form.submit()">
+                        </form>
+                        @error('avatar')
+                            <small class="text-danger d-block mt-1">{{ $message }}</small>
+                        @enderror
+                    </div>
                 </div>
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2">
                     <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-1.5 rounded-pill fw-bold" style="font-size: 12.5px;">
