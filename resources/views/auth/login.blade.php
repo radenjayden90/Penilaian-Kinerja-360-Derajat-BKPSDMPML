@@ -117,8 +117,8 @@
             background-repeat: no-repeat;
             filter: brightness(1.15) contrast(1.02);
             will-change: transform, opacity;
-            transform: translate3d(0, 0, 0);
-            opacity: 1;
+            transform: translate3d(0, 140px, 0);
+            opacity: 0;
         }
 
         /* Layer 4: Original Minimal Overlay */
@@ -970,10 +970,11 @@
         // Easing: power4.out
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-        // Gedung BKPSDM: Fade in (tanpa pergerakan)
+        // Gedung BKPSDM: Slide up dari bawah ke atas dengan efek fade in
         tl.fromTo('#layerBuilding', 
-            { opacity: 0 }, 
-            { opacity: 1, duration: 2.2 }
+            { y: 140, opacity: 0 }, 
+            { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' },
+            0.05
         );
 
         // 3. Logo Intro (Pemalang brand logo top left)
