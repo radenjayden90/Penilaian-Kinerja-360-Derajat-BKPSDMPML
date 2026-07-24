@@ -596,7 +596,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('livewire:navigated', function() {
+(function() {
     const totalCategories = {{ count($categories) }};
     const totalQuestions = document.querySelectorAll('.form-score-input').length;
     let currentTabIndex = 0;
@@ -1079,6 +1079,7 @@ document.addEventListener('livewire:navigated', function() {
     
     // Initialize Progress
     updateProgress();
-});
+    updateProgress();
+})();
 </script>
 @endpush
