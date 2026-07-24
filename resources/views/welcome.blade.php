@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>360° Kinerja ASN - BKPSDM Kabupaten Pemalang</title>
-    
+
+    <!-- Favicon Logo Pemalang -->
+    <link rel="icon" type="image/png" href="{{ asset('images/pemalang-shield.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/pemalang-shield.png') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -167,7 +171,6 @@
             -webkit-text-fill-color: transparent;
         }
     </style>
-    @livewireStyles
 </head>
 <body class="antialiased mesh-bg">
     <div class="noise-overlay"></div>
@@ -803,6 +806,5 @@
             }
         }
     </script>
-    @livewireScripts
 </body>
 </html>

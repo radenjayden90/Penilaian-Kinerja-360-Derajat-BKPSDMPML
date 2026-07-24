@@ -7,6 +7,10 @@
     <meta name="description" content="Lupa Password - Sistem Penilaian Kinerja ASN 360 Derajat BKPSDM Kabupaten Pemalang.">
     <title>Lupa Password — 360° Kinerja ASN BKPSDM Pemalang</title>
 
+    <!-- Favicon Logo Pemalang -->
+    <link rel="icon" type="image/png" href="{{ asset('images/pemalang-shield.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/pemalang-shield.png') }}">
+
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
