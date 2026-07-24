@@ -616,10 +616,29 @@ body.sidebar-collapsed .app-sidebar .submenu .nav-link i {
         top: 0;
         bottom: 0;
         left: -260px;
+        width: 260px !important;
     }
     
     body.sidebar-open .app-sidebar {
         left: 0;
+        width: 260px !important;
+    }
+    
+    body.sidebar-open .sidebar-brand-text,
+    body.sidebar-open .nav-label,
+    body.sidebar-open .nav-link-text,
+    body.sidebar-open .sidebar-version-info {
+        display: block !important;
+    }
+
+    body.sidebar-open .sidebar-brand-text {
+        display: flex !important;
+    }
+
+    body.sidebar-open .app-sidebar .nav-link {
+        justify-content: flex-start !important;
+        padding: 0.5rem 0.75rem !important;
+        text-align: left !important;
     }
     
     body.sidebar-open::after {

@@ -6,6 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') — 360 Kinerja ASN Pemalang</title>
 
+    <!-- Favicon Logo Pemalang -->
+    <link rel="icon" type="image/png" href="{{ asset('images/pemalang-shield.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/pemalang-shield.png') }}">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
@@ -14,7 +18,6 @@
     <link rel="stylesheet" href="{{ asset('css/app-custom.css') }}">
 
     @stack('styles')
-    @livewireStyles
 </head>
 <body>
     <div class="app-wrapper">
@@ -76,9 +79,11 @@
             const toggleBtn = document.getElementById('sidebarToggleBtn');
             const body = document.body;
 
-            // Restore saved sidebar collapsed state for desktop
+            // Restore saved sidebar collapsed state for desktop, default to expanded
             if (localStorage.getItem('sidebar-collapsed') === 'true') {
                 body.classList.add('sidebar-collapsed');
+            } else {
+                body.classList.remove('sidebar-collapsed');
             }
 
             if (toggleBtn) {
@@ -91,6 +96,7 @@
                     e.stopPropagation();
 
                     if (window.innerWidth < 992) {
+                        body.classList.remove('sidebar-collapsed');
                         body.classList.toggle('sidebar-open');
                     } else {
                         body.classList.toggle('sidebar-collapsed');
@@ -144,6 +150,5 @@
     </script>
 
     @stack('scripts')
-    @livewireScripts
 </body>
 </html>
