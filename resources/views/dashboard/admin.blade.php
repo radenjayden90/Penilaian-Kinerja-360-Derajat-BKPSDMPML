@@ -145,62 +145,6 @@
                 </span>
             </div>
             <div class="card-body px-4 pb-4 pt-0">
-<<<<<<< HEAD
-                <div class="row g-3">
-                    <!-- Sangat Baik -->
-                    <div class="col-12 col-sm-6 col-xl-3">
-                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #A7F3D0 !important; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.05);">
-                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
-                                <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
-                                    <i class="bi bi-stars fs-6"></i>
-                                </div>
-                                <span class="fw-bold text-success" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Sangat Baik</span>
-                            </div>
-                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['sangat_baik'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
-                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Performa melampaui target</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Baik -->
-                    <div class="col-12 col-sm-6 col-xl-3">
-                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #BFDBFE !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);">
-                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
-                                <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
-                                    <i class="bi bi-hand-thumbs-up-fill fs-6"></i>
-                                </div>
-                                <span class="fw-bold text-primary" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Baik</span>
-                            </div>
-                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['baik'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
-                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Sesuai dengan ekspektasi</div>
-                        </div>
-                    </div>
-
-                    <!-- Cukup -->
-                    <div class="col-12 col-sm-6 col-xl-3">
-                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #FDE68A !important; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.05);">
-                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
-                                <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px; color: #D97706 !important;">
-                                    <i class="bi bi-exclamation-circle-fill fs-6"></i>
-                                </div>
-                                <span class="fw-bold text-warning" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #D97706 !important;">Cukup</span>
-                            </div>
-                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['cukup'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
-                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Butuh peningkatan kapasitas</div>
-                        </div>
-                    </div>
-
-                    <!-- Kurang -->
-                    <div class="col-12 col-sm-6 col-xl-3">
-                        <div class="p-4 rounded-4 bg-white border h-100 position-relative overflow-hidden hover-lift" style="border-color: #FECDD3 !important; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05);">
-                            <div class="d-flex align-items-center gap-2 mb-3 position-relative z-1">
-                                <div class="bg-danger bg-opacity-10 text-danger rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
-                                    <i class="bi bi-shield-x fs-6"></i>
-                                </div>
-                                <span class="fw-bold text-danger" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Kurang</span>
-                            </div>
-                            <h3 class="fw-extrabold text-dark mb-1 position-relative z-1" style="font-size: 34px; letter-spacing: -1px;">{{ $categoryStats['kurang'] ?? 0 }} <span class="text-muted fw-medium" style="font-size: 14px; letter-spacing: 0;">ASN</span></h3>
-                            <div class="text-muted position-relative z-1" style="font-size: 12px; font-weight: 500;">Perlu pembinaan khusus</div>
-=======
                 <div class="row text-center g-3">
                     <div class="col-6 col-md-3">
                         <div class="p-3.5 rounded-4 bg-emerald-50 border border-emerald-200">
@@ -236,7 +180,6 @@
                             </div>
                             <h3 class="fw-extrabold text-rose-600 mb-0 mt-1" style="font-size: 26px;">{{ $categoryStats['kurang'] ?? 0 }}</h3>
                             <small class="text-rose-600 opacity-75 d-block mt-0.5" style="font-size: 11px;">Perlu Pembinaan</small>
->>>>>>> 2924dbec52fc53cd83008afe4458c285212c265c
                         </div>
                     </div>
                 </div>

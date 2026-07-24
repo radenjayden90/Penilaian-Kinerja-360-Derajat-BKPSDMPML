@@ -1,8 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Hasil Penilaian Kinerja 360°')
-@section('header', 'Laporan Kinerja 360° ASN')
-@section('subtitle', 'Cetak dan ekspor hasil akhir penilaian kinerja ASN Kabupaten Pemalang')
+@php
+    if ($activeTab === 'department') {
+        $pageTitle = 'Laporan Per Bidang / Unit Kerja';
+        $pageSubtitle = 'Rekapitulasi dan ringkasan nilai rata-rata kinerja pada tiap unit kerja';
+    } elseif ($activeTab === 'analytics') {
+        $pageTitle = 'Statistik & Analitik Kinerja';
+        $pageSubtitle = 'Dashboard analitik dan distribusi predikat penilaian kinerja secara keseluruhan';
+    } else {
+        $pageTitle = 'Laporan Individu Pegawai';
+        $pageSubtitle = 'Cetak dan ekspor hasil akhir penilaian kinerja tiap pegawai ASN secara detail';
+    }
+@endphp
+
+@section('title', $pageTitle)
+@section('header', $pageTitle)
+@section('subtitle', $pageSubtitle)
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -11,49 +24,29 @@
 
 @section('action_buttons')
     <div class="d-flex gap-2">
-        <a href="{{ route('report.print', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" target="_blank" class="btn btn-danger fw-semibold">
+        <a href="{{ route('report.print', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId, 'tab' => $activeTab]) }}" target="_blank" class="btn btn-danger fw-semibold">
             <i class="bi bi-file-earmark-pdf me-1"></i> Ekspor PDF
         </a>
-        <a href="{{ route('report.exportCsv', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId]) }}" class="btn btn-success fw-semibold">
+        <a href="{{ route('report.exportCsv', ['period_id' => $selectedPeriodId, 'department_id' => $selectedDepartmentId, 'tab' => $activeTab]) }}" class="btn btn-success fw-semibold">
             <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Excel (.xlsx)
         </a>
     </div>
 @endsection
 
 @section('content')
-<<<<<<< HEAD
 
-=======
-<!-- Navigation Tabs for Executive & Admin Reports -->
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white p-2">
-        <ul class="nav nav-pills card-header-pills fw-semibold gap-1">
-            <li class="nav-item">
-                <a class="nav-link {{ $activeTab === 'department' ? 'active bg-primary' : 'text-dark' }}" href="{{ route('report.index', ['tab' => 'department', 'period_id' => $selectedPeriodId]) }}">
-                    <i class="bi bi-diagram-3 me-1.5"></i> Laporan Per Bidang
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ $activeTab === 'employee' ? 'active bg-primary' : 'text-dark' }}" href="{{ route('report.index', ['tab' => 'employee', 'period_id' => $selectedPeriodId]) }}">
-                    <i class="bi bi-person-lines-fill me-1.5"></i> Laporan Individu Pegawainya
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ $activeTab === 'analytics' ? 'active bg-primary' : 'text-dark' }}" href="{{ route('report.index', ['tab' => 'analytics', 'period_id' => $selectedPeriodId]) }}">
-                    <i class="bi bi-graph-up-arrow me-1.5"></i> Statistik & Tren Kinerja
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
->>>>>>> 6521e8159f9cdd2536b23f055866ef58065c1942
 
 <!-- Global Filter Header -->
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white py-3">
         <form method="GET" action="{{ route('report.index') }}" class="row g-2 align-items-center">
             <input type="hidden" name="tab" value="{{ $activeTab }}">
-            <div class="col-12 col-md-4">
+            @php
+                $colPeriod = $activeTab === 'department' ? 'col-md-4' : 'col-md-3';
+                $colDept = $activeTab === 'department' ? 'col' : 'col-md-4';
+                $colSearch = $activeTab === 'department' ? 'col-auto' : 'col-md-5';
+            @endphp
+            <div class="{{ $colPeriod }}">
                 <label class="form-label small fw-semibold text-muted mb-1">Periode Evaluation</label>
                 <select name="period_id" class="form-select bg-light" onchange="this.form.submit()">
                     <option value="">-- Semua Periode --</option>
@@ -64,33 +57,28 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="{{ $colDept }}">
                 <label class="form-label small fw-semibold text-muted mb-1">Unit Kerja / Bidang</label>
-                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="department_id" class="form-select bg-light text-truncate" onchange="this.form.submit()">
                     <option value="">-- Semua Unit Kerja / Bidang --</option>
                     @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}" {{ $selectedDepartmentId == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                        <option value="{{ $dept->id }}" {{ $selectedDepartmentId == $dept->id ? 'selected' : '' }} title="{{ $dept->name }}">{{ $dept->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-12 col-md-4 d-flex gap-2 align-items-end" style="height: 100%;">
-                <div class="w-100">
-                    <label class="form-label small fw-semibold text-muted mb-1">Cari Data</label>
-                    @php
-                        $searchPlaceholder = 'Cari NIP / Nama Pegawai...';
-                        if ($activeTab === 'department') {
-                            $searchPlaceholder = 'Cari Unit Kerja / Bidang...';
-                        } elseif ($activeTab === 'summary') {
-                            $searchPlaceholder = 'Cari di Ringkasan (NIP/Nama)...';
-                        }
-                    @endphp
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control bg-light" placeholder="{{ $searchPlaceholder }}" value="{{ request('search') }}" {{ $activeTab === 'analytics' ? 'disabled title="Pencarian tidak tersedia untuk Statistik"' : '' }}>
-                        <button class="btn btn-primary" type="submit" {{ $activeTab === 'analytics' ? 'disabled' : '' }}><i class="bi bi-search"></i></button>
+            <div class="{{ $colSearch }} d-flex gap-2">
+                @if($activeTab !== 'department')
+                    <div class="w-100">
+                        <label class="form-label small fw-semibold text-muted mb-1">Cari Data</label>
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control bg-light" placeholder="Cari NIP / Nama Pegawai..." value="{{ request('search') }}" {{ $activeTab === 'analytics' ? 'disabled title="Pencarian tidak tersedia untuk Statistik"' : '' }}>
+                            <button class="btn btn-primary" type="submit" {{ $activeTab === 'analytics' ? 'disabled' : '' }}><i class="bi bi-search"></i></button>
+                        </div>
                     </div>
-                </div>
+                @endif
                 @if($selectedPeriodId || $selectedDepartmentId || request('search'))
-                    <div style="padding-bottom: 2px;">
+                    <div>
+                        <label class="form-label small mb-1 d-block">&nbsp;</label>
                         <a href="{{ route('report.index', ['tab' => $activeTab]) }}" class="btn btn-outline-secondary" title="Reset Filter">
                             <i class="bi bi-x-circle"></i>
                         </a>
@@ -111,15 +99,15 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0" style="table-layout: fixed;">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4" style="width: 50px;">No</th>
-                            <th>Bidang / Unit Kerja</th>
-                            <th class="text-center">Jumlah Pegawai Evaluasi</th>
-                            <th class="text-center">Rata-Rata Nilai</th>
-                            <th class="text-center">Nilai Tertinggi</th>
-                            <th class="text-center">Distribusi Predikat</th>
+                            <th class="ps-4" style="width: 5%;">No</th>
+                            <th style="width: 30%;">Bidang / Unit Kerja</th>
+                            <th class="text-center" style="width: 15%;">Jumlah Pegawai Evaluasi</th>
+                            <th class="text-center" style="width: 15%;">Rata-Rata Nilai</th>
+                            <th class="text-center" style="width: 15%;">Nilai Tertinggi</th>
+                            <th class="text-center" style="width: 20%;">Distribusi Predikat</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,11 +134,11 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <div class="d-flex gap-1 justify-content-center flex-wrap">
-                                        <span class="badge bg-emerald-100 text-emerald-800" title="Sangat Baik">SB: {{ $stat['very_good'] }}</span>
-                                        <span class="badge bg-blue-100 text-blue-800" title="Baik">B: {{ $stat['good'] }}</span>
-                                        <span class="badge bg-amber-100 text-amber-800" title="Cukup">C: {{ $stat['fair'] }}</span>
-                                        <span class="badge bg-rose-100 text-rose-800" title="Perlu Pembinaan">PB: {{ $stat['needs_improvement'] }}</span>
+                                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                        <span class="fw-bold text-primary" title="Sangat Baik">SB: {{ $stat['very_good'] }}</span>
+                                        <span class="fw-bold text-success" title="Baik">B: {{ $stat['good'] }}</span>
+                                        <span class="fw-bold text-warning" title="Cukup">C: {{ $stat['fair'] }}</span>
+                                        <span class="fw-bold text-danger" title="Perlu Pembinaan">PB: {{ $stat['needs_improvement'] }}</span>
                                     </div>
                                 </td>
                             </tr>
@@ -234,18 +222,18 @@
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover table-striped align-middle mb-0">
+                <table class="table table-hover table-striped align-middle mb-0" style="table-layout: fixed;">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 50px;">No</th>
-                            <th>NIP & Nama Pegawai</th>
-                            <th>Unit Kerja & Jabatan</th>
-                            <th class="text-center">Atasan (40%)</th>
-                            <th class="text-center">Sejawat (30%)</th>
-                            <th class="text-center">Bawahan (20%)</th>
-                            <th class="text-center">Diri (10%)</th>
-                            <th class="text-center">Nilai Akhir 360°</th>
-                            <th class="text-center">Predikat</th>
+                            <th class="ps-3" style="width: 5%;">No</th>
+                            <th style="width: 20%;">NIP & Nama Pegawai</th>
+                            <th style="width: 25%;">Unit Kerja & Jabatan</th>
+                            <th class="text-center" style="width: 8%;">Atasan (40%)</th>
+                            <th class="text-center" style="width: 8%;">Sejawat (30%)</th>
+                            <th class="text-center" style="width: 8%;">Bawahan (20%)</th>
+                            <th class="text-center" style="width: 8%;">Diri (10%)</th>
+                            <th class="text-center" style="width: 9%;">Nilai Akhir 360°</th>
+                            <th class="text-center" style="width: 9%;">Predikat</th>
                         </tr>
                     </thead>
                     <tbody>

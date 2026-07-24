@@ -22,21 +22,7 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $status = $request->input('status');
-        $departmentId = $request->input('department_id');
-        $positionId = $request->input('position_id');
-        $roleId = $request->input('role_id');
-        $perPage = $request->input('per_page', 10);
-        $sortColumn = $request->input('sort_column', 'name');
-        $sortDirection = $request->input('sort_direction', 'asc');
-
-        $employees = $this->employeeService->getPaginated($search, $departmentId, $positionId, $roleId, $status, $perPage, $sortColumn, $sortDirection);
-        $departments = Department::orderBy('name')->get();
-        $positions = Position::orderBy('name')->get();
-        $roles = Role::orderBy('name')->get();
-
-        return view('master.employees.index', compact('employees', 'departments', 'positions', 'roles', 'search', 'departmentId', 'positionId', 'roleId', 'status', 'perPage', 'sortColumn', 'sortDirection'));
+        return view('master.employees.index');
     }
 
     public function create()

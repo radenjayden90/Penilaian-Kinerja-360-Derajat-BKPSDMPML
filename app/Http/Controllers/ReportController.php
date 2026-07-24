@@ -55,19 +55,13 @@ class ReportController extends Controller
 
         $results = $resultsQuery->paginate($request->input('per_page', 15))->withQueryString();
 
-<<<<<<< HEAD
-        // Department breakdown stats
-        $departmentStats = Department::withCount('employees')
-            ->when($search, function($q) use ($search) {
-                $term = mb_strtolower($search, 'UTF-8');
-                return $q->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'LIKE', '%' . $term . '%');
-            })
-=======
         // Department breakdown stats (hanya bidang/unit kerja, bukan instansi utama BKPSDM)
         $departmentStats = Department::where('code', '!=', 'BKPSDM')
             ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%bkpsdm kabupaten%')
             ->withCount('employees')
->>>>>>> 6521e8159f9cdd2536b23f055866ef58065c1942
+            ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
+                return $q->where('id', $selectedDepartmentId);
+            })
             ->orderBy('name')
             ->get()
             ->map(function($dept) use ($selectedPeriodId) {
@@ -118,25 +112,60 @@ class ReportController extends Controller
 
     public function print(Request $request)
     {
+        $tab = $request->input('tab');
         $selectedPeriodId = $request->input('period_id');
         $selectedDepartmentId = $request->input('department_id');
 
         $period = Period::find($selectedPeriodId) ?? Period::where('is_active', true)->first();
         $department = Department::find($selectedDepartmentId);
 
-        $results = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
-            ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
-                return $q->where('period_id', $selectedPeriodId);
-            })
-            ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
-                return $q->whereHas('employee', function($empQ) use ($selectedDepartmentId) {
-                    $empQ->where('department_id', $selectedDepartmentId);
+        if ($tab === 'department') {
+            $departmentStats = Department::where('code', '!=', 'BKPSDM')
+                ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%bkpsdm kabupaten%')
+                ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
+                    return $q->where('id', $selectedDepartmentId);
+                })
+                ->orderBy('name')
+                ->get()
+                ->map(function($dept) use ($selectedPeriodId) {
+                    $query = AssessmentResult::whereHas('employee', function($q) use ($dept) {
+                        $q->where('department_id', $dept->id);
+                    });
+                    if ($selectedPeriodId) {
+                        $query->where('period_id', $selectedPeriodId);
+                    }
+                    $results = $query->get();
+                    $avgScore = $results->count() > 0 ? round($results->avg('final_score'), 2) : 0;
+                    $highestScore = $results->count() > 0 ? round($results->max('final_score'), 2) : 0;
+                    return [
+                        'department' => $dept,
+                        'total_evaluated' => $results->count(),
+                        'average_score' => $avgScore,
+                        'highest_score' => $highestScore,
+                        'very_good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'VERY_GOOD')->count(),
+                        'good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'GOOD')->count(),
+                        'fair' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'FAIR')->count(),
+                        'needs_improvement' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'NEEDS_IMPROVEMENT')->count(),
+                    ];
                 });
-            })
-            ->get();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('report.print', compact('results', 'period', 'department'))
-            ->setPaper('a4', 'landscape');
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('report.print_department', compact('departmentStats', 'period', 'department'))
+                ->setPaper('a4', 'landscape');
+        } else {
+            $results = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
+                ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
+                    return $q->where('period_id', $selectedPeriodId);
+                })
+                ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
+                    return $q->whereHas('employee', function($empQ) use ($selectedDepartmentId) {
+                        $empQ->where('department_id', $selectedDepartmentId);
+                    });
+                })
+                ->get();
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('report.print', compact('results', 'period', 'department'))
+                ->setPaper('a4', 'landscape');
+        }
 
         $fileName = 'Laporan_Rekapitulasi_Penilaian_360_' . date('Ymd_His') . '.pdf';
 
@@ -145,25 +174,60 @@ class ReportController extends Controller
 
     public function exportCsv(Request $request)
     {
+        $tab = $request->input('tab');
         $selectedPeriodId = $request->input('period_id');
         $selectedDepartmentId = $request->input('department_id');
 
         $period = Period::find($selectedPeriodId);
         $department = Department::find($selectedDepartmentId);
 
-        $results = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
-            ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
-                return $q->where('period_id', $selectedPeriodId);
-            })
-            ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
-                return $q->whereHas('employee', function($empQ) use ($selectedDepartmentId) {
-                    $empQ->where('department_id', $selectedDepartmentId);
+        if ($tab === 'department') {
+            $departmentStats = Department::where('code', '!=', 'BKPSDM')
+                ->where(\Illuminate\Support\Facades\DB::raw('LOWER(name)'), 'NOT LIKE', '%bkpsdm kabupaten%')
+                ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
+                    return $q->where('id', $selectedDepartmentId);
+                })
+                ->orderBy('name')
+                ->get()
+                ->map(function($dept) use ($selectedPeriodId) {
+                    $query = AssessmentResult::whereHas('employee', function($q) use ($dept) {
+                        $q->where('department_id', $dept->id);
+                    });
+                    if ($selectedPeriodId) {
+                        $query->where('period_id', $selectedPeriodId);
+                    }
+                    $results = $query->get();
+                    $avgScore = $results->count() > 0 ? round($results->avg('final_score'), 2) : 0;
+                    $highestScore = $results->count() > 0 ? round($results->max('final_score'), 2) : 0;
+                    return [
+                        'department' => $dept,
+                        'total_evaluated' => $results->count(),
+                        'average_score' => $avgScore,
+                        'highest_score' => $highestScore,
+                        'very_good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'VERY_GOOD')->count(),
+                        'good' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'GOOD')->count(),
+                        'fair' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'FAIR')->count(),
+                        'needs_improvement' => $results->filter(fn($r) => (is_object($r->category) ? $r->category->value : $r->category) === 'NEEDS_IMPROVEMENT')->count(),
+                    ];
                 });
-            })
-            ->get();
+            
+            $exporter = new \App\Services\Export\DepartmentReportExporter($departmentStats, $period, $department);
+            $spreadsheet = $exporter->export();
+        } else {
+            $results = AssessmentResult::with(['employee', 'employee.department', 'employee.position', 'period'])
+                ->when($selectedPeriodId, function($q) use ($selectedPeriodId) {
+                    return $q->where('period_id', $selectedPeriodId);
+                })
+                ->when($selectedDepartmentId, function($q) use ($selectedDepartmentId) {
+                    return $q->whereHas('employee', function($empQ) use ($selectedDepartmentId) {
+                        $empQ->where('department_id', $selectedDepartmentId);
+                    });
+                })
+                ->get();
 
-        $exporter = new ReportExporter($results, $period, $department);
-        $spreadsheet = $exporter->export();
+            $exporter = new ReportExporter($results, $period, $department);
+            $spreadsheet = $exporter->export();
+        }
 
         $fileName = 'Rekap_Penilaian_360_Laporan_' . date('Ymd') . '.xlsx';
 

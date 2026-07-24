@@ -197,71 +197,56 @@
     </div>
 
     <div class="title-block">
-        <div class="doc-title">LAPORAN REKAPITULASI HASIL PENILAIAN KINERJA 360 DERAJAT ASN</div>
+        <div class="doc-title">LAPORAN REKAPITULASI PENILAIAN KINERJA PER BIDANG</div>
         <div class="doc-subtitle">PERIODE: {{ strtoupper($period->name ?? 'SEMUA PERIODE') }}</div>
         @if($department)
             <div class="doc-subtitle" style="margin-top: 2px;">UNIT KERJA: {{ strtoupper($department->name) }}</div>
         @endif
     </div>
 
-    <!-- Print Table -->
     <table class="table-print">
         <colgroup>
-            <col style="width: 4%;">
-            <col style="width: 14%;">
-            <col style="width: 18%;">
-            <col style="width: 15%;">
-            <col style="width: 15%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 6%;">
+            <col style="width: 5%;">
+            <col style="width: 35%;">
+            <col style="width: 12%;">
+            <col style="width: 12%;">
+            <col style="width: 12%;">
+            <col style="width: 24%;">
         </colgroup>
         <thead>
             <tr>
                 <th>NO</th>
-                <th>NIP</th>
-                <th>NAMA PEGAWAI</th>
                 <th>UNIT KERJA / BIDANG</th>
-                <th>JABATAN</th>
-                <th>ATASAN</th>
-                <th>SEJAWAT</th>
-                <th>BAWAHAN</th>
-                <th>NILAI AKHIR</th>
-                <th>PREDIKAT</th>
+                <th>JUMLAH PEGAWAI</th>
+                <th>RATA-RATA NILAI</th>
+                <th>NILAI TERTINGGI</th>
+                <th>DISTRIBUSI PREDIKAT</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($results as $index => $res)
-                @php
-                    $catLabel = \App\Enums\ResultCategory::formatLabel($res->category);
-                @endphp
+            @forelse($departmentStats as $index => $stat)
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $res->employee->nip ?? '-' }}</td>
-                    <td><strong>{{ $res->employee->name ?? '-' }}</strong></td>
-                    <td>{{ $res->employee->department->name ?? '-' }}</td>
-                    <td>{{ $res->employee->position->name ?? '-' }}</td>
-                    <td class="text-center">{{ number_format($res->subordinate_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ number_format($res->peer_average ?? 0, 2) }}</td>
-                    <td class="text-center">{{ ($res->superior_weight > 0) ? number_format($res->superior_average ?? 0, 2) : '-' }}</td>
-                    <td class="text-center text-bold"><strong>{{ number_format($res->final_score ?? 0, 2) }}</strong></td>
-                    <td class="text-center"><strong>{{ $catLabel }}</strong></td>
+                    <td><strong>{{ $stat['department']->name }}</strong></td>
+                    <td class="text-center">{{ $stat['total_evaluated'] }} Orang</td>
+                    <td class="text-center text-bold">{{ number_format($stat['average_score'], 2) }}</td>
+                    <td class="text-center">{{ number_format($stat['highest_score'], 2) }}</td>
+                    <td class="text-center">
+                        <span style="font-size: 8.5pt;">
+                            SB: <strong>{{ $stat['very_good'] }}</strong>, 
+                            B: <strong>{{ $stat['good'] }}</strong>, 
+                            C: <strong>{{ $stat['fair'] }}</strong>, 
+                            PB: <strong>{{ $stat['needs_improvement'] }}</strong>
+                        </span>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="text-center" style="padding: 15px;">Tidak ada data hasil penilaian kinerja untuk periode ini.</td>
+                    <td colspan="6" class="text-center" style="padding: 15px;">Tidak ada data bidang untuk periode ini.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
-
-    <div style="font-size: 9pt; margin-top: 5px;">
-        <strong>Keterangan Bobot Penilaian:</strong><br>
-        - <strong>Staff:</strong> Atasan (50%), Rekan Sejawat (50%), Bawahan (N/A)<br>
-        - <strong>Kabid/Pejabat:</strong> Atasan (50%), Rekan Sejawat (30%), Bawahan (20%)
-    </div>
 
     <!-- Signature Container -->
     <div class="ttd-container">

@@ -22,11 +22,11 @@
             <div class="col-12 col-md-5">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari nama jabatan..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari nama jabatan..." value="{{ request('search') }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 1.5rem;">
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 2.5rem;">
                     <option value="">-- Semua Unit Kerja / Bidang --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
@@ -34,7 +34,7 @@
                 </select>
             </div>
             <div class="col-12 col-md-3 d-flex gap-2">
-                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="status" class="form-select bg-light" onchange="this.form.submit()" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 2.5rem;">
                     <option value="">-- Semua Status --</option>
                     <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>

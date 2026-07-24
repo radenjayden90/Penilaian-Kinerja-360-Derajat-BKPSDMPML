@@ -237,16 +237,16 @@
             <div class="card-body-custom p-4 d-flex flex-column justify-content-between">
                 @if($topDepartment)
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">{{ $topDepartment['name'] }}</h4>
-                        <span class="text-muted d-block mb-3"><i class="bi bi-people me-1"></i>Total Evaluasi: <strong>{{ $topDepartment['count'] }} Pegawai</strong></span>
+                        <h6 class="fw-bold text-dark mb-1 lh-base">{{ $topDepartment['name'] }}</h6>
+                        <span class="text-muted small d-block mb-3"><i class="bi bi-people me-1"></i>Total Evaluasi: <strong>{{ $topDepartment['count'] }} Pegawai</strong></span>
                     </div>
                     <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="text-muted small d-block text-uppercase fw-semibold">Nilai Rata-Rata</span>
-                            <span class="fw-extrabold fs-2" style="color: #15803D;">{{ number_format($topDepartment['avg'], 2) }}</span>
+                            <span class="text-muted small d-block text-uppercase fw-semibold mb-1">Nilai Rata-Rata</span>
+                            <span class="fw-extrabold fs-4" style="color: #15803D;">{{ number_format($topDepartment['avg'], 2) }}</span>
                         </div>
                         <div>
-                            <span class="badge px-3 py-2 fs-6 fw-bold rounded-3" style="{{ getCategoryBadgeStyle($topDepartment['category_label']) }}">
+                            <span class="badge px-2.5 py-1.5 fw-bold rounded-2" style="{{ getCategoryBadgeStyle($topDepartment['category_label']) }}">
                                 {{ $topDepartment['category_label'] }}
                             </span>
                         </div>
@@ -270,16 +270,16 @@
             <div class="card-body-custom p-4 d-flex flex-column justify-content-between">
                 @if($lowestDepartment)
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">{{ $lowestDepartment['name'] }}</h4>
-                        <span class="text-muted d-block mb-3"><i class="bi bi-people me-1"></i>Total Evaluasi: <strong>{{ $lowestDepartment['count'] }} Pegawai</strong></span>
+                        <h6 class="fw-bold text-dark mb-1 lh-base">{{ $lowestDepartment['name'] }}</h6>
+                        <span class="text-muted small d-block mb-3"><i class="bi bi-people me-1"></i>Total Evaluasi: <strong>{{ $lowestDepartment['count'] }} Pegawai</strong></span>
                     </div>
                     <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="text-muted small d-block text-uppercase fw-semibold">Nilai Rata-Rata</span>
-                            <span class="fw-extrabold fs-2" style="color: #B91C1C;">{{ number_format($lowestDepartment['avg'], 2) }}</span>
+                            <span class="text-muted small d-block text-uppercase fw-semibold mb-1">Nilai Rata-Rata</span>
+                            <span class="fw-extrabold fs-4" style="color: #B91C1C;">{{ number_format($lowestDepartment['avg'], 2) }}</span>
                         </div>
                         <div>
-                            <span class="badge px-3 py-2 fs-6 fw-bold rounded-3" style="{{ getCategoryBadgeStyle($lowestDepartment['category_label']) }}">
+                            <span class="badge px-2.5 py-1.5 fw-bold rounded-2" style="{{ getCategoryBadgeStyle($lowestDepartment['category_label']) }}">
                                 {{ $lowestDepartment['category_label'] }}
                             </span>
                         </div>

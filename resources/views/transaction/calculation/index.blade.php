@@ -20,23 +20,19 @@
             <div class="col-12 col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari NIP atau nama pegawai..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Cari NIP atau nama pegawai..." value="{{ request('search') }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 1.5rem;">
                 </div>
             </div>
-            <div class="col-12 col-md-4">
-                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+            <div class="col-12 col-md-6 d-flex gap-2">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-right: 2.5rem;">
                     <option value="">-- Semua Unit Kerja --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div class="col-12 col-md-2">
-                @if(request('search') || request('department_id'))
-                    <a href="{{ route('transaction.calculations.index') }}" class="btn btn-outline-secondary w-100">
-                        <i class="bi bi-x-circle me-1"></i> Reset
-                    </a>
-                @endif
+                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" title="Reset Filter">
+                    <i class="bi bi-x-circle"></i>
+                </a>
             </div>
         </form>
     </div>
