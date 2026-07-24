@@ -171,7 +171,6 @@
             -webkit-text-fill-color: transparent;
         }
     </style>
-    @livewireStyles
 </head>
 <body class="antialiased mesh-bg">
     <div class="noise-overlay"></div>
@@ -807,6 +806,5 @@
             }
         }
     </script>
-    @livewireScripts
 </body>
 </html>
