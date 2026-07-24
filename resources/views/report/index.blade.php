@@ -18,7 +18,6 @@
 @section('subtitle', $pageSubtitle)
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Laporan</li>
 @endsection
 

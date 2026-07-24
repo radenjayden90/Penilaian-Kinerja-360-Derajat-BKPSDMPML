@@ -5,7 +5,6 @@
 @section('subtitle', 'Proses kalkulasi nilai agregat berdasarkan pembobotan (Atasan, Sejawat, Bawahan, Diri Sendiri)')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Perhitungan Nilai</li>
 @endsection
 

@@ -5,7 +5,6 @@
 @section('subtitle', 'Daftar instrumen evaluasi kuesioner yang harus Anda isi pada periode aktif secara obyektif, transparan, dan akuntabel.')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Penilaian Saya</li>
 @endsection
 
