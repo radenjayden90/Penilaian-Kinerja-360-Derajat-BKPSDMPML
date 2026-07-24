@@ -18,7 +18,7 @@
 @section('content')
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('master.periods.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('master.periods.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-5">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                <select name="year" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="year" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Tahun --</option>
                     @for($y = date('Y') + 1; $y >= 2024; $y--)
                         <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>Tahun {{ $y }}</option>
@@ -34,14 +34,14 @@
                 </select>
             </div>
             <div class="col-12 col-md-4 d-flex gap-2">
-                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="status" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Status --</option>
                     <option value="OPEN" {{ request('status') === 'OPEN' ? 'selected' : '' }}>Aktif / Terbuka</option>
                     <option value="CLOSED" {{ request('status') === 'CLOSED' ? 'selected' : '' }}>Selesai / Ditutup</option>
                     <option value="ARCHIVED" {{ request('status') === 'ARCHIVED' ? 'selected' : '' }}>Arsip</option>
                 </select>
                 @if(request('search') || request('year') || request('status'))
-                    <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
+                    <a href="{{ route('master.periods.index') }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                         <i class="bi bi-x-circle"></i>
                     </a>
                 @endif

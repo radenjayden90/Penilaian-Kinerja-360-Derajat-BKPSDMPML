@@ -472,10 +472,10 @@
 <div class="toolbar-container mb-4">
     <div class="row align-items-center g-3">
         <div class="col-12 col-lg-6">
-            <form method="GET" action="{{ route('assessment.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
+            <form method="GET" action="{{ route('assessment.index') }}" class="d-flex align-items-center gap-2 flex-wrap" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
                 <div class="input-group input-group-merge" style="max-width: 320px;">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-funnel"></i></span>
-                    <select name="period_id" class="form-select bg-light border-start-0 ps-0 fw-medium" onchange="this.form.submit()">
+                    <select name="period_id" class="form-select bg-light border-start-0 ps-0 fw-medium" onchange="this.form.requestSubmit()">
                         <option value="">-- Semua Periode Penilaian --</option>
                         @foreach($periods as $p)
                             <option value="{{ $p->id }}" {{ request('period_id') == $p->id ? 'selected' : '' }}>
@@ -485,7 +485,7 @@
                     </select>
                 </div>
                 @if(request('period_id'))
-                    <a href="{{ route('assessment.index') }}" class="btn btn-light border text-muted fw-medium rounded-3" title="Reset Filter">
+                    <a href="{{ route('assessment.index') }}" class="btn btn-light border text-muted fw-medium rounded-3" title="Reset Filter" wire:navigate>
                         <i class="bi bi-x-circle me-1"></i> Reset
                     </a>
                 @endif

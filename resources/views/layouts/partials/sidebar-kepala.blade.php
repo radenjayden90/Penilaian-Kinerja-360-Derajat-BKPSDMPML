@@ -34,9 +34,9 @@
             <i class="bi bi-diagram-3 nav-main-icon"></i>
             <span class="nav-link-text">Laporan Per Bidang</span>
         </a>
-        <a href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawainya" wire:navigate>
+        <a href="{{ route('report.index', ['tab' => 'employee']) }}" class="nav-link {{ $isReportActive && $currentTab === 'employee' ? 'active' : '' }}" title="Laporan Individu Pegawai" wire:navigate>
             <i class="bi bi-person-lines-fill nav-main-icon"></i>
-            <span class="nav-link-text">Laporan Individu Pegawainya</span>
+            <span class="nav-link-text">Laporan Individu Pegawai</span>
         </a>
         <a href="{{ route('report.index', ['tab' => 'analytics']) }}" class="nav-link {{ $isReportActive && $currentTab === 'analytics' ? 'active' : '' }}" title="Statistik & Tren Kinerja" wire:navigate>
             <i class="bi bi-graph-up-arrow nav-main-icon"></i>

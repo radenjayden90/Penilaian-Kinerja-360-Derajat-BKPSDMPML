@@ -12,7 +12,7 @@
 @section('content')
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('transaction.monitoring.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('transaction.monitoring.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <select name="department_id" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="department_id" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Unit Kerja --</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
@@ -29,7 +29,7 @@
             </div>
             <div class="col-12 col-md-2">
                 @if(request('search') || request('department_id'))
-                    <a href="{{ route('transaction.monitoring.index') }}" class="btn btn-outline-secondary w-100">
+                    <a href="{{ route('transaction.monitoring.index') }}" class="btn btn-outline-secondary w-100" wire:navigate>
                         <i class="bi bi-x-circle me-1"></i> Reset
                     </a>
                 @endif

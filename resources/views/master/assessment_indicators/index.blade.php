@@ -23,7 +23,7 @@
 @section('content')
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <form method="GET" action="{{ route('master.assessment-indicators.index') }}" class="row g-2">
+        <form method="GET" action="{{ route('master.assessment-indicators.index') }}" class="row g-2" x-data @submit.prevent="Livewire.navigate($el.action + '?' + new URLSearchParams(new FormData($el)).toString())">
             <div class="col-12 col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <select name="category_id" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="category_id" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Semua Aspek Kategori --</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -39,13 +39,13 @@
                 </select>
             </div>
             <div class="col-12 col-md-2 d-flex gap-2">
-                <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+                <select name="status" class="form-select bg-light" onchange="this.form.requestSubmit()">
                     <option value="">-- Status --</option>
                     <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
                 @if(request('search') || request('category_id') || request('status') !== null)
-                    <a href="{{ route('master.assessment-indicators.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
+                    <a href="{{ route('master.assessment-indicators.index') }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                         <i class="bi bi-x-circle"></i>
                     </a>
                 @endif
