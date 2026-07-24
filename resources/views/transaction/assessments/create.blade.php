@@ -125,7 +125,6 @@
         padding: 12px 18px;
     }
 
-    /* Executive Question Card */
     .question-card {
         background: #FFFFFF;
         border: 1px solid var(--card-border);
@@ -136,14 +135,40 @@
         margin-bottom: 24px;
     }
 
+    .name-title {
+        font-size: 26px;
+        letter-spacing: -0.5px;
+    }
+
     @media (max-width: 768px) {
         .hero-banner-target {
-            padding: 20px;
+            padding: 16px;
             border-radius: 16px;
         }
         .question-card {
             padding: 16px;
             border-radius: 16px;
+        }
+        .badge-type-pill {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .target-info-pill {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .target-avatar-lg {
+            width: 44px;
+            height: 44px;
+            font-size: 1.15rem;
+            border-radius: 12px;
+        }
+        .name-title {
+            font-size: 18px;
+        }
+        .period-box-glass {
+            padding: 10px 12px;
+            width: 100%;
         }
     }
 
@@ -272,7 +297,7 @@
                     {{ strtoupper(substr($target->name, 0, 1)) }}
                 </div>
                 <div>
-                    <h2 class="fw-bold text-white mb-1" style="font-size: 26px; letter-spacing: -0.5px;">
+                    <h2 class="fw-bold text-white mb-1 name-title">
                         {{ $target->name }}
                     </h2>
                     <div class="text-white text-opacity-90 small">
@@ -311,15 +336,15 @@
     <div class="tw-bg-white tw-rounded-2xl tw-shadow-xl tw-overflow-hidden tw-border tw-border-slate-200/80">
         
         <!-- Header Title Bar -->
-        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-6 md:tw-px-10 tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
+        <div class="tw-bg-gradient-to-r tw-from-slate-900 tw-to-slate-800 tw-px-5 sm:tw-px-6 md:tw-px-10 tw-py-4 sm:tw-py-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
             <div>
-                <h3 class="tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
+                <h3 class="tw-text-base md:tw-text-xl tw-font-bold tw-text-white tw-m-0 tw-flex tw-items-center tw-gap-2">
                     <i class="bi bi-pencil-square tw-text-blue-400"></i> Pengisian Kuesioner Evaluasi
                 </h3>
-                <p class="tw-text-slate-300 tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
+                <p class="tw-text-slate-300 tw-text-xs md:tw-text-sm tw-mt-1 tw-mb-0">Berikan penilaian secara objektif, jujur, dan akuntabel sesuai pengamatan kinerja Anda.</p>
             </div>
             <div>
-                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-4 tw-py-1.5 tw-rounded-full tw-text-xs tw-font-semibold">
+                <span class="tw-bg-blue-500/20 tw-text-blue-200 tw-border tw-border-blue-400/30 tw-px-3 md:tw-px-4 tw-py-1.5 tw-rounded-full tw-text-[10px] md:tw-text-xs tw-font-semibold">
                     <i class="bi bi-person-badge me-1"></i> Evaluator: {{ Auth::user()->name }}
                 </span>
             </div>
