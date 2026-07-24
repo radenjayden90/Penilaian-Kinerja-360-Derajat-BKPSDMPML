@@ -431,22 +431,22 @@
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-4 md:tw-justify-between tw-items-center">
+            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-4 md:tw-justify-between tw-items-start md:tw-items-center">
                 
-                <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors tw-w-full sm:tw-w-auto">
+                <div class="tw-flex tw-flex-wrap tw-gap-3">
+                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
-                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors tw-w-full sm:tw-w-auto">
+                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
                         <i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara
                     </button>
                 </div>
 
-                <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-w-full md:tw-w-auto">
-                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all tw-w-full sm:tw-w-auto">
+                <div class="tw-flex tw-flex-wrap tw-gap-3">
+                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
                         Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
-                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all tw-w-full sm:tw-w-auto disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
                         <i class="bi bi-check-circle-fill me-1"></i> Submit Penilaian
                     </button>
                 </div>
