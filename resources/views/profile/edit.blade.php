@@ -382,8 +382,7 @@
     </div>
 </div>
 
-<!-- 3. 7 Dimensions BerAKHLAK Bar Chart Visualisation (Hidden for HEAD) -->
-@if(isset($roleName) && $roleName !== 'HEAD')
+<!-- 3. 7 Dimensions BerAKHLAK Bar Chart Visualisation & Score Highlights -->
 <div class="row g-4 mb-4">
     <!-- Left Column: Bar Chart -->
     <div class="col-12 col-xl-7">
@@ -456,7 +455,6 @@
         </div>
     </div>
 </div>
-@endif
 
 @endsection
 
