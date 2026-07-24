@@ -431,7 +431,7 @@
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-col-reverse md:tw-flex-row tw-gap-4 md:tw-justify-between tw-items-start md:tw-items-center">
+            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-wrap tw-gap-4 tw-justify-between tw-items-center">
                 
                 <div class="tw-flex tw-flex-wrap tw-gap-3">
                     <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
@@ -442,7 +442,7 @@
                     </button>
                 </div>
 
-                <div class="tw-flex tw-flex-wrap tw-gap-3">
+                <div class="tw-flex tw-flex-wrap tw-gap-3 tw-ml-auto tw-justify-end">
                     <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
                         Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
