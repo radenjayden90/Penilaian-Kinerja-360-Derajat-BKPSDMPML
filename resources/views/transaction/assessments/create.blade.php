@@ -281,10 +281,10 @@
 @endphp
 
 <!-- Executive Target Employee Header Banner -->
-<div class="hero-banner-target mb-4">
-    <div class="row align-items-center g-4">
+<div class="hero-banner-target mb-4 tw-overflow-hidden">
+    <div class="row m-0 align-items-center g-4">
         <div class="col-12 col-lg-8">
-            <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                 <span class="badge-type-pill">
                     <i class="bi bi-shield-check"></i> Evaluasi Kinerja 360°
                 </span>
@@ -297,7 +297,7 @@
                     {{ strtoupper(substr($target->name, 0, 1)) }}
                 </div>
                 <div>
-                    <h2 class="fw-bold text-white mb-1 name-title">
+                    <h2 class="fw-bold text-white mb-1 name-title tw-break-words tw-whitespace-normal">
                         {{ $target->name }}
                     </h2>
                     <div class="text-white text-opacity-90 small">
