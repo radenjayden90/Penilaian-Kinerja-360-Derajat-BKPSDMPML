@@ -242,10 +242,10 @@
             </h5>
             <small class="text-muted fw-semibold">Data Resmi BKPSDM Pemalang</small>
         </div>
-        <div class="card-body p-0 pt-2">
-            <div class="row g-0">
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 border-bottom d-flex align-items-center gap-3">
+        <div class="card-body p-0 pt-3">
+            <div class="row g-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
                             <i class="bi bi-briefcase fs-5"></i>
                         </div>
@@ -258,8 +258,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 border-bottom d-flex align-items-center gap-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; color: #B45309 !important;">
                             <i class="bi bi-building fs-5"></i>
                         </div>
@@ -272,8 +272,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 border-bottom d-flex align-items-center gap-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-indigo bg-opacity-10 text-indigo rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background-color: #E0E7FF; color: #4F46E5;">
                             <i class="bi bi-person-up fs-5"></i>
                         </div>
@@ -286,8 +286,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 border-bottom d-flex align-items-center gap-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-info bg-opacity-10 text-info rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
                             <i class="bi bi-envelope fs-5"></i>
                         </div>
@@ -300,8 +300,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 border-bottom border-lg-0 d-flex align-items-center gap-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
                             <i class="bi bi-gender-ambiguous fs-5"></i>
                         </div>
@@ -314,8 +314,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <div class="p-3 d-flex align-items-center gap-3">
+                <div class="col-12 col-lg-6 d-flex">
+                    <div class="p-3 rounded-3 border w-100 h-100 d-flex align-items-center gap-3" style="background: #F8FAFC; border-color: #E2E8F0 !important;">
                         <div class="bg-success bg-opacity-10 text-success rounded-circle p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
                             <i class="bi bi-telephone fs-5"></i>
                         </div>

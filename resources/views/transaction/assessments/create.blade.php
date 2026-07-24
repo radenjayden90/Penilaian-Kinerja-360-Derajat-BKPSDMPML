@@ -94,11 +94,13 @@
         font-size: 13px;
         font-weight: 600;
         padding: 6px 16px;
-        border-radius: 9999px;
+        border-radius: 14px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        max-width: 100%;
+        line-height: 1.35;
     }
 
     .badge-type-pill {
@@ -863,12 +865,7 @@ document.addEventListener('livewire:navigated', function() {
         }
     }
 
-    // Set default value to 1 for unanswered inputs
-    inputs.forEach(input => {
-        if (input.dataset.answered !== "true") {
-            syncUI(input.id, '1');
-        }
-    });
+
 
     // Auto-navigate to the first incomplete category
     let firstIncompleteTab = 0;
