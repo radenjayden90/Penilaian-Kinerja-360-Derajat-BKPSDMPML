@@ -136,6 +136,17 @@
         margin-bottom: 24px;
     }
 
+    @media (max-width: 768px) {
+        .hero-banner-target {
+            padding: 20px;
+            border-radius: 16px;
+        }
+        .question-card {
+            padding: 16px;
+            border-radius: 16px;
+        }
+    }
+
     .question-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.1);
@@ -343,7 +354,7 @@
             </div>
 
             <!-- Content Area -->
-            <div class="tw-p-6 md:tw-p-10 tw-bg-slate-50/60">
+            <div class="tw-p-4 sm:tw-p-6 md:tw-p-10 tw-bg-slate-50/60">
                 
                 <div class="tw-mb-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-sm-center tw-gap-3">
                     <div>
@@ -377,7 +388,7 @@
                                         <div class="tw-flex tw-justify-between tw-mb-4 tw-px-1">
                                             @for($i = 1; $i <= 10; $i++)
                                                 <button type="button" 
-                                                        class="rating-number tw-w-8 tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-700 tw-font-bold tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-100 hover:tw-text-blue-700 tw-border-0"
+                                                        class="rating-number tw-w-6 tw-h-6 sm:tw-w-8 sm:tw-h-8 md:tw-w-10 md:tw-h-10 tw-rounded-full tw-bg-slate-100 tw-text-slate-700 tw-font-bold tw-text-xs sm:tw-text-sm md:tw-text-base tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-100 hover:tw-text-blue-700 tw-border-0"
                                                         data-value="{{ $i }}"
                                                         data-input="score_{{ $indicator->id }}">
                                                     {{ $i }}
@@ -431,22 +442,22 @@
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-wrap tw-gap-4 tw-justify-between tw-items-center">
+            <div class="tw-bg-white tw-border-t tw-border-slate-200 tw-p-4 sm:tw-p-6 md:tw-p-8 tw-flex tw-flex-row tw-flex-wrap tw-gap-3 sm:tw-gap-4 tw-justify-between tw-items-center">
                 
-                <div class="tw-flex tw-flex-wrap tw-gap-3">
-                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
+                <div class="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3">
+                    <button type="button" id="btnPrev" class="tw-hidden tw-border-0 tw-px-4 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-slate-100 tw-text-slate-700 tw-font-bold hover:tw-bg-slate-200 tw-transition-colors">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
-                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-6 tw-py-3 tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
+                    <button type="button" id="btnSaveDraft" class="tw-border-0 tw-px-4 tw-py-2 sm:tw-px-6 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-amber-100 tw-text-amber-800 tw-font-bold hover:tw-bg-amber-200 tw-transition-colors">
                         <i class="bi bi-bookmark-fill me-1"></i> Simpan Sementara
                     </button>
                 </div>
 
-                <div class="tw-flex tw-flex-wrap tw-gap-3 tw-ml-auto tw-justify-end">
-                    <button type="button" id="btnNext" class="tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
+                <div class="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3 tw-ml-auto tw-justify-end">
+                    <button type="button" id="btnNext" class="tw-border-0 tw-px-5 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-blue-600 tw-text-white tw-font-bold hover:tw-bg-blue-700 tw-shadow-lg tw-shadow-blue-500/30 tw-transition-all">
                         Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
                     </button>
-                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-8 tw-py-3 tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                    <button type="submit" id="btnSubmit" class="tw-hidden tw-border-0 tw-px-5 tw-py-2 sm:tw-px-8 sm:tw-py-3 tw-text-xs sm:tw-text-sm tw-rounded-xl tw-bg-emerald-600 tw-text-white tw-font-bold hover:tw-bg-emerald-700 tw-shadow-lg tw-shadow-emerald-500/30 tw-transition-all disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
                         <i class="bi bi-check-circle-fill me-1"></i> Submit Penilaian
                     </button>
                 </div>
