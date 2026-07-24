@@ -283,7 +283,7 @@ class ReportExporter
         // 5. Score Scale Clarification Footnote
         $noteRow = $row;
         $sheet->mergeCells('A' . $noteRow . ':J' . $noteRow);
-        $sheet->setCellValue('A' . $noteRow, '* Catatan: Skor Atasan, Sejawat, Bawahan, dan Diri ditampilkan dalam skala 1–10, sedangkan Nilai Akhir 360° merupakan hasil konversi bobot ke skala 100.');
+        $sheet->setCellValue('A' . $noteRow, '* Catatan: Skor Atasan, Sejawat, dan Bawahan ditampilkan dalam skala 1–10, sedangkan Nilai Akhir 360° merupakan hasil konversi bobot ke skala 100.');
         $sheet->getStyle('A' . $noteRow)->applyFromArray([
             'font' => ['size' => 9, 'italic' => true, 'color' => ['rgb' => '64748B']],
             'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
@@ -572,7 +572,6 @@ class ReportExporter
                 'SUBORDINATE' => 'Atasan',
                 'PEER' => 'Rekan Kerja',
                 'SUPERIOR' => 'Bawahan',
-                'SELF' => 'Diri Sendiri',
                 default => 'Penilai',
             };
 

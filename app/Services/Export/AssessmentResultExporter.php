@@ -592,7 +592,6 @@ class AssessmentResultExporter
                 'SUBORDINATE' => 'Atasan',
                 'PEER' => 'Rekan Kerja',
                 'SUPERIOR' => 'Bawahan',
-                'SELF' => 'Diri Sendiri',
                 default => 'Penilai',
             };
 

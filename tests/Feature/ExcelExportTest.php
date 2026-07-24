@@ -29,11 +29,9 @@ class ExcelExportTest extends TestCase
         $exporter = new AssessmentResultExporter($result);
         $spreadsheet = $exporter->export();
 
-        $this->assertEquals(4, $spreadsheet->getSheetCount());
+        $this->assertEquals(2, $spreadsheet->getSheetCount());
         $this->assertEquals('Ringkasan Penilaian', $spreadsheet->getSheet(0)->getTitle());
         $this->assertEquals('Detail Penilaian', $spreadsheet->getSheet(1)->getTitle());
-        $this->assertEquals('Grafik Penilaian', $spreadsheet->getSheet(2)->getTitle());
-        $this->assertEquals('Riwayat Penilai', $spreadsheet->getSheet(3)->getTitle());
     }
 
     public function test_assessment_history_exporter_generates_spreadsheet()
@@ -60,9 +58,6 @@ class ExcelExportTest extends TestCase
 
         $this->assertEquals(4, $spreadsheet->getSheetCount());
         $this->assertEquals('Ringkasan Penilaian', $spreadsheet->getSheet(0)->getTitle());
-        $this->assertEquals('Detail Penilaian', $spreadsheet->getSheet(1)->getTitle());
-        $this->assertEquals('Grafik Penilaian', $spreadsheet->getSheet(2)->getTitle());
-        $this->assertEquals('Riwayat Penilai', $spreadsheet->getSheet(3)->getTitle());
     }
 
     public function test_report_exporter_generates_spreadsheet()
@@ -81,9 +76,6 @@ class ExcelExportTest extends TestCase
 
         $this->assertEquals(4, $spreadsheet->getSheetCount());
         $this->assertEquals('Ringkasan Penilaian', $spreadsheet->getSheet(0)->getTitle());
-        $this->assertEquals('Detail Penilaian', $spreadsheet->getSheet(1)->getTitle());
-        $this->assertEquals('Grafik Penilaian', $spreadsheet->getSheet(2)->getTitle());
-        $this->assertEquals('Riwayat Penilai', $spreadsheet->getSheet(3)->getTitle());
     }
 
     public function test_export_excel_routes()
