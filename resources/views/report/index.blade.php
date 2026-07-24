@@ -225,14 +225,13 @@
                     <thead>
                         <tr>
                             <th class="ps-3" style="width: 5%;">No</th>
-                            <th style="width: 20%;">NIP & Nama Pegawai</th>
-                            <th style="width: 25%;">Unit Kerja & Jabatan</th>
-                            <th class="text-center" style="width: 8%;">Atasan (40%)</th>
-                            <th class="text-center" style="width: 8%;">Sejawat (30%)</th>
-                            <th class="text-center" style="width: 8%;">Bawahan (20%)</th>
-                            <th class="text-center" style="width: 8%;">Diri (10%)</th>
+                            <th style="width: 25%;">NIP & Nama Pegawai</th>
+                            <th style="width: 26%;">Unit Kerja & Jabatan</th>
+                            <th class="text-center" style="width: 9%;">Atasan</th>
+                            <th class="text-center" style="width: 9%;">Sejawat</th>
+                            <th class="text-center" style="width: 9%;">Bawahan</th>
                             <th class="text-center" style="width: 9%;">Nilai Akhir 360°</th>
-                            <th class="text-center" style="width: 9%;">Predikat</th>
+                            <th class="text-center" style="width: 8%;">Predikat</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,10 +246,9 @@
                                     <div class="small fw-medium text-dark">{{ $res->employee->department->name ?? '-' }}</div>
                                     <small class="text-muted">{{ $res->employee->position->name ?? '-' }}</small>
                                 </td>
-                                <td class="text-center">{{ number_format($res->superior_score ?? 0, 2) }}</td>
-                                <td class="text-center">{{ number_format($res->peer_score ?? 0, 2) }}</td>
-                                <td class="text-center">{{ number_format($res->subordinate_score ?? 0, 2) }}</td>
-                                <td class="text-center">{{ number_format($res->self_score ?? 0, 2) }}</td>
+                                <td class="text-center">{{ number_format($res->subordinate_average ?? 0, 2) }}</td>
+                                <td class="text-center">{{ number_format($res->peer_average ?? 0, 2) }}</td>
+                                <td class="text-center">{{ ($res->superior_weight > 0) ? number_format($res->superior_average ?? 0, 2) : '-' }}</td>
                                 <td class="text-center">
                                     <span class="fw-semibold text-dark">
                                         {{ number_format($res->final_score ?? 0, 2) }}
@@ -281,7 +279,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-muted py-4">
+                                <td colspan="8" class="text-center text-muted py-4">
                                     <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
                                     Belum ada data laporan hasil penilaian untuk filter yang dipilih.
                                 </td>

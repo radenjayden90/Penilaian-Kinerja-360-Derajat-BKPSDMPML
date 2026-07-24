@@ -2,7 +2,7 @@
 
 @section('title', 'Perhitungan Nilai 360°')
 @section('header', 'Kalkulasi Skor Kinerja 360° ASN')
-@section('subtitle', 'Proses kalkulasi nilai agregat berdasarkan pembobotan (Atasan, Sejawat, Bawahan, Diri Sendiri)')
+@section('subtitle', 'Proses kalkulasi nilai agregat berdasarkan pembobotan (Atasan, Sejawat, Bawahan)')
 
 @section('breadcrumb')
     <li class="breadcrumb-item active" aria-current="page">Perhitungan Nilai</li>

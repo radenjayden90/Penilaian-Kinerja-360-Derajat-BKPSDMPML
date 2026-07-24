@@ -70,19 +70,26 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Sidebar Toggle Script -->
+    <!-- Sidebar Toggle & Bootstrap Initializer Script -->
     <script>
-        document.addEventListener('livewire:navigated', function () {
+        function setupSidebarToggle() {
             const toggleBtn = document.getElementById('sidebarToggleBtn');
             const body = document.body;
 
-            // Load saved sidebar state
+            // Restore saved sidebar collapsed state for desktop
             if (localStorage.getItem('sidebar-collapsed') === 'true') {
                 body.classList.add('sidebar-collapsed');
             }
 
             if (toggleBtn) {
-                toggleBtn.addEventListener('click', function () {
+                // Remove previous click listener if any to avoid duplication
+                toggleBtn.replaceWith(toggleBtn.cloneNode(true));
+                const freshBtn = document.getElementById('sidebarToggleBtn');
+
+                freshBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
                     if (window.innerWidth < 992) {
                         body.classList.toggle('sidebar-open');
                     } else {
@@ -93,27 +100,32 @@
             }
 
             // Close mobile sidebar on click outside
-            document.addEventListener('click', function (e) {
+            const handleOutsideClick = function (e) {
                 if (window.innerWidth < 992 && body.classList.contains('sidebar-open')) {
                     const sidebar = document.querySelector('.app-sidebar');
-                    if (sidebar && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    const btn = document.getElementById('sidebarToggleBtn');
+                    if (sidebar && btn && !sidebar.contains(e.target) && !btn.contains(e.target)) {
                         body.classList.remove('sidebar-open');
                     }
                 }
-            });
+            };
 
-            // Live Auto-Search as user types (case-insensitive debounced filtering)
+            document.removeEventListener('click', handleOutsideClick);
+            document.addEventListener('click', handleOutsideClick);
+
+            // Re-initialize Bootstrap 5 dropdowns for data-bs-toggle
+            if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+                const dropdownElements = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+                dropdownElements.forEach(function(dropdownToggleEl) {
+                    bootstrap.Dropdown.getOrCreateInstance(dropdownToggleEl);
+                });
+            }
+
+            // Live Auto-Search as user types
             const searchInputs = document.querySelectorAll('input[name="search"]');
             searchInputs.forEach(function(input) {
-                // Keep cursor focus position after submission
-                if (input.value && document.activeElement !== input) {
-                    const queryParam = new URLSearchParams(window.location.search).get('search');
-                    if (queryParam) {
-                        input.focus();
-                        const len = input.value.length;
-                        input.setSelectionRange(len, len);
-                    }
-                }
+                if (input.dataset.searchBound) return;
+                input.dataset.searchBound = 'true';
 
                 let debounceTimer = null;
                 input.addEventListener('input', function() {
@@ -125,7 +137,10 @@
                     }, 450);
                 });
             });
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', setupSidebarToggle);
+        document.addEventListener('livewire:navigated', setupSidebarToggle);
     </script>
 
     @stack('scripts')

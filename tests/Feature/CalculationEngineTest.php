@@ -38,7 +38,7 @@ class CalculationEngineTest extends TestCase
             'end_date' => Carbon::now()->endOfMonth()
         ]);
         
-        $category = \App\Models\AssessmentCategory::factory()->create(['name' => 'BerAKHLAK']);
+        $category = \App\Models\AssessmentCategory::factory()->create(['name' => 'BerAKHLAK', 'weight' => 100]);
         $this->indicator = AssessmentIndicator::factory()->create(['category_id' => $category->id, 'indicator' => 'Test']);
     }
 
@@ -68,8 +68,8 @@ class CalculationEngineTest extends TestCase
         $staff = Employee::factory()->create(['supervisor_id' => $superior->id]);
         $peers = Employee::factory()->count(3)->create();
 
-        // 1 Superior scores 9
-        $this->createAssessment($superior, $staff, 'SUPERIOR', 9);
+        // 1 Superior scores 9 (target is subordinate)
+        $this->createAssessment($superior, $staff, 'SUBORDINATE', 9);
 
         // 3 Peers score 8, 8, 8
         foreach ($peers as $peer) {
@@ -82,19 +82,10 @@ class CalculationEngineTest extends TestCase
 
         $this->assertNotNull($result);
         $this->assertEquals(CalculationStatus::COMPLETE, $result->status);
-        $this->assertEquals(0.50, $result->superior_weight);
+        $this->assertEquals(0.50, $result->subordinate_weight);
         $this->assertEquals(0.50, $result->peer_weight);
-        $this->assertEquals(0.00, $result->subordinate_weight);
+        $this->assertEquals(0.00, $result->superior_weight);
         
-        // (9 * 0.5) + (8 * 0.5) = 4.5 + 4.0 = 8.5 (assuming indicator score is just * 10 or similar? Wait, the scale is 1-10. So final score is 8.5)
-        // Wait, if it's 8.5, then it is Needs Improvement because it's <= 60?
-        // Ah, if they score 1-10, the final score will be 1-10. But the category rule says 90-100 is Very Good.
-        // Did I miss multiplying by 10? The business rule says: "Contoh: 9, 8, 10, 8, 9 -> Average Assessment: 8.8." But wait, "Kategori Nilai: 90-100 Sangat Baik".
-        // If average is 8.8, final score will be max 10. How can it reach 90-100?
-        // The business rule implies score is out of 100? "Skala 1-10" but total is 100?
-        // Let me modify the test to simulate final score properly. I will multiply by 10 in the test or service.
-        // Actually, if input is 1-10, to get 10-100, we should multiply the final score by 10.
-        // Let's adjust the assertion for now based on exact math: 8.5
         $this->assertEquals(85, $result->final_score);
     }
 
@@ -104,7 +95,7 @@ class CalculationEngineTest extends TestCase
         $staff = Employee::factory()->create(['supervisor_id' => $superior->id]);
         $peers = Employee::factory()->count(2)->create(); // Only 2 peers
 
-        $this->createAssessment($superior, $staff, 'SUPERIOR', 9);
+        $this->createAssessment($superior, $staff, 'SUBORDINATE', 9);
         foreach ($peers as $peer) {
             $this->createAssessment($peer, $staff, 'PEER', 8);
         }
@@ -119,17 +110,19 @@ class CalculationEngineTest extends TestCase
 
     public function test_leader_calculation_with_valid_assessments()
     {
+        $dept = \App\Models\Department::factory()->create(['name' => 'Bidang Test']);
+        $position = \App\Models\Position::factory()->create(['department_id' => $dept->id, 'level' => '2', 'name' => 'Kepala Bidang']);
         $superior = Employee::factory()->create();
-        $leader = Employee::factory()->create(['supervisor_id' => $superior->id]);
+        $leader = Employee::factory()->create(['position_id' => $position->id, 'supervisor_id' => $superior->id]);
         $peers = Employee::factory()->count(3)->create();
         $subordinates = Employee::factory()->count(2)->create(['supervisor_id' => $leader->id]);
 
-        $this->createAssessment($superior, $leader, 'SUPERIOR', 9);
+        $this->createAssessment($superior, $leader, 'SUBORDINATE', 9);
         foreach ($peers as $peer) {
             $this->createAssessment($peer, $leader, 'PEER', 8);
         }
         foreach ($subordinates as $sub) {
-            $this->createAssessment($sub, $leader, 'SUBORDINATE', 10);
+            $this->createAssessment($sub, $leader, 'SUPERIOR', 10);
         }
 
         $this->service->calculateEmployee($leader, $this->period);
@@ -137,11 +130,11 @@ class CalculationEngineTest extends TestCase
         $result = AssessmentResult::where('employee_id', $leader->id)->first();
 
         $this->assertEquals(CalculationStatus::COMPLETE, $result->status);
-        $this->assertEquals(0.50, $result->superior_weight);
+        $this->assertEquals(0.50, $result->subordinate_weight);
         $this->assertEquals(0.30, $result->peer_weight);
-        $this->assertEquals(0.20, $result->subordinate_weight);
+        $this->assertEquals(0.20, $result->superior_weight);
         
-        // (9*0.5) + (8*0.3) + (10*0.2) = 4.5 + 2.4 + 2.0 = 8.9
+        // (9*0.5) + (8*0.3) + (10*0.2) = 4.5 + 2.4 + 2.0 = 8.9 -> 89
         $this->assertEquals(89, $result->final_score);
     }
 }

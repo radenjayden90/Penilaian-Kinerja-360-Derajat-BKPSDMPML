@@ -479,7 +479,7 @@
                             </span>
                         </div>
 
-                        <!-- 4 Assessment Sources Progress Bars -->
+                        <!-- 3 Assessment Sources Progress Bars -->
                         <div class="space-y-4">
                             <div class="group">
                                 <div class="flex justify-between text-xs font-semibold mb-1.5">
@@ -514,18 +514,6 @@
                                 </div>
                                 <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
                                     <div class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 h-2 rounded-full progress-animate shadow-sm" style="width: 94%; animation-delay: 400ms;"></div>
-                                </div>
-                            </div>
-
-                            <div class="group">
-                                <div class="flex justify-between text-xs font-semibold mb-1.5">
-                                    <span class="text-dark flex items-center gap-2 group-hover:text-emerald-600 transition-colors">
-                                        <i data-lucide="user" class="w-4 h-4 text-emerald-600"></i> Self-Assessment (Diri Sendiri)
-                                    </span>
-                                    <span class="text-emerald-600 font-bold">90% (Baik)</span>
-                                </div>
-                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden p-0.5 shadow-inner">
-                                    <div class="bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600 h-2 rounded-full progress-animate shadow-sm" style="width: 90%; animation-delay: 600ms;"></div>
                                 </div>
                             </div>
                         </div>
