@@ -162,48 +162,61 @@
 @section('content')
 
 @php
-    $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom((string)($result->category ?? ''));
-    $catLabel = \App\Enums\ResultCategory::formatLabel($result->category);
-    
-    $badgeStyle = match($catEnum) {
-        \App\Enums\ResultCategory::VERY_GOOD => 'background-color: #DCFCE7; color: #15803D; border-color: #86EFAC;',
-        \App\Enums\ResultCategory::GOOD => 'background-color: #F0FDF4; color: #166534; border-color: #BBF7D0;',
-        \App\Enums\ResultCategory::FAIR => 'background-color: #FEF9C3; color: #854D0E; border-color: #FDE047;',
-        \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'background-color: #FFEDD5; color: #C2410C; border-color: #FDBA74;',
-        default => 'background-color: #F1F5F9; color: #475569; border-color: #CBD5E1;'
-    };
-
-    $posName = strtolower($employee->position?->name ?? '');
-    $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
-
-    // 7 Dimensions BerAKHLAK Calculations
     $finalScoreVal = (float)($result->final_score ?? 0);
     $subAvg = (float)($result->subordinate_average ?? 0) * 10;
     $peerAvg = (float)($result->peer_average ?? 0) * 10;
     $supAvg = (float)($result->superior_average ?? 0) * 10;
 
-    $base = $finalScoreVal > 0 ? $finalScoreVal : 75;
-    
-    $dimPelayanan  = min(100, max(50, round($base + (($subAvg - $base) * 0.15) + 1.2, 1)));
-    $dimAkuntabel  = min(100, max(50, round($base + (($supAvg - $base) * 0.12) - 0.5, 1)));
-    $dimKompeten   = min(100, max(50, round($base + (($subAvg - $base) * 0.10) + 0.8, 1)));
-    $dimHarmonis   = min(100, max(50, round($base + (($peerAvg - $base) * 0.18) + 0.5, 1)));
-    $dimLoyal      = min(100, max(50, round($base + (($supAvg - $base) * 0.15) - 0.2, 1)));
-    $dimAdaptif    = min(100, max(50, round($base + (($peerAvg - $base) * 0.12) - 1.0, 1)));
-    $dimKolaboratif= min(100, max(50, round($base + (($peerAvg - $base) * 0.15) + 0.4, 1)));
+    $hasEvaluations = ($finalScoreVal > 0) || ($subAvg > 0 || $peerAvg > 0 || $supAvg > 0) || ($result->status?->value === 'COMPLETE' || $result->status === 'COMPLETE');
 
     $radarLabels = ['Berorientasi Pelayanan', 'Akuntabel', 'Kompeten', 'Harmonis', 'Loyal', 'Adaptif', 'Kolaboratif'];
-    $radarValues = [$dimPelayanan, $dimAkuntabel, $dimKompeten, $dimHarmonis, $dimLoyal, $dimAdaptif, $dimKolaboratif];
 
-    $dimScores = array_combine($radarLabels, $radarValues);
-    arsort($dimScores);
-    $topStrength = array_key_first($dimScores);
-    $topStrengthVal = current($dimScores);
-    
-    $areaImprovement = array_key_last($dimScores);
-    $areaImprovementVal = end($dimScores);
+    if ($hasEvaluations) {
+        $catEnum = $result->category instanceof \App\Enums\ResultCategory ? $result->category : \App\Enums\ResultCategory::tryFrom((string)($result->category ?? ''));
+        $catLabel = \App\Enums\ResultCategory::formatLabel($result->category);
+        
+        $badgeStyle = match($catEnum) {
+            \App\Enums\ResultCategory::VERY_GOOD => 'background-color: #DCFCE7; color: #15803D; border-color: #86EFAC;',
+            \App\Enums\ResultCategory::GOOD => 'background-color: #F0FDF4; color: #166534; border-color: #BBF7D0;',
+            \App\Enums\ResultCategory::FAIR => 'background-color: #FEF9C3; color: #854D0E; border-color: #FDE047;',
+            \App\Enums\ResultCategory::NEEDS_IMPROVEMENT => 'background-color: #FFEDD5; color: #C2410C; border-color: #FDBA74;',
+            default => 'background-color: #F1F5F9; color: #475569; border-color: #CBD5E1;'
+        };
 
-    // Initial avatar letters
+        $base = $finalScoreVal;
+        $dimPelayanan  = min(100, max(0, round($base + (($subAvg - $base) * 0.15) + 1.2, 1)));
+        $dimAkuntabel  = min(100, max(0, round($base + (($supAvg - $base) * 0.12) - 0.5, 1)));
+        $dimKompeten   = min(100, max(0, round($base + (($subAvg - $base) * 0.10) + 0.8, 1)));
+        $dimHarmonis   = min(100, max(0, round($base + (($peerAvg - $base) * 0.18) + 0.5, 1)));
+        $dimLoyal      = min(100, max(0, round($base + (($supAvg - $base) * 0.15) - 0.2, 1)));
+        $dimAdaptif    = min(100, max(0, round($base + (($peerAvg - $base) * 0.12) - 1.0, 1)));
+        $dimKolaboratif= min(100, max(0, round($base + (($peerAvg - $base) * 0.15) + 0.4, 1)));
+
+        $radarValues = [$dimPelayanan, $dimAkuntabel, $dimKompeten, $dimHarmonis, $dimLoyal, $dimAdaptif, $dimKolaboratif];
+
+        $dimScores = array_combine($radarLabels, $radarValues);
+        arsort($dimScores);
+        $topStrength = array_key_first($dimScores);
+        $topStrengthVal = current($dimScores);
+        
+        $areaImprovement = array_key_last($dimScores);
+        $areaImprovementVal = end($dimScores);
+    } else {
+        $catLabel = 'Belum Dihitung';
+        $badgeStyle = 'background-color: #F1F5F9; color: #475569; border-color: #CBD5E1;';
+
+        $radarValues = [0, 0, 0, 0, 0, 0, 0];
+
+        $topStrength = 'Belum Ada Data';
+        $topStrengthVal = 0.0;
+
+        $areaImprovement = 'Belum Ada Data';
+        $areaImprovementVal = 0.0;
+    }
+
+    $posName = strtolower($employee->position?->name ?? '');
+    $isKabid = ($employee->position?->level == '2' || str_contains($posName, 'kepala bidang') || str_contains($posName, 'kabid') || str_contains($posName, 'sekretaris'));
+
     $initials = collect(explode(' ', $employee->name))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->join('');
 @endphp
 
@@ -353,7 +366,7 @@
                     @foreach($radarLabels as $idx => $label)
                         @php
                             $val = round((float)($radarValues[$idx] ?? 0), 1);
-                            $badgeStyle = $val >= 85 ? 'background-color: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;' : ($val >= 70 ? 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;' : ($val >= 60 ? 'background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;' : 'background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;'));
+                            $badgeStyle = $val >= 85 ? 'background-color: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;' : ($val >= 70 ? 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;' : ($val >= 60 ? 'background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;' : ($val > 0 ? 'background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;' : 'background-color: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1;')));
                         @endphp
                         <div class="col-6 col-sm-4 col-md-3 col-lg">
                             <div class="p-2 rounded-3 text-center" style="{{ $badgeStyle }}">
@@ -371,36 +384,36 @@
     <div class="col-12 col-xl-5">
         <div class="d-flex flex-column gap-3 h-100">
             <!-- Strength Card -->
-            <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-success border-4">
+            <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-{{ $hasEvaluations ? 'success' : 'secondary' }} border-4">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                    <div class="bg-{{ $hasEvaluations ? 'success' : 'secondary' }} bg-opacity-10 text-{{ $hasEvaluations ? 'success' : 'secondary' }} rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                         <i class="bi bi-star-fill fs-5"></i>
                     </div>
                     <div>
-                        <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px;">Kekuatan Utama</span>
+                        <span class="badge bg-{{ $hasEvaluations ? 'success' : 'secondary' }} bg-opacity-10 text-{{ $hasEvaluations ? 'success' : 'secondary' }} fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px;">Kekuatan Utama</span>
                         <h6 class="fw-bold text-dark mb-0 fs-6">{{ $topStrength }}</h6>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: #F0FDF4; border: 1px solid #DCFCE7;">
-                    <span class="text-success-emphasis fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
-                    <span class="fw-extrabold text-success fs-6">{{ $topStrengthVal }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
+                <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: {{ $hasEvaluations ? '#F0FDF4' : '#F8FAFC' }}; border: 1px solid {{ $hasEvaluations ? '#DCFCE7' : '#E2E8F0' }};">
+                    <span class="text-{{ $hasEvaluations ? 'success-emphasis' : 'muted' }} fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
+                    <span class="fw-extrabold text-{{ $hasEvaluations ? 'success' : 'secondary' }} fs-6">{{ $hasEvaluations ? number_format($topStrengthVal, 1) : '0.0' }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
                 </div>
             </div>
 
             <!-- Development Opportunity Card -->
-            <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-warning border-4">
+            <div class="executive-card p-3 border-0 shadow-sm rounded-4 bg-white border-start border-{{ $hasEvaluations ? 'warning' : 'secondary' }} border-4">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                    <div class="bg-{{ $hasEvaluations ? 'warning' : 'secondary' }} bg-opacity-10 text-{{ $hasEvaluations ? 'warning' : 'secondary' }} rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                         <i class="bi bi-arrow-up-circle-fill fs-5"></i>
                     </div>
                     <div>
-                        <span class="badge bg-warning bg-opacity-10 fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px; color: #B45309 !important; background-color: #FEF3C7 !important;">Area Pengembangan</span>
+                        <span class="badge bg-{{ $hasEvaluations ? 'warning' : 'secondary' }} bg-opacity-10 fw-bold text-uppercase px-2 py-1 rounded-2 mb-1" style="font-size: 9px; letter-spacing: 0.5px; color: {{ $hasEvaluations ? '#B45309' : '#64748B' }} !important; background-color: {{ $hasEvaluations ? '#FEF3C7' : '#F1F5F9' }} !important;">Area Pengembangan</span>
                         <h6 class="fw-bold text-dark mb-0 fs-6">{{ $areaImprovement }}</h6>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: #FFFBEB; border: 1px solid #FEF3C7;">
-                    <span class="text-warning-emphasis fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
-                    <span class="fw-extrabold fs-6" style="color: #B45309 !important;">{{ $areaImprovementVal }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
+                <div class="d-flex align-items-center justify-content-between p-2 px-3 rounded-3 mt-2" style="background-color: {{ $hasEvaluations ? '#FFFBEB' : '#F8FAFC' }}; border: 1px solid {{ $hasEvaluations ? '#FEF3C7' : '#E2E8F0' }};">
+                    <span class="text-{{ $hasEvaluations ? 'warning-emphasis' : 'muted' }} fw-medium small" style="font-size: 12px;">Skor Evaluasi:</span>
+                    <span class="fw-extrabold fs-6" style="color: {{ $hasEvaluations ? '#B45309' : '#64748B' }} !important;">{{ $hasEvaluations ? number_format($areaImprovementVal, 1) : '0.0' }} <span class="text-muted fw-normal" style="font-size: 11px;">/ 100</span></span>
                 </div>
             </div>
         </div>
@@ -532,14 +545,19 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('livewire:navigated', function () {
+    function renderBerakhlakShowChart() {
         const canvas = document.getElementById('berakhlakBarChart');
         if (!canvas) return;
+
+        if (window.berakhlakShowChartInstance) {
+            window.berakhlakShowChartInstance.destroy();
+        }
+
         const ctx = canvas.getContext('2d');
 
         const rawLabels = @json($radarLabels);
         const rawValues = @json($radarValues);
-        const values = rawValues.map(v => { const val = parseFloat(v); return val <= 10 ? Math.round(val * 100) / 10 : val; });
+        const values = rawValues.map(v => { const val = parseFloat(v); return val <= 10 && val > 0 ? Math.round(val * 100) / 10 : val; });
 
         // Format short labels for crisp X-axis presentation
         const labels = rawLabels.map(l => {
@@ -568,11 +586,11 @@
         });
         const barBorderColors = gradientStops.map(s => s.border);
 
-        // Dynamic minimum score scale (starts closely below minimum score, capped at min 40)
-        const minVal = values.length > 0 ? Math.min(...values) : 50;
-        const calculatedMin = Math.max(0, Math.min(50, Math.floor((minVal - 5) / 10) * 10));
+        const nonZeroValues = values.filter(v => v > 0);
+        const minVal = nonZeroValues.length > 0 ? Math.min(...nonZeroValues) : 50;
+        const calculatedMin = nonZeroValues.length > 0 ? Math.max(0, Math.min(50, Math.floor((minVal - 5) / 10) * 10)) : 0;
 
-        new Chart(ctx, {
+        window.berakhlakShowChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -598,7 +616,7 @@
                         max: 100,
                         grid: { color: 'rgba(226, 232, 240, 0.8)' },
                         ticks: {
-                            stepSize: 10,
+                            stepSize: 20,
                             font: { family: 'Inter', size: 11, weight: '600' },
                             color: '#64748B'
                         }
@@ -628,13 +646,20 @@
                                 return rawLabels[idx] || context[0].label;
                             },
                             label: function(context) {
-                                return ' Skor: ' + context.raw + ' / 100';
+                                return ' Skor: ' + context.parsed.y + ' / 100';
                             }
                         }
                     }
                 }
             }
         });
-    });
+    }
+
+    if (document.readyState !== 'loading') {
+        renderBerakhlakShowChart();
+    } else {
+        document.addEventListener('DOMContentLoaded', renderBerakhlakShowChart);
+    }
+    document.addEventListener('livewire:navigated', renderBerakhlakShowChart);
 </script>
 @endpush

@@ -317,16 +317,9 @@
                 </div>
             </div>
             
-            @if(count($chartLabels) > 0)
-                <div style="position: relative; height:350px; width:100%">
-                    <canvas id="historicalChart"></canvas>
-                </div>
-            @else
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-bar-chart-line fs-1 mb-3 d-block text-slate-300"></i>
-                    <p class="mb-0">Belum ada riwayat nilai untuk ditampilkan.</p>
-                </div>
-            @endif
+            <div style="position: relative; height:350px; width:100%">
+                <canvas id="historicalChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -334,89 +327,105 @@
 @endsection
 
 @push('scripts')
-@if(count($chartLabels) > 0)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('livewire:navigated', function() {
-    const ctx = document.getElementById('historicalChart').getContext('2d');
-    
-    // Create gradient for the line chart fill
-    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)'); // Primary blue semi-transparent
-    gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');   // Transparent
+    function renderHistoricalChart() {
+        const canvas = document.getElementById('historicalChart');
+        if (!canvas) return;
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($chartLabels) !!},
-            datasets: [{
-                label: 'Nilai Akhir',
-                data: {!! json_encode($chartData) !!},
-                borderColor: '#2563EB',
-                backgroundColor: gradient,
-                borderWidth: 3,
-                pointBackgroundColor: '#FFFFFF',
-                pointBorderColor: '#2563EB',
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                fill: true,
-                tension: 0.3 // Smooth curves
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false // Hide default legend
-                },
-                tooltip: {
-                    backgroundColor: '#0F172A',
-                    titleFont: { size: 13, family: "'Inter', sans-serif" },
-                    bodyFont: { size: 14, weight: 'bold', family: "'Inter', sans-serif" },
-                    padding: 12,
-                    cornerRadius: 8,
-                    displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            return 'Nilai Akhir: ' + context.parsed.y.toFixed(2);
+        if (window.historicalChartInstance) {
+            window.historicalChartInstance.destroy();
+        }
+
+        const ctx = canvas.getContext('2d');
+        
+        let gradient = ctx.createLinearGradient(0, 0, 0, 350);
+        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+        gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+
+        const rawLabels = @json($chartLabels);
+        const rawData = @json($chartData);
+
+        const labels = rawLabels && rawLabels.length > 0 ? rawLabels : [{{ json_encode($activePeriod->name ?? 'Periode Aktif') }}];
+        const data = rawData && rawData.length > 0 ? rawData : [0];
+
+        window.historicalChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nilai Akhir',
+                    data: data,
+                    borderColor: '#2563EB',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#2563EB',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0F172A',
+                        titleFont: { size: 13, family: "'Inter', sans-serif" },
+                        bodyFont: { size: 14, weight: 'bold', family: "'Inter', sans-serif" },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Nilai Akhir: ' + context.parsed.y.toFixed(2);
+                            }
                         }
                     }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100, // Assuming score is out of 100
-                    grid: {
-                        color: '#F1F5F9',
-                        drawBorder: false,
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            color: '#F1F5F9',
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 12 },
+                            color: '#64748B',
+                            stepSize: 20
+                        }
                     },
-                    ticks: {
-                        font: { family: "'Inter', sans-serif", size: 12 },
-                        color: '#64748B',
-                        stepSize: 20
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 12 },
+                            color: '#64748B'
+                        }
                     }
                 },
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false,
-                    },
-                    ticks: {
-                        font: { family: "'Inter', sans-serif", size: 12 },
-                        color: '#64748B'
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
-        }
-    });
-});
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+            }
+        });
+    }
+
+    if (document.readyState !== 'loading') {
+        renderHistoricalChart();
+    } else {
+        document.addEventListener('DOMContentLoaded', renderHistoricalChart);
+    }
+    document.addEventListener('livewire:navigated', renderHistoricalChart);
 </script>
-@endif
 @endpush

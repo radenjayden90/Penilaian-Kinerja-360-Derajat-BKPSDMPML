@@ -416,126 +416,142 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // 1. CHART DONUT: DISTRIBUSI HASIL PENILAIAN
-    const ctxDoughnut = document.getElementById('doughnutCategoryChart');
-    if (ctxDoughnut) {
-        new Chart(ctxDoughnut, {
-            type: 'doughnut',
-            data: {
-                labels: ['Sangat Baik', 'Baik', 'Cukup', 'Perlu Pembinaan'],
-                datasets: [{
-                    data: [
-                        {{ $distribusiStats['sangat_baik']['count'] }},
-                        {{ $distribusiStats['baik']['count'] }},
-                        {{ $distribusiStats['cukup']['count'] }},
-                        {{ $distribusiStats['kurang']['count'] }}
-                    ],
-                    backgroundColor: ['#10B981', '#2563EB', '#D97706', '#DC2626'],
-                    borderWidth: 2,
-                    borderColor: '#FFFFFF'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                cutout: '70%'
+    function renderKepalaCharts() {
+        // 1. CHART DONUT: DISTRIBUSI HASIL PENILAIAN
+        const ctxDoughnut = document.getElementById('doughnutCategoryChart');
+        if (ctxDoughnut) {
+            if (window.doughnutCategoryChartInstance) {
+                window.doughnutCategoryChartInstance.destroy();
             }
-        });
-    }
-
-    // 2. CHART BAR HORIZONTAL: RATA-RATA NILAI PER BIDANG
-    const ctxBar = document.getElementById('barDepartmentChart');
-    if (ctxBar) {
-        const deptNames = {!! json_encode($departmentAverages->pluck('name')) !!};
-        const deptScores = {!! json_encode($departmentAverages->pluck('avg')) !!};
-
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: deptNames,
-                datasets: [{
-                    label: 'Rata-Rata Nilai',
-                    data: deptScores,
-                    backgroundColor: '#2563EB',
-                    borderRadius: 6,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
+            window.doughnutCategoryChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sangat Baik', 'Baik', 'Cukup', 'Perlu Pembinaan'],
+                    datasets: [{
+                        data: [
+                            {{ $distribusiStats['sangat_baik']['count'] }},
+                            {{ $distribusiStats['baik']['count'] }},
+                            {{ $distribusiStats['cukup']['count'] }},
+                            {{ $distribusiStats['kurang']['count'] }}
+                        ],
+                        backgroundColor: ['#10B981', '#2563EB', '#D97706', '#DC2626'],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
+                    }]
                 },
-                scales: {
-                    x: {
-                        min: 0,
-                        max: 100,
-                        grid: { color: '#F1F5F9' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
                     },
-                    y: {
-                        grid: { display: false },
-                        ticks: {
-                            callback: function(value, index) {
-                                let label = this.getLabelForValue(index);
-                                return label.length > 18 ? label.substr(0, 18) + '...' : label;
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // 2. CHART BAR HORIZONTAL: RATA-RATA NILAI PER BIDANG
+        const ctxBar = document.getElementById('barDepartmentChart');
+        if (ctxBar) {
+            if (window.barDepartmentChartInstance) {
+                window.barDepartmentChartInstance.destroy();
+            }
+            const deptNames = {!! json_encode($departmentAverages->pluck('name')) !!};
+            const deptScores = {!! json_encode($departmentAverages->pluck('avg')) !!};
+
+            window.barDepartmentChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: deptNames,
+                    datasets: [{
+                        label: 'Rata-Rata Nilai',
+                        data: deptScores,
+                        backgroundColor: '#2563EB',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 100,
+                            grid: { color: '#F1F5F9' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value, index) {
+                                    let label = this.getLabelForValue(index);
+                                    return label.length > 18 ? label.substr(0, 18) + '...' : label;
+                                }
                             }
                         }
                     }
                 }
+            });
+        }
+
+        // 3. CHART LINE TREN: TREN NILAI RATA-RATA INSTANSI PER PERIODE
+        const ctxLine = document.getElementById('lineTrendChart');
+        if (ctxLine) {
+            if (window.lineTrendChartInstance) {
+                window.lineTrendChartInstance.destroy();
             }
-        });
-    }
+            const periodNames = {!! json_encode($periodTrends->pluck('period_name')) !!};
+            const periodScores = {!! json_encode($periodTrends->pluck('avg_score')) !!};
 
-    // 3. CHART LINE TREN: TREN NILAI RATA-RATA INSTANSI PER PERIODE
-    const ctxLine = document.getElementById('lineTrendChart');
-    if (ctxLine) {
-        const periodNames = {!! json_encode($periodTrends->pluck('period_name')) !!};
-        const periodScores = {!! json_encode($periodTrends->pluck('avg_score')) !!};
-
-        new Chart(ctxLine, {
-            type: 'line',
-            data: {
-                labels: periodNames,
-                datasets: [{
-                    label: 'Nilai Rata-Rata',
-                    data: periodScores,
-                    borderColor: '#4F46E5',
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: '#4F46E5',
-                    pointBorderColor: '#FFFFFF',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
+            window.lineTrendChartInstance = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: periodNames,
+                    datasets: [{
+                        label: 'Nilai Rata-Rata',
+                        data: periodScores,
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#4F46E5',
+                        pointBorderColor: '#FFFFFF',
+                        pointBorderWidth: 2
+                    }]
                 },
-                scales: {
-                    y: {
-                        min: 0,
-                        max: 100,
-                        grid: { color: '#F1F5F9' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
                     },
-                    x: {
-                        grid: { display: false }
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            grid: { color: '#F1F5F9' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
-});
+
+    if (document.readyState !== 'loading') {
+        renderKepalaCharts();
+    } else {
+        document.addEventListener('DOMContentLoaded', renderKepalaCharts);
+    }
+    document.addEventListener('livewire:navigated', renderKepalaCharts);
 </script>
 @endpush
