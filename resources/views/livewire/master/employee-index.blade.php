@@ -152,10 +152,10 @@
                                 </td>
                                 <td class="text-end pe-4 py-3">
                                     <div class="d-inline-flex gap-1.5">
-                                        <a href="{{ route('master.employees.show', $emp) }}" class="btn btn-sm btn-icon rounded-3" style="background: #E0F2FE; color: #0284C7; width: 32px; height: 32px;" title="Detail Profile">
+                                        <a wire:navigate href="{{ route('master.employees.show', $emp) }}" class="btn btn-sm btn-icon rounded-3" style="background: #E0F2FE; color: #0284C7; width: 32px; height: 32px;" title="Detail Profile">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
-                                        <a href="{{ route('master.employees.edit', $emp) }}" class="btn btn-sm btn-icon rounded-3" style="background: #EFF6FF; color: #2563EB; width: 32px; height: 32px;" title="Edit Data">
+                                        <a wire:navigate href="{{ route('master.employees.edit', $emp) }}" class="btn btn-sm btn-icon rounded-3" style="background: #EFF6FF; color: #2563EB; width: 32px; height: 32px;" title="Edit Data">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                         <form action="{{ route('master.employees.destroy', $emp) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pegawai {{ $emp->name }}?')">

@@ -50,7 +50,7 @@
                         <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Total Pegawai ASN</span>
                         <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_pegawai']) }}</h3>
                         <div class="mt-3">
-                            <a href="{{ route('master.employees.index') }}" class="text-decoration-none text-primary fw-semibold small d-inline-flex align-items-center">
+                            <a wire:navigate href="{{ route('master.employees.index') }}" class="text-decoration-none text-primary fw-semibold small d-inline-flex align-items-center">
                                 Kelola Pegawai <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
@@ -72,7 +72,7 @@
                         <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Unit Kerja / Bidang</span>
                         <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_department']) }}</h3>
                         <div class="mt-3">
-                            <a href="{{ route('master.departments.index') }}" class="text-decoration-none text-info fw-semibold small d-inline-flex align-items-center">
+                            <a wire:navigate href="{{ route('master.departments.index') }}" class="text-decoration-none text-info fw-semibold small d-inline-flex align-items-center">
                                 Lihat Unit Kerja <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
@@ -94,7 +94,7 @@
                         <span class="text-uppercase fw-bold text-muted" style="font-size: 11px; letter-spacing: 0.5px;">Master Jabatan</span>
                         <h3 class="fw-extrabold mb-0 mt-2" style="color: #0F172A; font-size: 28px;">{{ number_format($stats['total_position']) }}</h3>
                         <div class="mt-3">
-                            <a href="{{ route('master.positions.index') }}" class="text-decoration-none text-purple fw-semibold small d-inline-flex align-items-center" style="color: #8B5CF6;">
+                            <a wire:navigate href="{{ route('master.positions.index') }}" class="text-decoration-none text-purple fw-semibold small d-inline-flex align-items-center" style="color: #8B5CF6;">
                                 Lihat Jabatan <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
@@ -118,7 +118,7 @@
                             {{ $stats['active_period']->name ?? 'Belum Aktif' }}
                         </h3>
                         <div class="mt-3">
-                            <a href="{{ route('master.periods.index') }}" class="text-decoration-none text-success fw-semibold small d-inline-flex align-items-center">
+                            <a wire:navigate href="{{ route('master.periods.index') }}" class="text-decoration-none text-success fw-semibold small d-inline-flex align-items-center">
                                 Kelola Periode <i class="bi bi-arrow-right ms-1 transition-icon"></i>
                             </a>
                         </div>
@@ -198,7 +198,7 @@
             </div>
             <div class="card-body p-3 d-flex flex-column">
                 <div class="d-flex flex-column gap-2 h-100 justify-content-between">
-                    <a href="{{ route('master.employees.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                    <a wire:navigate href="{{ route('master.employees.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
                         <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-primary text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;">
                             <i class="bi bi-person-plus-fill" style="font-size: 1.1rem;"></i>
                         </div>
@@ -208,7 +208,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('master.periods.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                    <a wire:navigate href="{{ route('master.periods.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
                         <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-success text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;">
                             <i class="bi bi-plus-circle-fill" style="font-size: 1.1rem;"></i>
                         </div>
@@ -218,7 +218,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('master.assessment-indicators.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                    <a wire:navigate href="{{ route('master.assessment-indicators.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
                         <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-info text-white" style="width: 36px; height: 36px; background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%) !important;">
                             <i class="bi bi-card-checklist" style="font-size: 1.1rem;"></i>
                         </div>
@@ -228,7 +228,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('transaction.calculations.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
+                    <a wire:navigate href="{{ route('transaction.calculations.index') }}" class="px-3 py-2 rounded-3 d-flex align-items-center gap-2 text-decoration-none action-shortcut-item h-100">
                         <div class="rounded-3 p-2 d-flex align-items-center justify-content-center bg-warning text-dark" style="width: 36px; height: 36px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important; color: #FFF !important;">
                             <i class="bi bi-calculator-fill" style="font-size: 1.1rem;"></i>
                         </div>
@@ -249,7 +249,7 @@
                 <span class="fw-bold text-dark" style="font-size: 15px;">
                     <i class="bi bi-trophy-fill text-amber-500 me-2"></i>5 Pegawai Skor Kinerja Tertinggi
                 </span>
-                <a href="{{ route('transaction.calculations.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 12px;">
+                <a wire:navigate href="{{ route('transaction.calculations.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 12px;">
                     Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>

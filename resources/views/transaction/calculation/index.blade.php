@@ -98,7 +98,7 @@
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
                                     @if($res)
-                                        <a href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Detail Penilaian">
+                                        <a wire:navigate href="{{ route('transaction.calculations.show', $emp) }}" class="btn btn-outline-info" title="Lihat Detail Penilaian">
                                             <i class="bi bi-eye me-1"></i> Lihat Detail Penilaian
                                         </a>
                                     @else

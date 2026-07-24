@@ -197,7 +197,7 @@
         </div>
 
         <div class="col-12 col-lg-4 text-lg-end">
-            <a href="{{ route('transaction.assessments.index') }}" class="btn-hero-cta">
+            <a wire:navigate href="{{ route('transaction.assessments.index') }}" class="btn-hero-cta">
                 <i class="bi bi-pencil-square fs-5"></i> Mulai Penilaian
             </a>
         </div>

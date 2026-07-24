@@ -5,12 +5,12 @@
 @section('subtitle', 'Kelola data seluruh jabatan ASN di lingkungan instansi')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Jabatan</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.positions.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.positions.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Tambah Jabatan
     </a>
 @endsection
@@ -79,7 +79,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.positions.edit', $pos) }}" class="btn btn-outline-primary" title="Edit Data">
+                                    <a wire:navigate href="{{ route('master.positions.edit', $pos) }}" class="btn btn-outline-primary" title="Edit Data">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.positions.destroy', $pos) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jabatan ini?')">

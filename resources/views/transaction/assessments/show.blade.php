@@ -5,7 +5,7 @@
 @section('subtitle', 'Hasil masukan isian kuesioner yang telah diserahkan')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
     <li class="breadcrumb-item active" aria-current="page">Rincian Evaluasi</li>
 @endsection
 
@@ -76,7 +76,7 @@
 @endif
 
 <div class="d-flex justify-content-start mb-4">
-    <a href="{{ route('transaction.assessments.index') }}" class="btn btn-outline-secondary">
+    <a wire:navigate href="{{ route('transaction.assessments.index') }}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar Penilaian
     </a>
 </div>

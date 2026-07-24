@@ -703,7 +703,7 @@
                         <li><a href="#beranda" class="hover:text-white transition-colors">Beranda</a></li>
                         <li><a href="#tentang" class="hover:text-white transition-colors">Tentang Sistem</a></li>
                         <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
-                        <li><a href="{{ route('login') }}" class="hover:text-white transition-colors">Login Aplikasi</a></li>
+                        <li><a wire:navigate href="{{ route('login') }}" class="hover:text-white transition-colors">Login Aplikasi</a></li>
                     </ul>
                 </div>
                 <div>

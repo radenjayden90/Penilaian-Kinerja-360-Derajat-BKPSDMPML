@@ -16,8 +16,8 @@
 @endpush
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('master.employees.index') }}">Pegawai</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.employees.index') }}">Pegawai</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
 @endsection
 
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4 text-md-end">
-                        <a href="{{ route('master.employees.index') }}" class="btn btn-light text-slate-700 fw-semibold px-3 py-2 rounded-3 shadow-sm" style="font-size: 13px;">
+                        <a wire:navigate href="{{ route('master.employees.index') }}" class="btn btn-light text-slate-700 fw-semibold px-3 py-2 rounded-3 shadow-sm" style="font-size: 13px;">
                             <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar
                         </a>
                     </div>
@@ -244,7 +244,7 @@
 
                 <!-- Form Action Buttons Footer -->
                 <div class="card-footer bg-white py-3.5 px-4 border-top d-flex justify-content-end gap-2">
-                    <a href="{{ route('master.employees.index') }}" class="btn btn-light text-slate-700 fw-semibold px-4 py-2 rounded-3 border border-slate-200">
+                    <a wire:navigate href="{{ route('master.employees.index') }}" class="btn btn-light text-slate-700 fw-semibold px-4 py-2 rounded-3 border border-slate-200">
                         Batal
                     </a>
                     <button type="submit" class="btn btn-primary fw-semibold px-4 py-2 rounded-3 shadow-sm" style="background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%); border: none;">

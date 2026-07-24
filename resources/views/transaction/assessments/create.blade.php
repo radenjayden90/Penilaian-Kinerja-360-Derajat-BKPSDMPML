@@ -5,7 +5,7 @@
 @section('subtitle', 'Instrumen pengisian kuesioner penilaian kinerja 360 derajat ASN Kabupaten Pemalang')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('transaction.assessments.index') }}">Penilaian Saya</a></li>
     <li class="breadcrumb-item active" aria-current="page">Pengisian Penilaian</li>
 @endsection
 

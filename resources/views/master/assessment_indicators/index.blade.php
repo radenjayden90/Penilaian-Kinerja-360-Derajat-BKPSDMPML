@@ -5,16 +5,16 @@
 @section('subtitle', 'Kelola butir pertanyaan instrumen penilaian kinerja ASN berdasarkan aspek kompetensi')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Pertanyaan Penilaian</li>
 @endsection
 
 @section('action_buttons')
     <div class="d-flex gap-2">
-        <a href="{{ route('master.assessment-categories.index') }}" class="btn btn-outline-primary">
+        <a wire:navigate href="{{ route('master.assessment-categories.index') }}" class="btn btn-outline-primary">
             <i class="bi bi-folder me-1"></i> Kelola Aspek / Kategori
         </a>
-        <a href="{{ route('master.assessment-indicators.create') }}" class="btn btn-primary">
+        <a wire:navigate href="{{ route('master.assessment-indicators.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i> Tambah Pertanyaan
         </a>
     </div>
@@ -89,7 +89,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.assessment-indicators.edit', $ind) }}" class="btn btn-outline-primary" title="Edit Pertanyaan">
+                                    <a wire:navigate href="{{ route('master.assessment-indicators.edit', $ind) }}" class="btn btn-outline-primary" title="Edit Pertanyaan">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.assessment-indicators.destroy', $ind) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?')">

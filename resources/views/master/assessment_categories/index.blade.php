@@ -5,13 +5,13 @@
 @section('subtitle', 'Kelola kelompok aspek kompetensi penilaian kinerja ASN')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('master.assessment-indicators.index') }}">Pertanyaan</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.assessment-indicators.index') }}">Pertanyaan</a></li>
     <li class="breadcrumb-item active" aria-current="page">Kategori Aspek</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.assessment-categories.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.assessment-categories.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Tambah Kategori Aspek
     </a>
 @endsection
@@ -75,7 +75,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.assessment-categories.edit', $cat) }}" class="btn btn-outline-primary" title="Edit Kategori">
+                                    <a wire:navigate href="{{ route('master.assessment-categories.edit', $cat) }}" class="btn btn-outline-primary" title="Edit Kategori">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.assessment-categories.destroy', $cat) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">

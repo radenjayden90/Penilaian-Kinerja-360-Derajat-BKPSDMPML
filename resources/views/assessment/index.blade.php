@@ -501,11 +501,11 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 220px;">
                         <li><h6 class="dropdown-header">Pilih Rentang Waktu</h6></li>
-                        <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => 'all']) }}" target="_blank"><i class="bi bi-journal-text me-2 text-primary"></i>Seluruh Hasil Penilaian</a></li>
+                        <li><a wire:navigate class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => 'all']) }}" target="_blank"><i class="bi bi-journal-text me-2 text-primary"></i>Seluruh Hasil Penilaian</a></li>
                         @if($availableYears->isNotEmpty())
                             <li><hr class="dropdown-divider"></li>
                             @foreach($availableYears as $yr)
-                                <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => $yr]) }}" target="_blank"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
+                                <li><a wire:navigate class="dropdown-item py-2" href="{{ route('assessment.exportAllPdf', ['year' => $yr]) }}" target="_blank"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
                             @endforeach
                         @endif
                     </ul>
@@ -518,11 +518,11 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 220px;">
                         <li><h6 class="dropdown-header">Pilih Rentang Waktu</h6></li>
-                        <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => 'all']) }}"><i class="bi bi-journal-text me-2 text-success"></i>Seluruh Hasil Penilaian</a></li>
+                        <li><a wire:navigate class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => 'all']) }}"><i class="bi bi-journal-text me-2 text-success"></i>Seluruh Hasil Penilaian</a></li>
                         @if($availableYears->isNotEmpty())
                             <li><hr class="dropdown-divider"></li>
                             @foreach($availableYears as $yr)
-                                <li><a class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => $yr]) }}"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
+                                <li><a wire:navigate class="dropdown-item py-2" href="{{ route('assessment.exportAllExcel', ['year' => $yr]) }}"><i class="bi bi-calendar me-2 text-muted"></i>Tahun {{ $yr }}</a></li>
                             @endforeach
                         @endif
                     </ul>
@@ -562,7 +562,7 @@
         <p class="text-muted mb-4 mx-auto" style="max-width: 480px;">
             Anda belum memiliki hasil penilaian pada periode mana pun. Silakan cek kembali saat periode penilaian berjalan telah dihitung oleh atasan.
         </p>
-        <a href="{{ route('dashboard') }}" class="btn btn-primary fw-semibold px-4 rounded-3">
+        <a wire:navigate href="{{ route('dashboard') }}" class="btn btn-primary fw-semibold px-4 rounded-3">
             <i class="bi bi-house me-1"></i> Kembali ke Dashboard
         </a>
     </div>
@@ -656,7 +656,7 @@
                                     <a href="{{ route('assessment.exportPdf', $res->id) }}" target="_blank" class="btn-action-soft btn-action-pdf" title="Ekspor PDF">
                                         <i class="bi bi-file-pdf"></i>
                                     </a>
-                                    <a href="{{ route('assessment.exportExcel', $res->id) }}" class="btn-action-soft btn-action-excel" title="Ekspor Excel">
+                                    <a wire:navigate href="{{ route('assessment.exportExcel', $res->id) }}" class="btn-action-soft btn-action-excel" title="Ekspor Excel">
                                         <i class="bi bi-file-earmark-excel"></i>
                                     </a>
                                 </div>
@@ -756,7 +756,7 @@
                     <a href="{{ route('assessment.exportPdf', $res->id) }}" target="_blank" class="btn btn-sm btn-outline-danger w-50 fw-semibold rounded-3 py-2">
                         <i class="bi bi-file-pdf me-1"></i> PDF
                     </a>
-                    <a href="{{ route('assessment.exportExcel', $res->id) }}" class="btn btn-sm btn-outline-primary w-50 fw-semibold rounded-3 py-2">
+                    <a wire:navigate href="{{ route('assessment.exportExcel', $res->id) }}" class="btn btn-sm btn-outline-primary w-50 fw-semibold rounded-3 py-2">
                         <i class="bi bi-file-earmark-excel me-1"></i> Excel
                     </a>
                 </div>

@@ -5,12 +5,12 @@
 @section('subtitle', 'Pengaturan jadwal pelaksanaan evaluasi kinerja ASN semester/tahunan')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Periode Penilaian</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.periods.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.periods.create') }}" class="btn btn-primary">
         <i class="bi bi-calendar-plus me-1"></i> Buka Periode Baru
     </a>
 @endsection
@@ -95,7 +95,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.periods.edit', $period) }}" class="btn btn-outline-primary" title="Edit Periode">
+                                    <a wire:navigate href="{{ route('master.periods.edit', $period) }}" class="btn btn-outline-primary" title="Edit Periode">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.periods.destroy', $period) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus periode ini?')">

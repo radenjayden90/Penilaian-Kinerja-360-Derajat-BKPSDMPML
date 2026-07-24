@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
-                <a href="{{ route('dashboard') }}" class="btn btn-light text-primary fw-semibold px-3 py-2 rounded-3 shadow-sm" style="font-size: 13px;">
+                <a wire:navigate href="{{ route('dashboard') }}" class="btn btn-light text-primary fw-semibold px-3 py-2 rounded-3 shadow-sm" style="font-size: 13px;">
                     <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
                 </a>
             </div>
@@ -45,7 +45,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Kelola NIP, nama, email, atasan langsung, unit kerja, serta peran hak akses pegawai.
                 </p>
-                <a href="{{ route('master.employees.index') }}" class="btn btn-primary w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
+                <a wire:navigate href="{{ route('master.employees.index') }}" class="btn btn-primary w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
                     Kelola Pegawai <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -68,7 +68,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Kelola daftar bidang, sekretariat, dan unit kerja operasional di lingkungan BKPSDM.
                 </p>
-                <a href="{{ route('master.departments.index') }}" class="btn btn-info text-white w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #0EA5E9; border-color: #0EA5E9;">
+                <a wire:navigate href="{{ route('master.departments.index') }}" class="btn btn-info text-white w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #0EA5E9; border-color: #0EA5E9;">
                     Kelola Unit Kerja <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -91,7 +91,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Kelola tingkatan jabatan struktural, fungsional umum, dan fungsional tertentu.
                 </p>
-                <a href="{{ route('master.positions.index') }}" class="btn btn-purple text-white w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #8B5CF6; border-color: #8B5CF6;">
+                <a wire:navigate href="{{ route('master.positions.index') }}" class="btn btn-purple text-white w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #8B5CF6; border-color: #8B5CF6;">
                     Kelola Jabatan <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -114,7 +114,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Atur tanggal mulai, batas waktu pengisian kuesioner, dan status aktif periode penilaian.
                 </p>
-                <a href="{{ route('master.periods.index') }}" class="btn btn-success w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
+                <a wire:navigate href="{{ route('master.periods.index') }}" class="btn btn-success w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
                     Kelola Periode <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -137,7 +137,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Kelola 7 dimensi utama BerAKHLAK (Berorientasi Pelayanan, Akuntabel, Kompeten, dst).
                 </p>
-                <a href="{{ route('master.assessment-categories.index') }}" class="btn btn-warning text-dark w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #F59E0B; border-color: #F59E0B; color: #FFFFFF !important;">
+                <a wire:navigate href="{{ route('master.assessment-categories.index') }}" class="btn btn-warning text-dark w-100 fw-semibold rounded-3 py-2" style="font-size: 13px; background-color: #F59E0B; border-color: #F59E0B; color: #FFFFFF !important;">
                     Kelola Kategori <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -160,7 +160,7 @@
                 <p class="text-secondary mb-4" style="font-size: 13px; line-height: 1.5;">
                     Kelola daftar butir pertanyaan kuesioner 360 derajat untuk masing-masing kategori BerAKHLAK.
                 </p>
-                <a href="{{ route('master.assessment-indicators.index') }}" class="btn btn-danger w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
+                <a wire:navigate href="{{ route('master.assessment-indicators.index') }}" class="btn btn-danger w-100 fw-semibold rounded-3 py-2" style="font-size: 13px;">
                     Kelola Indikator <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>

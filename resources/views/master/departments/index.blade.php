@@ -5,12 +5,12 @@
 @section('subtitle', 'Kelola struktur organisasi dan bidang kerja di instansi')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
     <li class="breadcrumb-item active" aria-current="page">Unit Kerja</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.departments.create') }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.departments.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Tambah Unit Kerja
     </a>
 @endsection
@@ -71,7 +71,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ route('master.departments.edit', $dept) }}" class="btn btn-outline-primary" title="Edit Data">
+                                    <a wire:navigate href="{{ route('master.departments.edit', $dept) }}" class="btn btn-outline-primary" title="Edit Data">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('master.departments.destroy', $dept) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus unit kerja ini?')">

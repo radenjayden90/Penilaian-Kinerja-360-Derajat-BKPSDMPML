@@ -339,7 +339,7 @@
                                             <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                         </button>
                                     @else
-                                        <a href="{{ route('transaction.assessments.create', ['target_id' => $superior->id, 'type' => 'SUPERIOR']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $superior->id }}">
+                                        <a wire:navigate href="{{ route('transaction.assessments.create', ['target_id' => $superior->id, 'type' => 'SUPERIOR']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $superior->id }}">
                                             <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                         </a>
                                     @endif
@@ -489,7 +489,7 @@
                                                 <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                             </button>
                                         @else
-                                            <a href="{{ route('transaction.assessments.create', ['target_id' => $peer->id, 'type' => 'PEER']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $peer->id }}">
+                                            <a wire:navigate href="{{ route('transaction.assessments.create', ['target_id' => $peer->id, 'type' => 'PEER']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $peer->id }}">
                                                 <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                             </a>
                                         @endif
@@ -599,7 +599,7 @@
                                                 <i class="bi bi-lock-fill me-1"></i>Batas Tugas Terpenuhi
                                             </button>
                                         @else
-                                            <a href="{{ route('transaction.assessments.create', ['target_id' => $sub->id, 'type' => 'SUBORDINATE']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $sub->id }}">
+                                            <a wire:navigate href="{{ route('transaction.assessments.create', ['target_id' => $sub->id, 'type' => 'SUBORDINATE']) }}" class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm btn-isi-penilaian" data-target-id="{{ $sub->id }}">
                                                 <i class="bi bi-pencil-square me-1"></i>Isi Penilaian
                                             </a>
                                         @endif

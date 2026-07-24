@@ -5,13 +5,13 @@
 @section('subtitle', 'Rincian identitas, jabatan, dan struktur atasan-bawahan')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('master.index') }}">Master Data</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('master.employees.index') }}">Pegawai</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.index') }}">Master Data</a></li>
+    <li class="breadcrumb-item"><a wire:navigate href="{{ route('master.employees.index') }}">Pegawai</a></li>
     <li class="breadcrumb-item active" aria-current="page">Detail</li>
 @endsection
 
 @section('action_buttons')
-    <a href="{{ route('master.employees.edit', $employee) }}" class="btn btn-primary">
+    <a wire:navigate href="{{ route('master.employees.edit', $employee) }}" class="btn btn-primary">
         <i class="bi bi-pencil me-1"></i> Edit Pegawai
     </a>
 @endsection

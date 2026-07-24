@@ -78,7 +78,7 @@
                 @if($selectedPeriodId || $selectedDepartmentId || request('search'))
                     <div>
                         <label class="form-label small mb-1 d-block">&nbsp;</label>
-                        <a href="{{ route('report.index', ['tab' => $activeTab]) }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
+                        <a wire:navigate href="{{ route('report.index', ['tab' => $activeTab]) }}" class="btn btn-outline-secondary" title="Reset Filter" wire:navigate>
                             <i class="bi bi-x-circle"></i>
                         </a>
                     </div>
